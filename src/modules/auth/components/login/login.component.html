@@ -15,10 +15,11 @@
                 <label for="password">תעודת זהות:</label>
                 <input id="password" name="password" type="password" [(ngModel)]="credentials.password" class="form-control" required>
               </div>
-              <button type="submit" class="btn btn-primary btn-block">התחבר</button>
-              <p class="mt-2 text-center">משתמש חדש?</p>
-              <button type="button" class="btn btn-secondary btn-block" (click)="navigateToRegister()">הירשם</button>
-  
+              <div class="d-flex justify-content-center align-items-center mt-4">
+                <button type="submit" class="btn btn-primary me-2">התחבר</button>
+                <p class="my-0 mx-2">משתמש חדש?</p>
+                <button type="button" class="btn btn-secondary ms-2" (click)="navigateToRegister()">הירשם</button>
+              </div>              
               <div *ngIf="errorMessage" class="alert alert-danger mt-2">{{ errorMessage }}</div>
             </form>
           </div>
