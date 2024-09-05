@@ -8,14 +8,17 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+[x: string]: any;
   credentials = { name: '', password: '' };
   errorMessage: string = '';
 
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
-    console.log('in login');
-    
+  }
+
+  navigateToRegister() {
+    this.router.navigate(['/register']);
   }
 
   login() {

@@ -1,0 +1,85 @@
+<!-- register.component.html
+<div class="register-container">
+    <h2>רישום לאת</h2>
+    <form (ngSubmit)="register()" #registerForm="ngForm">
+      <div class="form-group">
+        <label for="name">שם</label>
+        <input id="name" name="name" type="text" [(ngModel)]="employee.name" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="password">תעודת זהות</label>
+        <input id="password" name="password" type="password" [(ngModel)]="employee.password" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="address">כתובת</label>
+        <input id="address" name="address" type="text" [(ngModel)]="employee.address" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="city">עיר</label>
+        <input id="city" name="city" type="text" [(ngModel)]="employee.city" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="phoneNumber">מספר טלפון</label>
+        <input id="phoneNumber" name="phoneNumber" type="text" [(ngModel)]="employee.phoneNumber" required class="form-control">
+      </div>
+      <h2>פרטי בנק</h2>
+      <div class="form-group">
+        <label for="bankName">בנק</label>
+        <input id="bankName" name="bankName" type="text" [(ngModel)]="employee.bankDetails.bankName" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="branchNumber">סניף</label>
+        <input id="branchNumber" name="branchNumber" type="number" [(ngModel)]="employee.bankDetails.branchNumber" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="accountNumber">מספר חשבון</label>
+        <input id="accountNumber" name="accountNumber" type="text" [(ngModel)]="employee.bankDetails.accountNumber" required class="form-control">
+      </div>
+      <button type="submit" class="btn btn-primary">אישור</button>
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    </form>
+  </div>
+   -->
+
+   <!-- register.component.html -->
+<div class="register-container">
+    <h2>הרשמה</h2>
+    <form (ngSubmit)="register()" #registerForm="ngForm">
+      <!-- שדות הטופס בהתאם למודל שלך -->
+      <div class="form-group">
+        <label for="name">שם</label>
+        <input id="name" name="name" type="text" [(ngModel)]="employee.name" placeholder="שם מלא" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="password">סיסמא</label>
+        <input id="password" name="password" type="password" [(ngModel)]="employee.password" placeholder="סיסמא" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="address">כתובת</label>
+        <input id="address" name="address" type="text" [(ngModel)]="employee.address" placeholder="כתובת" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="city">עיר</label>
+        <input id="city" name="city" type="text" [(ngModel)]="employee.city" placeholder="עיר" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="phoneNumber">מספר טלפון</label>
+        <input id="phoneNumber" name="phoneNumber" type="text" [(ngModel)]="employee.phoneNumber" placeholder="מספר טלפון" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="bankName">שם הבנק</label>
+        <input id="bankName" name="bankName" type="text" [(ngModel)]="employee.bankDetails.bankName" placeholder="שם הבנק" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="branchNumber">מספר סניף</label>
+        <input id="branchNumber" name="branchNumber" type="number" [(ngModel)]="employee.bankDetails.branchNumber" placeholder="מספר סניף" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="accountNumber">מספר חשבון</label>
+        <input id="accountNumber" name="accountNumber" type="text" [(ngModel)]="employee.bankDetails.accountNumber" placeholder="מספר חשבון" required class="form-control">
+      </div>
+      <button type="submit" class="btn btn-primary">הרשם</button>
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    </form>
+  </div>
+  
