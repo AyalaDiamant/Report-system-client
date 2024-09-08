@@ -1,44 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
 
 const Login: React.FC = () => {
   const [credentials, setCredentials] = useState<{ name: string; password: string }>({ name: '', password: '' });
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [rememberMe, setRememberMe] = useState<boolean>(false); // תיבת זכור אותי
   const navigate = useNavigate();
-
-  // זיהוי התחברות קיימת בעת טעינת הקומפוננטה
-  useEffect(() => {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    const isAdmin = localStorage.getItem('isAdmin') || sessionStorage.getItem('isAdmin');
-    if (token) {
-      navigate(isAdmin === 'true' ? '/admin' : '/employee');
-    }
-  }, [navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCredentials({ ...credentials, [name]: value });
   };
 
-  const handleRememberMeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRememberMe(e.target.checked); // עדכון המצב של זכור אותי
-  };
-
   const login = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const res = await AuthService.login(credentials);
-      if (rememberMe) {
-        // שמירת פרטי המשתמש ב-localStorage אם המשתמש בחר זכור אותי
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('isAdmin', res.data.isAdmin);
-      } else {
-        // שמירת פרטי המשתמש ב-sessionStorage אם המשתמש לא בחר זכור אותי
-        sessionStorage.setItem('token', res.data.token);
-        sessionStorage.setItem('isAdmin', res.data.isAdmin);
-      }
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('isAdmin', res.data.isAdmin);
       navigate(res.data.isAdmin ? '/admin' : '/employee');
     } catch (error) {
       setErrorMessage('Invalid credentials. Please try again.');
@@ -64,10 +43,6 @@ const Login: React.FC = () => {
                   <label htmlFor="password">תעודת זהות:</label>
                   <input id="password" name="password" type="password" onChange={handleChange} className="form-control" required />
                 </div>
-                <div className="form-check">
-                  <input type="checkbox" className="form-check-input" id="rememberMe" onChange={handleRememberMeChange} />
-                  <label className="form-check-label" htmlFor="rememberMe">זכור אותי</label>
-                </div>
                 <div className="d-flex justify-content-center align-items-center mt-8">
                   <button type="submit" className="btn btn-primary me-2">התחבר</button>
                   <p className="my-0 mx-2">משתמש חדש?</p>
@@ -84,4 +59,3 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-

@@ -1,8 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import './index.css'; // סגנונות אישיים שלך
-import 'bootstrap/dist/css/bootstrap.min.css'; // ייבוא Bootstrap CSS
+import './index.css'; 
+import 'bootstrap/dist/css/bootstrap.min.css'; 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import React from 'react';
 
