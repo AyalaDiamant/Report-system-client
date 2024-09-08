@@ -12,6 +12,7 @@ import Register from './components/auth/register.comonent';
 import Admin from './components/users/admin.component';
 import Employee from './components/users/employee.component';
 import Logout from './components/auth/logout.component';
+import Report from './components/report.component';
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "/logout", 
     element: <Logout />,
+  },
+  {
+    path: "/report", 
+    element: <Report />,
   },
   {
     path: "/", 
