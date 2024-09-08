@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import AuthService from '../../services/auth.service';
+
+
+import React from 'react';
+import Logout from '../auth/logout.component'; 
 
 const Admin: React.FC = () => {
-
-
-    return (
-        <div>
-            <h2>היי מנהל</h2>
-        </div>
-    );
+  return (
+    <div className="container mt-5">
+      <h1>עמוד ניהול</h1>
+      {/* הוספת כפתור התנתקות */}
+      <Logout />
+      {/* שאר התוכן של עמוד המנהל */}
+    </div>
+  );
 };
 
 export default Admin;

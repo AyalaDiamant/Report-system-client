@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import AuthService from '../../services/auth.service';
+
+
+
+import React from 'react';
+import Logout from '../auth/logout.component'; // ייבוא הקומפוננטה של Logout
 
 const Employee: React.FC = () => {
-
-
-    return (
-        <div>
-            <h2>היי עובד</h2>
-        </div>
-    );
+  return (
+    <div className="container mt-5">
+      <h1>עמוד עובד</h1>
+      {/* הוספת כפתור התנתקות */}
+      <Logout />
+      {/* שאר התוכן של עמוד העובד */}
+    </div>
+  );
 };
 
 export default Employee;

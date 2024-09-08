@@ -1,31 +1,39 @@
-// import React from 'react';
-// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// import Login from './components/auth/login.component';
-// import Register from './components/auth/register.comonent';
 
-// const App = () => {
+// import React from 'react';
+
+// const App: React.FC = () => {
 //   return (
-//     <Router>
-//       <Routes>
-//         <Route path="/login" element={<Login />} />
-//         <Route path="/register" element={<Register />} />
-//         {/* הוספת דפים נוספים בעת הצורך */}
-//         <Route path="/" element={<Login />} />
-//       </Routes>
-//     </Router>
+//     <div>
+//       {/* כל שאר התוכן שלך באפליקציה */}
+//     </div>
 //   );
-// };
+// }
 
 // export default App;
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const App: React.FC = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // בדיקת טוקן ב-localStorage או sessionStorage בעת טעינת האפליקציה
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    const isAdmin = localStorage.getItem('isAdmin') || sessionStorage.getItem('isAdmin');
+    if (token) {
+      navigate(isAdmin === 'true' ? '/admin' : '/employee');
+    } else {
+      navigate('/login');
+    }
+  }, [navigate]);
+
   return (
     <div>
-      {/* כל שאר התוכן שלך באפליקציה */}
+      {/* כאן יבואו הראוטרים וכל מה שצריך */}
     </div>
   );
-}
+};
 
 export default App;
+
