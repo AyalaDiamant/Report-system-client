@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
+import { useUser } from '../../contexts/user.context';
 
 const Login: React.FC = () => {
   const [credentials, setCredentials] = useState<{ name: string; password: string }>({ name: '', password: '' });
   const [errorMessage, setErrorMessage] = useState<string>('');
   const navigate = useNavigate();
+
+  const { setUser } = useUser();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -16,8 +19,14 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       const res = await AuthService.login(credentials);
+      console.log(res);
+      
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('isAdmin', res.data.isAdmin);
+      setUser({
+        employeeId: res.data.employeeId,
+        name: 'בדיקת שם',
+      });
       navigate(res.data.isAdmin ? '/admin' : '/employee');
     } catch (error) {
       setErrorMessage('Invalid credentials. Please try again.');

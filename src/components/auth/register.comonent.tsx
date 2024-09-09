@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
+import { useUser } from '../../contexts/user.context';
 
 const Register: React.FC = () => {
   const [employee, setEmployee] = useState({
@@ -18,6 +19,8 @@ const Register: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const navigate = useNavigate();
 
+  const { setUser } = useUser();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEmployee({ ...employee, [name]: value });
@@ -29,6 +32,10 @@ const Register: React.FC = () => {
       const res = await AuthService.register(employee);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('isAdmin', res.data.newEmployee.isAdmin);
+      setUser({
+        employeeId: res.data.employeeId,
+        name: 'בדיקת שם',
+      });
       navigate('/login');
     } catch (error) {
       setErrorMessage('Registration failed. Please try again.');

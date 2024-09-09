@@ -1,8 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import './index.css'; 
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import React from 'react';
 
@@ -13,6 +13,8 @@ import Admin from './components/users/admin.component';
 import Employee from './components/users/employee.component';
 import Logout from './components/auth/logout.component';
 import Report from './components/report.component';
+import { UserProvider } from './contexts/user.context';
+
 
 const router = createBrowserRouter([
   {
@@ -24,29 +26,31 @@ const router = createBrowserRouter([
     element: <Register />,
   },
   {
-    path: "/admin", 
+    path: "/admin",
     element: <Admin />,
   },
   {
-    path: "/employee", 
+    path: "/employee",
     element: <Employee />,
   },
   {
-    path: "/logout", 
+    path: "/logout",
     element: <Logout />,
   },
   {
-    path: "/report", 
+    path: "/report",
     element: <Report />,
   },
   {
-    path: "/", 
+    path: "/",
     element: <Login />,
   },
 ]);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <UserProvider>
+      <RouterProvider router={router} />
+    </UserProvider>
   </StrictMode>,
 );
