@@ -5,6 +5,8 @@ const API_URL = 'http://localhost:3000/api/employee/';
 const getEmployeeById = async (employeeId: number) => {
     try {
         const response = await axios.get(`${API_URL}${employeeId}`);
+        // console.log(response.data,'data');
+        
         return response.data;
     } catch (error) {
         console.error('Error fetching employee:', error);
