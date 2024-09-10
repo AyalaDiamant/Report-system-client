@@ -1,38 +1,12 @@
-
-// import React from 'react';
-// import Logout from '../auth/logout.component'; 
-// import { useNavigate } from 'react-router-dom';
-
-// const Employee: React.FC = () => {
-//     const navigate = useNavigate();
-
-//     const handleReport = () => {
-//         navigate('/report');
-//     };
-
-//     return (
-//         <div className="container mt-5">
-//             <h1>עמוד עובד</h1>
-//             {/* הוספת כפתור התנתקות */}
-//             <Logout />
-//             <button onClick={handleReport} className="btn">
-//                 למילוי דו"ח
-//             </button>
-//         </div>
-//     );
-// };
-
-// export default Employee;
-
 import React, { useEffect, useState } from 'react';
-import Logout from '../auth/logout.component'; 
+import Logout from '../../auth/logout.component';
 import { useNavigate } from 'react-router-dom';
-import ReportService from '../../services/report.service'; 
-import { useUser } from '../../contexts/user.context';
+import ReportService from '../../../services/report.service';
+import { useUser } from '../../../contexts/user.context';
 
 const Employee: React.FC = () => {
-    const [reports, setReports] = useState<Report[]>([]); 
-    const [loading, setLoading] = useState<boolean>(true); 
+    const [reports, setReports] = useState<Report[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
     const { user } = useUser();
 
@@ -42,7 +16,7 @@ const Employee: React.FC = () => {
             if (!token) {
                 throw new Error('No token found. User is not authenticated.');
             }
-// עושה בעיה על השורה משום מה לא מגיע ID לבדוק את זה
+            // עושה בעיה על השורה משום מה לא מגיע ID לבדוק את זה
             let employeeId = user?.employeeId;
 
             const data = await ReportService.getReportByEmployee(employeeId);
@@ -81,7 +55,7 @@ const Employee: React.FC = () => {
                     {reports.length > 0 ? (
                         <ul>
                             {reports.map((report, index) => (
-                                <li key={index}>{report.title}</li> // שינוי לפי השדה המתאים
+                                <li key={index}>{report.type}</li> // שינוי לפי השדה המתאים
                             ))}
                         </ul>
                     ) : (

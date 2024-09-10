@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ReportService from '../services/report.service';
-import Enums from '../interfaces/enums';
-import { useUser } from '../contexts/user.context';
+import ReportService from '../../../services/report.service';
+import Enums from '../../../interfaces/enums';
+import { useUser } from '../../../contexts/user.context';
 
 const Report: React.FC = () => {
   const { user } = useUser();
