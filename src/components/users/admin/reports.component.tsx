@@ -4,12 +4,14 @@ import EmployeeService from '../../../services/employee.service';
 import { MyReport } from '../../../interfaces/report.interface';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { getSetting } from '../../../services/setting.service';
 
 const Reports: React.FC = () => {
     const [reports, setReports] = useState<MyReport[]>([]);
     const [originalReports, setOriginalReports] = useState<MyReport[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [employeeNames, setEmployeeNames] = useState<{ [key: number]: string }>({});
+    const [setting, setSetting] = useState<any[]>([]); // התחל עם מערך ריק
 
     useEffect(() => {
         const fetchData = async () => {
@@ -23,13 +25,17 @@ const Reports: React.FC = () => {
                 const reportData = await ReportService.getAllReports();
                 setReports(reportData);
                 setOriginalReports([...reportData]);
-                
+
+                // טעינת ההגדרות
+                const settingsData = await getSetting();
+                setSetting(settingsData);
+
                 // טעינת שמות העובדים
                 const namesMap: { [key: number]: string } = {};
 
                 // צריך לבדוק למה כל דבר פה קורה פעמיים
                 for (const report of reportData) {
-                    console.log(reportData,' reportData');
+                    console.log(reportData, ' reportData');
                     try {
                         console.log('hi');
                         const employee = await EmployeeService.getEmployeeById(report.employeeId);
@@ -41,9 +47,9 @@ const Reports: React.FC = () => {
                     }
                 }
                 setEmployeeNames(namesMap);
-                console.log(employeeNames,'empppp');
-                
-                
+                console.log(employeeNames, 'empppp');
+
+
             } catch (error) {
                 console.error('Error loading reports:', error);
             } finally {
@@ -59,7 +65,7 @@ const Reports: React.FC = () => {
 
         // יצוא דוחות מקור
         const originalSheetData = [
-            ["שם עובד", "פרוייקט", "סימן/סעיף", "תפקיד", "תעריף", "סה\"כ","כמות", "הערה"],
+            ["שם עובד", "פרוייקט", "סימן/סעיף", "תפקיד", "תעריף", "סה\"כ", "כמות", "הערה"],
             ...originalReports.map(report => [
                 employeeNames[report.employeeId] || 'טוען...',
                 report.project,
@@ -75,11 +81,22 @@ const Reports: React.FC = () => {
         XLSX.utils.book_append_sheet(wb, originalWs, 'דוחות מקור');
 
         // יצוא דוחות לאחר שינוי
-        const updatedReports = reports.map(report => ({
-            ...report,
-            rate: report.rate + 100,
-            total: (report.quantity * (report.rate + 100))
-        }));
+        const updatedReports = reports.map(report => {
+            const settingForRole = setting.find(set => set.role === report.role);
+
+            if (settingForRole) {
+                const newRate = report.rate + settingForRole.rateIncrease; 
+                const newTotal = report.quantity * newRate;
+
+                return {
+                    ...report,
+                    rate: newRate,
+                    total: newTotal
+                };
+            }
+            return report;
+        });
+
 
         const updatedSheetData = [
             ["שם עובד", "פרוייקט", "סימן/סעיף", "תפקיד", "תעריף", "סה\"כ", "כמות", "הערה"],
@@ -130,7 +147,7 @@ const Reports: React.FC = () => {
         <div className="container mt-5">
             <h1>כל הדוחות</h1>
 
-            <button 
+            <button
                 className="btn btn-primary mt-3"
                 onClick={exportToExcel}
             >

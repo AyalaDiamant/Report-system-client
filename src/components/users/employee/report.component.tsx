@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReportService from '../../../services/report.service';
 import Enums from '../../../interfaces/enums';
 import { useUser } from '../../../contexts/user.context';
+import { getSetting } from '../../../services/setting.service';
 
 const Report: React.FC = () => {
   const { user } = useUser();
@@ -20,6 +21,20 @@ const Report: React.FC = () => {
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
   const navigate = useNavigate();
+  const [setting, setSetting] = useState<any[]>([]); // התחל עם מערך ריק
+
+  useEffect(() => {
+    // פונקציה פנימית שתעשה את הבקשה לשרת
+    const fetchSettings = async () => {
+      try {
+        const settingsData = await getSetting(); // קריאה לפונקציה המובאת מהשרת
+        setSetting(settingsData); // שמירה ב-state את הנתונים שהתקבלו
+      } catch (error) {
+        console.error('Error fetching settings:', error);
+      }
+    };
+    fetchSettings(); // קריאה לפונקציה כשהעמוד נטען    
+  }, []); // [] אומר שה-useEffect ירוץ רק פעם אחת כשהעמוד נטען
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -28,23 +43,24 @@ const Report: React.FC = () => {
 
   function rateCalculation(): string {
     const role = report.role;
-    let rate: number;
-
-    switch (role) {
-      case Enums.ReportRole.BIKORET:
-        rate = 100;
-        break;
-      case Enums.ReportRole.FIX_BIKORET:
-        rate = 120;
-        break;
-      case Enums.ReportRole.HGAA:
-        rate = 90;
-        break;
-      default:
-        rate = 0;
+    let rate: number | undefined; 
+  
+    for (let index = 0; index < setting.length; index++) {
+      const set = setting[index];
+      if (set.role === role) {
+        rate = set.rate;
+        break; 
+      }
     }
-    return rate.toString();
+    console.log(setting);
+
+    if (rate !== undefined) {
+      return rate.toString();
+    } else {
+      return 'תעריף לא נמצא'; 
+    }    
   }
+  
 
   const fixReport = () => {
     report.employeeId = user?.employeeId ?? 0
