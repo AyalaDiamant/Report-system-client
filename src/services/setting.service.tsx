@@ -34,6 +34,6 @@ export const getSetting = async () => {
     console.error('Error getting settings:', error.response ? error.response.data : error.message);
     throw error;
   }
-}
+};
 
 

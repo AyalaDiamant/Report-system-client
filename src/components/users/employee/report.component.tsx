@@ -21,20 +21,19 @@ const Report: React.FC = () => {
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
   const navigate = useNavigate();
-  const [setting, setSetting] = useState<any[]>([]); // התחל עם מערך ריק
+  const [setting, setSetting] = useState<any[]>([]); 
 
   useEffect(() => {
-    // פונקציה פנימית שתעשה את הבקשה לשרת
     const fetchSettings = async () => {
       try {
-        const settingsData = await getSetting(); // קריאה לפונקציה המובאת מהשרת
-        setSetting(settingsData); // שמירה ב-state את הנתונים שהתקבלו
+        const settingsData = await getSetting(); 
+        setSetting(settingsData); 
       } catch (error) {
         console.error('Error fetching settings:', error);
       }
     };
-    fetchSettings(); // קריאה לפונקציה כשהעמוד נטען    
-  }, []); // [] אומר שה-useEffect ירוץ רק פעם אחת כשהעמוד נטען
+    fetchSettings();
+  }, []); 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -52,8 +51,6 @@ const Report: React.FC = () => {
         break; 
       }
     }
-    console.log(setting);
-
     if (rate !== undefined) {
       return rate.toString();
     } else {
@@ -112,12 +109,6 @@ const Report: React.FC = () => {
                   <input id="quantity" name="quantity" type="text" onChange={handleChange} placeholder="כמות" className="form-control" required />
                 </div>
 
-                {/* שדה כתובת */}
-                <div className="form-group">
-                  <label htmlFor="address">כתובת</label>
-                  <input id="address" name="address" type="text" onChange={handleChange} placeholder="כתובת" className="form-control" required />
-                </div>
-
                 {/* שדה תפקיד - select */}
                 <div className="form-group">
                   <label htmlFor="role">תפקיד</label>
@@ -147,7 +138,7 @@ const Report: React.FC = () => {
 
                 <div className="form-group">
                   <label htmlFor="common">הערה</label>
-                  <input id="common" name="common" type="text" onChange={handleChange} placeholder="הערה מיוחדת להחודש" className="form-control" required />
+                  <input id="common" name="common" type="text" onChange={handleChange} placeholder="הערה מיוחדת להחודש" className="form-control" />
                 </div>
 
                 <button type="submit" className="btn btn-primary btn-block">שלח</button>

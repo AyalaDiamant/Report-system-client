@@ -5,6 +5,7 @@ import { MyReport } from '../../../interfaces/report.interface';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { getSetting } from '../../../services/setting.service';
+import ExcelJS from 'exceljs';
 
 const Reports: React.FC = () => {
     const [reports, setReports] = useState<MyReport[]>([]);
@@ -35,11 +36,8 @@ const Reports: React.FC = () => {
 
                 // צריך לבדוק למה כל דבר פה קורה פעמיים
                 for (const report of reportData) {
-                    console.log(reportData, ' reportData');
                     try {
-                        console.log('hi');
                         const employee = await EmployeeService.getEmployeeById(report.employeeId);
-                        // console.log(report._id,'report');
                         namesMap[report.employeeId] = employee.name;
                     } catch (error) {
                         console.error(`Error loading employee with ID ${report.employeeId}:`, error);
@@ -47,7 +45,6 @@ const Reports: React.FC = () => {
                     }
                 }
                 setEmployeeNames(namesMap);
-                console.log(employeeNames, 'empppp');
 
 
             } catch (error) {
@@ -60,13 +57,119 @@ const Reports: React.FC = () => {
         fetchData();
     }, []);
 
-    const exportToExcel = () => {
-        const wb = XLSX.utils.book_new();
+    // const exportToExcel = () => {
+    //     const wb = XLSX.utils.book_new();
 
-        // יצוא דוחות מקור
-        const originalSheetData = [
-            ["שם עובד", "פרוייקט", "סימן/סעיף", "תפקיד", "תעריף", "סה\"כ", "כמות", "הערה"],
-            ...originalReports.map(report => [
+    //     // יצוא דוחות מקור
+    //     const originalSheetData = [
+    //         ["שם עובד", "פרוייקט", "סימן/סעיף", "תפקיד", "תעריף", "סה\"כ", "כמות", "הערה"],
+    //         ...originalReports.map(report => [
+    //             employeeNames[report.employeeId] || 'טוען...',
+    //             report.project,
+    //             report.sign,
+    //             report.role,
+    //             report.rate,
+    //             report.total,
+    //             report.quantity,
+    //             report.common
+    //         ])
+    //     ];
+    //     const originalWs = XLSX.utils.aoa_to_sheet(originalSheetData);
+    //     XLSX.utils.book_append_sheet(wb, originalWs, 'דוחות מקור');
+
+    //     // יצוא דוחות לאחר שינוי
+    //     const updatedReports = reports.map(report => {
+    //         const settingForRole = setting.find(set => set.role === report.role);
+
+    //         if (settingForRole) {
+    //             const newRate = report.rate + settingForRole.rateIncrease; 
+    //             const newTotal = report.quantity * newRate;
+
+    //             return {
+    //                 ...report,
+    //                 rate: newRate,
+    //                 total: newTotal
+    //             };
+    //         }
+    //         return report;
+    //     });
+
+
+    //     const updatedSheetData = [
+    //         ["שם עובד", "פרוייקט", "סימן/סעיף", "תפקיד", "תעריף", "סה\"כ", "כמות", "הערה"],
+    //         ...updatedReports.map(report => [
+    //             employeeNames[report.employeeId] || 'טוען...',
+    //             report.project,
+    //             report.sign,
+    //             report.role,
+    //             report.rate,
+    //             report.total,
+    //             report.quantity,
+    //             report.common
+    //         ])
+    //     ];
+    //     const updatedWs = XLSX.utils.aoa_to_sheet(updatedSheetData);
+    //     XLSX.utils.book_append_sheet(wb, updatedWs, 'דוחות לאחר שינוי');
+
+    //     // יצוא טבלת חישובים
+    //     const calculationsData = [
+    //         ["שם עובד", "שכר נטו", "שכר ברוטו", "הפרש 15%", "יתרה"],
+    //         ...reports.map(report => {
+    //             const netSalary = report.total;
+    //             const newRate = report.rate + 100;
+    //             const grossSalary = report.quantity * newRate;
+    //             const deduction = grossSalary * 0.15;
+    //             const balance = grossSalary - netSalary - deduction;
+
+    //             return [
+    //                 employeeNames[report.employeeId] || 'טוען...',
+    //                 netSalary,
+    //                 grossSalary,
+    //                 deduction,
+    //                 balance
+    //             ];
+    //         })
+    //     ];
+    //     const calculationsWs = XLSX.utils.aoa_to_sheet(calculationsData);
+    //     XLSX.utils.book_append_sheet(wb, calculationsWs, 'טבלת חישובים');
+
+    //     const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    //     const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    //     const today = new Date().toISOString().split('T')[0];
+    //     const fileName = `דוחות_${today}.xlsx`;
+    //     saveAs(blob, fileName);
+    // };
+
+
+    const exportToExcel = () => {
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet('דוחות מקור');
+        const sheetUpdated = workbook.addWorksheet('דוחות לאחר שינוי');
+        const sheetCalculations = workbook.addWorksheet('טבלת חישובים');
+    
+        // עיצוב כותרות עם רקע צבעוני וכיתוב מודגש
+        const headerStyle = {
+            font: { bold: true },
+            fill: {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FFFFFF00' } // צבע רקע צהוב
+            },
+            alignment: { horizontal: 'center' as ExcelJS.Alignment['horizontal'] }
+        };
+    
+        // כותרות לדוחות מקור
+        const headers = ["שם עובד", "פרוייקט", "סימן/סעיף", "תפקיד", "תעריף", "סה\"כ", "כמות", "הערה"];
+        const headerRow = sheet.addRow(headers);
+        headerRow.eachCell(cell => {
+            cell.font = headerStyle.font;
+            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } }; // תיקון כאן
+            cell.alignment = headerStyle.alignment;
+        });
+    
+        // נתונים לדוחות מקור
+        originalReports.forEach(report => {
+            sheet.addRow([
                 employeeNames[report.employeeId] || 'טוען...',
                 report.project,
                 report.sign,
@@ -75,19 +178,17 @@ const Reports: React.FC = () => {
                 report.total,
                 report.quantity,
                 report.common
-            ])
-        ];
-        const originalWs = XLSX.utils.aoa_to_sheet(originalSheetData);
-        XLSX.utils.book_append_sheet(wb, originalWs, 'דוחות מקור');
-
-        // יצוא דוחות לאחר שינוי
+            ]);
+        });
+    
+        // חישוב דוחות לאחר שינוי
         const updatedReports = reports.map(report => {
             const settingForRole = setting.find(set => set.role === report.role);
-
+    
             if (settingForRole) {
                 const newRate = report.rate + settingForRole.rateIncrease; 
                 const newTotal = report.quantity * newRate;
-
+    
                 return {
                     ...report,
                     rate: newRate,
@@ -96,11 +197,18 @@ const Reports: React.FC = () => {
             }
             return report;
         });
-
-
-        const updatedSheetData = [
-            ["שם עובד", "פרוייקט", "סימן/סעיף", "תפקיד", "תעריף", "סה\"כ", "כמות", "הערה"],
-            ...updatedReports.map(report => [
+    
+        // כותרות לדוחות לאחר שינוי
+        const updatedHeaderRow = sheetUpdated.addRow(headers);
+        updatedHeaderRow.eachCell(cell => {
+            cell.font = headerStyle.font;
+            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } }; // תיקון כאן
+            cell.alignment = headerStyle.alignment;
+        });
+    
+        // נתונים לדוחות לאחר שינוי
+        updatedReports.forEach(report => {
+            sheetUpdated.addRow([
                 employeeNames[report.employeeId] || 'טוען...',
                 report.project,
                 report.sign,
@@ -109,38 +217,40 @@ const Reports: React.FC = () => {
                 report.total,
                 report.quantity,
                 report.common
-            ])
-        ];
-        const updatedWs = XLSX.utils.aoa_to_sheet(updatedSheetData);
-        XLSX.utils.book_append_sheet(wb, updatedWs, 'דוחות לאחר שינוי');
-
-        // יצוא טבלת חישובים
-        const calculationsData = [
-            ["שם עובד", "שכר נטו", "שכר ברוטו", "הפרש 15%", "יתרה"],
-            ...reports.map(report => {
-                const netSalary = report.total;
-                const newRate = report.rate + 100;
-                const grossSalary = report.quantity * newRate;
-                const deduction = grossSalary * 0.15;
-                const balance = grossSalary - netSalary - deduction;
-
-                return [
-                    employeeNames[report.employeeId] || 'טוען...',
-                    netSalary,
-                    grossSalary,
-                    deduction,
-                    balance
-                ];
-            })
-        ];
-        const calculationsWs = XLSX.utils.aoa_to_sheet(calculationsData);
-        XLSX.utils.book_append_sheet(wb, calculationsWs, 'טבלת חישובים');
-
-        const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-        const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const today = new Date().toISOString().split('T')[0];
-        const fileName = `דוחות_${today}.xlsx`;
-        saveAs(blob, fileName);
+            ]);
+        });
+    
+        // כותרות לטבלת חישובים
+        const calcHeaders = ["שם עובד", "שכר נטו", "שכר ברוטו", "הפרש 15%", "יתרה"];
+        const calcHeaderRow = sheetCalculations.addRow(calcHeaders);
+        calcHeaderRow.eachCell(cell => {
+            cell.font = headerStyle.font;
+            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } }; // תיקון כאן
+            cell.alignment = headerStyle.alignment;
+        });
+    
+        // נתונים לטבלת חישובים
+        reports.forEach(report => {
+            const netSalary = report.total;
+            const newRate = report.rate + 100;
+            const grossSalary = report.quantity * newRate;
+            const deduction = grossSalary * 0.15;
+            const balance = grossSalary - netSalary - deduction;
+    
+            sheetCalculations.addRow([
+                employeeNames[report.employeeId] || 'טוען...',
+                netSalary,
+                grossSalary,
+                deduction,
+                balance
+            ]);
+        });
+    
+        // שמירת הקובץ כ-Excel
+        workbook.xlsx.writeBuffer().then(buffer => {
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            saveAs(blob, `דוחות_${new Date().toISOString().split('T')[0]}.xlsx`);
+        });
     };
 
     return (
