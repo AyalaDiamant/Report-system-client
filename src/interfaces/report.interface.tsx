@@ -24,6 +24,7 @@ export interface Deliverable {
 
 export interface MyReport {
     employeeId: number; // מספר עובד
+    date: String,
     deliverables: Deliverable[]; // מערך של הספקים
     common: string; // הערה כללית
 }

@@ -190,58 +190,6 @@ const Reports: React.FC = () => {
         });
     };
 
-    //     return (
-    //         <div className="container mt-5">
-    //             <h1>כל הדוחות</h1>
-
-    //             <button
-    //                 className="btn btn-primary mt-3"
-    //                 onClick={exportToExcel}
-    //             >
-    //                 יצוא דוחות ל-Excel
-    //             </button>
-
-    //             {/* הצגת הדוחות */}
-    //             {loading ? (
-    //                 <p>טוען דוחות...</p>
-    //             ) : (
-    //                 <div>
-    //                     {reports.length > 0 ? (
-    //                         <div className="row">
-    //                             {reports.map((report, index) => (
-    //                                 <div className="col-md-4 mb-3" key={index}>
-    //                                     <div className="card">
-    //                                         <div className="card-body">
-    //                                             <h5 className="card-title">דוח {employeeNames[report.employeeId] || 'טוען...'}</h5>
-    //                                             <div>
-    //                                                 {report.deliverables.map((item, idx) => (
-    //                                                     <div key={`${item.type}-${idx}`}>
-    //                                                         <p><strong>סוג:</strong> {item.type}</p>
-    //                                                         <p><strong>כמות:</strong> {item.quantity}</p>
-    //                                                         <p><strong>תעריף:</strong> {item.rate}</p>
-    //                                                         <p><strong>תפקיד:</strong> {item.role}</p>
-    //                                                         <p><strong>פרוייקט:</strong> {item.project}</p>
-    //                                                         <p><strong>מדור:</strong> {item.section}</p>
-    //                                                         <p><strong>סימן/סעיף:</strong> {item.sign}</p>
-    //                                                         <p><strong>סכום סה"כ:</strong> {item.total}</p>
-    //                                                         <p><strong>הערה:</strong> {report.common}</p>
-    //                                                     </div>
-    //                                                 ))}
-
-    //                                             </div>
-    //                                         </div>
-    //                                     </div>
-    //                                 </div>
-    //                             ))}
-    //                         </div>
-    //                     ) : (
-    //                         <p>אין דוחות</p>
-    //                     )}
-    //                 </div>
-    //             )}
-    //         </div>
-    //     );
-    // };
     return (
         <div className="container mt-5">
             <h1>כל הדוחות</h1>
@@ -260,42 +208,52 @@ const Reports: React.FC = () => {
                 <div>
                     {reports.length > 0 ? (
                         <div className="row">
-                            {reports.map((report, index) => (
-                                <div className="col-md-6 mb-4" key={index}>
-                                    <div className="card">
-                                        <div className="card-body">
-                                            {/* כותרת הדוח */}
-                                            <h5 className="card-title">
-                                                דוח {employeeNames[report.employeeId] || 'טוען...'}
-                                            </h5>
+                            {reports.map((report, index) => {
+                                // חישוב הסכום הכולל של כל ההספקים בדוח
+                                const totalSum = report.deliverables.reduce((sum, item) => sum + item.total, 0);
 
-                                            {/* הצגת ההספקים */}
-                                            <h6 className="mt-3">הספקים:</h6>
-                                            <ul className="list-group mb-3">
-                                                {report.deliverables.map((item, idx) => (
-                                                    <li className="list-group-item" key={`${item.type}-${idx}`}>
-                                                        <p><strong>סוג:</strong> {item.type}</p>
-                                                        <p><strong>כמות:</strong> {item.quantity}</p>
-                                                        <p><strong>תעריף:</strong> {item.rate}</p>
-                                                        <p><strong>תפקיד:</strong> {item.role}</p>
-                                                        <p><strong>פרוייקט:</strong> {item.project}</p>
-                                                        <p><strong>מדור:</strong> {item.section}</p>
-                                                        <p><strong>סימן/סעיף:</strong> {item.sign}</p>
-                                                        <p><strong>סכום סה"כ:</strong> {item.total}</p>
-                                                    </li>
-                                                ))}
-                                            </ul>
+                                return (
+                                    <div className="col-md-6 mb-4" key={index}>
+                                        <div className="card">
+                                            <div className="card-body">
+                                                {/* כותרת הדוח */}
+                                                <h5 className="card-title">
+                                                    דוח {employeeNames[report.employeeId] || 'טוען...'}
+                                                </h5>
+                                                <p>תאריך: {report.date}</p>
+                                                {/* הצגת ההספקים */}
+                                                <h6 className="mt-3">הספקים:</h6>
+                                                <ul className="list-group mb-3">
+                                                    {report.deliverables.map((item, idx) => (
+                                                        <li className="list-group-item" key={`${item.type}-${idx}`}>
+                                                            <p><strong>סוג:</strong> {item.type}</p>
+                                                            <p><strong>כמות:</strong> {item.quantity}</p>
+                                                            <p><strong>תעריף:</strong> {item.rate}</p>
+                                                            <p><strong>תפקיד:</strong> {item.role}</p>
+                                                            <p><strong>פרוייקט:</strong> {item.project}</p>
+                                                            <p><strong>מדור:</strong> {item.section}</p>
+                                                            <p><strong>סימן/סעיף:</strong> {item.sign}</p>
+                                                            <p><strong>סכום סה"כ:</strong> {item.total}</p>
+                                                        </li>
+                                                    ))}
+                                                </ul>
 
-                                            {/* הערה לדוח */}
-                                            {report.common && (
-                                                <p className="card-text">
-                                                    <strong>הערה:</strong> {report.common}
+                                                {/* הערה לדוח */}
+                                                {report.common && (
+                                                    <p className="card-text">
+                                                        <strong>הערה:</strong> {report.common}
+                                                    </p>
+                                                )}
+
+                                                {/* סכום כולל */}
+                                                <p className="card-text mt-3">
+                                                    <strong>סה"כ:</strong> {totalSum}
                                                 </p>
-                                            )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     ) : (
                         <p>אין דוחות</p>
@@ -304,5 +262,6 @@ const Reports: React.FC = () => {
             )}
         </div>
     );
+
 };
 export default Reports;

@@ -20,6 +20,7 @@ const Report: React.FC = () => {
   });
   const [report, setReport] = useState<MyReport>({
     employeeId: user?.employeeId ?? 0,
+    date: '',
     deliverables: [],
     common: ''
   });
