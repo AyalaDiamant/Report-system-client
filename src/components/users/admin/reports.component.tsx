@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ReportService from '../../../services/report.service';
 import EmployeeService from '../../../services/employee.service';
 import { MyReport } from '../../../interfaces/report.interface';
+import { EmployeeSummary } from '../../../interfaces/employee.interface';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { getSetting } from '../../../services/setting.service';
@@ -62,6 +63,7 @@ const Reports: React.FC = () => {
         const sheet = workbook.addWorksheet('דוחות מקור');
         const sheetUpdated = workbook.addWorksheet('דוחות לאחר שינוי');
         const sheetCalculations = workbook.addWorksheet('טבלת חישובים');
+        const sheetSummary = workbook.addWorksheet('התאמות שכר'); // גיליון חדש עבור התאמות שכר
 
         // עיצוב כותרות עם רקע צבעוני וכיתוב מודגש
         const headerStyle = {
@@ -181,6 +183,59 @@ const Reports: React.FC = () => {
                     balance
                 ]);
             }
+        });
+        // הכנת הנתונים לסיכום לכל עובד
+        const employeeSummaries: EmployeeSummary[] = [];
+
+        reports.forEach(report => {
+            // חישוב שכר נטו ושכר ברוטו
+            const totalNetSalary = report.deliverables.reduce((sum, e) => sum + e.total, 0);
+            const totalGrossSalary = report.deliverables.reduce((sum, e) => {
+                const settingForRole = setting.find(set => set.role === e.role);
+                return sum + (e.quantity * (e.rate + (settingForRole?.rateIncrease || 0)));
+            }, 0);
+
+            // חישוב ההפרש
+            const difference = totalGrossSalary > 3000 ? totalGrossSalary - 3000 : 0;
+
+            // חיפוש או הוספת עובד
+            let existingEmployee = employeeSummaries.find(emp => emp._id === report.employeeId);
+
+            if (existingEmployee) {
+                // עדכון סכומים אם העובד כבר קיים ברשימה
+                existingEmployee.totalNetSalary += totalNetSalary;
+                existingEmployee.totalGrossSalary += totalGrossSalary;
+                existingEmployee.difference = existingEmployee.totalGrossSalary - 3000 > 0 ? existingEmployee.totalGrossSalary - 3000 : 0; // עדכון ההפרש
+            } else {
+                // הוספת עובד חדש לרשימה
+                employeeSummaries.push({
+                    _id: report.employeeId,
+                    name: employeeNames[report.employeeId] || 'טוען...',
+                    totalNetSalary: totalNetSalary,
+                    totalGrossSalary: totalGrossSalary,
+                    difference: difference
+                });
+            }
+        });
+
+
+        // יצירת גיליון עם הנתונים
+        const summaryHeaders = ["שם עובד", "שכר נטו", "שכר ברוטו", "הפרש"];
+        const summaryHeaderRow = sheetSummary.addRow(summaryHeaders);
+        summaryHeaderRow.eachCell(cell => {
+            cell.font = headerStyle.font;
+            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } }; // צבע רקע
+            cell.alignment = headerStyle.alignment;
+        });
+
+        // הוספת נתונים לגיליון
+        employeeSummaries.forEach(emp => {
+            sheetSummary.addRow([
+                emp.name,
+                emp.totalNetSalary,
+                emp.totalGrossSalary,
+                emp.difference
+            ]);
         });
 
         // שמירת הקובץ כ-Excel
