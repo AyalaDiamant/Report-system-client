@@ -57,96 +57,12 @@ const Reports: React.FC = () => {
         fetchData();
     }, []);
 
-    // const exportToExcel = () => {
-    //     const wb = XLSX.utils.book_new();
-
-    //     // יצוא דוחות מקור
-    //     const originalSheetData = [
-    //         ["שם עובד", "פרוייקט", "סימן/סעיף", "תפקיד", "תעריף", "סה\"כ", "כמות", "הערה"],
-    //         ...originalReports.map(report => [
-    //             employeeNames[report.employeeId] || 'טוען...',
-    //             report.project,
-    //             report.sign,
-    //             report.role,
-    //             report.rate,
-    //             report.total,
-    //             report.quantity,
-    //             report.common
-    //         ])
-    //     ];
-    //     const originalWs = XLSX.utils.aoa_to_sheet(originalSheetData);
-    //     XLSX.utils.book_append_sheet(wb, originalWs, 'דוחות מקור');
-
-    //     // יצוא דוחות לאחר שינוי
-    //     const updatedReports = reports.map(report => {
-    //         const settingForRole = setting.find(set => set.role === report.role);
-
-    //         if (settingForRole) {
-    //             const newRate = report.rate + settingForRole.rateIncrease; 
-    //             const newTotal = report.quantity * newRate;
-
-    //             return {
-    //                 ...report,
-    //                 rate: newRate,
-    //                 total: newTotal
-    //             };
-    //         }
-    //         return report;
-    //     });
-
-
-    //     const updatedSheetData = [
-    //         ["שם עובד", "פרוייקט", "סימן/סעיף", "תפקיד", "תעריף", "סה\"כ", "כמות", "הערה"],
-    //         ...updatedReports.map(report => [
-    //             employeeNames[report.employeeId] || 'טוען...',
-    //             report.project,
-    //             report.sign,
-    //             report.role,
-    //             report.rate,
-    //             report.total,
-    //             report.quantity,
-    //             report.common
-    //         ])
-    //     ];
-    //     const updatedWs = XLSX.utils.aoa_to_sheet(updatedSheetData);
-    //     XLSX.utils.book_append_sheet(wb, updatedWs, 'דוחות לאחר שינוי');
-
-    //     // יצוא טבלת חישובים
-    //     const calculationsData = [
-    //         ["שם עובד", "שכר נטו", "שכר ברוטו", "הפרש 15%", "יתרה"],
-    //         ...reports.map(report => {
-    //             const netSalary = report.total;
-    //             const newRate = report.rate + 100;
-    //             const grossSalary = report.quantity * newRate;
-    //             const deduction = grossSalary * 0.15;
-    //             const balance = grossSalary - netSalary - deduction;
-
-    //             return [
-    //                 employeeNames[report.employeeId] || 'טוען...',
-    //                 netSalary,
-    //                 grossSalary,
-    //                 deduction,
-    //                 balance
-    //             ];
-    //         })
-    //     ];
-    //     const calculationsWs = XLSX.utils.aoa_to_sheet(calculationsData);
-    //     XLSX.utils.book_append_sheet(wb, calculationsWs, 'טבלת חישובים');
-
-    //     const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    //     const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    //     const today = new Date().toISOString().split('T')[0];
-    //     const fileName = `דוחות_${today}.xlsx`;
-    //     saveAs(blob, fileName);
-    // };
-
-
     const exportToExcel = () => {
         const workbook = new ExcelJS.Workbook();
         const sheet = workbook.addWorksheet('דוחות מקור');
         const sheetUpdated = workbook.addWorksheet('דוחות לאחר שינוי');
         const sheetCalculations = workbook.addWorksheet('טבלת חישובים');
-    
+
         // עיצוב כותרות עם רקע צבעוני וכיתוב מודגש
         const headerStyle = {
             font: { bold: true },
@@ -157,7 +73,7 @@ const Reports: React.FC = () => {
             },
             alignment: { horizontal: 'center' as ExcelJS.Alignment['horizontal'] }
         };
-    
+
         // כותרות לדוחות מקור
         const headers = ["שם עובד", "פרוייקט", "סימן/סעיף", "תפקיד", "תעריף", "סה\"כ", "כמות", "הערה"];
         const headerRow = sheet.addRow(headers);
@@ -166,38 +82,51 @@ const Reports: React.FC = () => {
             cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } }; // תיקון כאן
             cell.alignment = headerStyle.alignment;
         });
-    
+
         // נתונים לדוחות מקור
         originalReports.forEach(report => {
-            sheet.addRow([
-                employeeNames[report.employeeId] || 'טוען...',
-                report.project,
-                report.sign,
-                report.role,
-                report.rate,
-                report.total,
-                report.quantity,
-                report.common
-            ]);
+            for (let index = 0; index < report.deliverables.length; index++) {
+                const e = report.deliverables[index];
+                sheet.addRow([
+                    employeeNames[report.employeeId] || 'טוען...',
+                    e.project,
+                    e.sign,
+                    e.role,
+                    e.rate,
+                    e.total,
+                    e.quantity,
+                    report.common
+                ]);
+            }
+
         });
-    
+
         // חישוב דוחות לאחר שינוי
         const updatedReports = reports.map(report => {
-            const settingForRole = setting.find(set => set.role === report.role);
-    
-            if (settingForRole) {
-                const newRate = report.rate + settingForRole.rateIncrease; 
-                const newTotal = report.quantity * newRate;
-    
-                return {
-                    ...report,
-                    rate: newRate,
-                    total: newTotal
-                };
-            }
-            return report;
+            // מעתיקים את כל ההספקים המקוריים, ועושים שינויים איפה שצריך
+            const updatedDeliverables = report.deliverables.map(e => {
+                const settingForRole = setting.find(set => set.role === e.role);
+                if (settingForRole) {
+                    const newRate = e.rate + settingForRole.rateIncrease;
+                    const newTotal = e.quantity * newRate;
+
+                    // מחזירים את ההספק עם השינויים
+                    return {
+                        ...e,
+                        rate: newRate,
+                        total: newTotal
+                    };
+                }
+                return e;
+            });
+
+            return {
+                ...report,
+                deliverables: updatedDeliverables
+            };
         });
-    
+
+
         // כותרות לדוחות לאחר שינוי
         const updatedHeaderRow = sheetUpdated.addRow(headers);
         updatedHeaderRow.eachCell(cell => {
@@ -205,21 +134,24 @@ const Reports: React.FC = () => {
             cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } }; // תיקון כאן
             cell.alignment = headerStyle.alignment;
         });
-    
+
         // נתונים לדוחות לאחר שינוי
         updatedReports.forEach(report => {
-            sheetUpdated.addRow([
-                employeeNames[report.employeeId] || 'טוען...',
-                report.project,
-                report.sign,
-                report.role,
-                report.rate,
-                report.total,
-                report.quantity,
-                report.common
-            ]);
+            for (let index = 0; index < report.deliverables.length; index++) {
+                const e = report.deliverables[index];
+                sheetUpdated.addRow([
+                    employeeNames[report.employeeId] || 'טוען...',
+                    e.project,
+                    e.sign,
+                    e.role,
+                    e.rate,
+                    e.total,
+                    e.quantity,
+                    report.common
+                ]);
+            }
         });
-    
+
         // כותרות לטבלת חישובים
         const calcHeaders = ["שם עובד", "שכר נטו", "שכר ברוטו", "הפרש 15%", "יתרה"];
         const calcHeaderRow = sheetCalculations.addRow(calcHeaders);
@@ -228,24 +160,29 @@ const Reports: React.FC = () => {
             cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } }; // תיקון כאן
             cell.alignment = headerStyle.alignment;
         });
-    
+
         // נתונים לטבלת חישובים
         reports.forEach(report => {
-            const netSalary = report.total;
-            const newRate = report.rate + 100;
-            const grossSalary = report.quantity * newRate;
-            const deduction = grossSalary * 0.15;
-            const balance = grossSalary - netSalary - deduction;
-    
-            sheetCalculations.addRow([
-                employeeNames[report.employeeId] || 'טוען...',
-                netSalary,
-                grossSalary,
-                deduction,
-                balance
-            ]);
+            for (let index = 0; index < report.deliverables.length; index++) {
+                const e = report.deliverables[index];
+                const settingForRole = setting.find(set => set.role === e.role);
+
+                const grossSalary = e.quantity * (e.rate + settingForRole.rateIncrease);
+                const netSalary = e.total;
+                const deduction = grossSalary * 0.15;
+                const balance = grossSalary - netSalary - deduction;
+
+                // הוספת השורה לטבלת החישובים
+                sheetCalculations.addRow([
+                    employeeNames[report.employeeId] || 'טוען...',
+                    netSalary,
+                    grossSalary,
+                    deduction,
+                    balance
+                ]);
+            }
         });
-    
+
         // שמירת הקובץ כ-Excel
         workbook.xlsx.writeBuffer().then(buffer => {
             const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -253,6 +190,58 @@ const Reports: React.FC = () => {
         });
     };
 
+    //     return (
+    //         <div className="container mt-5">
+    //             <h1>כל הדוחות</h1>
+
+    //             <button
+    //                 className="btn btn-primary mt-3"
+    //                 onClick={exportToExcel}
+    //             >
+    //                 יצוא דוחות ל-Excel
+    //             </button>
+
+    //             {/* הצגת הדוחות */}
+    //             {loading ? (
+    //                 <p>טוען דוחות...</p>
+    //             ) : (
+    //                 <div>
+    //                     {reports.length > 0 ? (
+    //                         <div className="row">
+    //                             {reports.map((report, index) => (
+    //                                 <div className="col-md-4 mb-3" key={index}>
+    //                                     <div className="card">
+    //                                         <div className="card-body">
+    //                                             <h5 className="card-title">דוח {employeeNames[report.employeeId] || 'טוען...'}</h5>
+    //                                             <div>
+    //                                                 {report.deliverables.map((item, idx) => (
+    //                                                     <div key={`${item.type}-${idx}`}>
+    //                                                         <p><strong>סוג:</strong> {item.type}</p>
+    //                                                         <p><strong>כמות:</strong> {item.quantity}</p>
+    //                                                         <p><strong>תעריף:</strong> {item.rate}</p>
+    //                                                         <p><strong>תפקיד:</strong> {item.role}</p>
+    //                                                         <p><strong>פרוייקט:</strong> {item.project}</p>
+    //                                                         <p><strong>מדור:</strong> {item.section}</p>
+    //                                                         <p><strong>סימן/סעיף:</strong> {item.sign}</p>
+    //                                                         <p><strong>סכום סה"כ:</strong> {item.total}</p>
+    //                                                         <p><strong>הערה:</strong> {report.common}</p>
+    //                                                     </div>
+    //                                                 ))}
+
+    //                                             </div>
+    //                                         </div>
+    //                                     </div>
+    //                                 </div>
+    //                             ))}
+    //                         </div>
+    //                     ) : (
+    //                         <p>אין דוחות</p>
+    //                     )}
+    //                 </div>
+    //             )}
+    //         </div>
+    //     );
+    // };
     return (
         <div className="container mt-5">
             <h1>כל הדוחות</h1>
@@ -272,19 +261,37 @@ const Reports: React.FC = () => {
                     {reports.length > 0 ? (
                         <div className="row">
                             {reports.map((report, index) => (
-                                <div className="col-md-4 mb-3" key={index}>
+                                <div className="col-md-6 mb-4" key={index}>
                                     <div className="card">
                                         <div className="card-body">
-                                            <h5 className="card-title">דוח {employeeNames[report.employeeId] || 'טוען...'}</h5>
-                                            <p><strong>סוג:</strong> {report.type}</p>
-                                            <p><strong>כמות:</strong> {report.quantity}</p>
-                                            <p><strong>תעריף:</strong> {report.rate}</p>
-                                            <p><strong>תפקיד:</strong> {report.role}</p>
-                                            <p><strong>פרוייקט:</strong> {report.project}</p>
-                                            <p><strong>מדור:</strong> {report.section}</p>
-                                            <p><strong>סימן/סעיף:</strong> {report.sign}</p>
-                                            <p><strong>סכום סה"כ:</strong> {report.total}</p>
-                                            <p><strong>הערה:</strong> {report.common}</p>
+                                            {/* כותרת הדוח */}
+                                            <h5 className="card-title">
+                                                דוח {employeeNames[report.employeeId] || 'טוען...'}
+                                            </h5>
+
+                                            {/* הצגת ההספקים */}
+                                            <h6 className="mt-3">הספקים:</h6>
+                                            <ul className="list-group mb-3">
+                                                {report.deliverables.map((item, idx) => (
+                                                    <li className="list-group-item" key={`${item.type}-${idx}`}>
+                                                        <p><strong>סוג:</strong> {item.type}</p>
+                                                        <p><strong>כמות:</strong> {item.quantity}</p>
+                                                        <p><strong>תעריף:</strong> {item.rate}</p>
+                                                        <p><strong>תפקיד:</strong> {item.role}</p>
+                                                        <p><strong>פרוייקט:</strong> {item.project}</p>
+                                                        <p><strong>מדור:</strong> {item.section}</p>
+                                                        <p><strong>סימן/סעיף:</strong> {item.sign}</p>
+                                                        <p><strong>סכום סה"כ:</strong> {item.total}</p>
+                                                    </li>
+                                                ))}
+                                            </ul>
+
+                                            {/* הערה לדוח */}
+                                            {report.common && (
+                                                <p className="card-text">
+                                                    <strong>הערה:</strong> {report.common}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -298,5 +305,4 @@ const Reports: React.FC = () => {
         </div>
     );
 };
-
 export default Reports;

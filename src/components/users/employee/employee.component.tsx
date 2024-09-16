@@ -60,7 +60,7 @@ const Employee: React.FC = () => {
                                     <div className="card">
                                         <div className="card-body">
                                             <h5 className="card-title">דוח</h5>
-                                            <p><strong>סוג:</strong> {report.type}</p>
+                                            {/* <p><strong>סוג:</strong> {report.type}</p>
                                             <p><strong>כמות:</strong> {report.quantity}</p>
                                             <p><strong>תעריף:</strong> {report.rate}</p>
                                             <p><strong>תפקיד:</strong> {report.role}</p>
@@ -68,7 +68,7 @@ const Employee: React.FC = () => {
                                             <p><strong>מדור:</strong> {report.section}</p>
                                             <p><strong>סימן/סעיף:</strong> {report.sign}</p>
                                             <p><strong>סכום סה"כ:</strong> {report.total}</p>
-                                            <p><strong>הערה:</strong> {report.common}</p>
+                                            <p><strong>הערה:</strong> {report.common}</p> */}
                                         </div>
                                     </div>
                                 </div>
