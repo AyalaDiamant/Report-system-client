@@ -30,7 +30,8 @@ const App: React.FC = () => {
 
   return (
     <div>
-      {/* כאן יבואו הראוטרים וכל מה שצריך */}
+            <div className="development-banner">האתר בשלבי פיתוח</div>
+
     </div>
   );
 };

@@ -11,7 +11,7 @@ const Employee: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useUser();
 
-    const loadReports = async () => {        
+    const loadReports = async () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -40,28 +40,53 @@ const Employee: React.FC = () => {
         navigate('/report');
     };
 
-    return (
-        <div className="container mt-5">
-            <h1>היי {user?.name}</h1>
-            <h1>עמוד עובד</h1>
-            <Logout />
-            <button onClick={handleReport} className="btn btn-primary mt-3">
-                למילוי דו"ח
-            </button>
+    const handleLogout = () => {
+        // מחיקת פרטי ההתחברות מ-localStorage ו-sessionStorage
+        localStorage.removeItem('token');
+        localStorage.removeItem('isAdmin');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('isAdmin');
 
-            {loading ? (
-                <p>טוען דוחות...</p>
-            ) : (
-                <div>
-                    <h2>כל הדוחות</h2>
-                    {reports.length > 0 ? (
-                        <div className="row">
-                            {reports.map((report, index) => (
-                                <div className="col-md-4 mb-3" key={index}>
-                                    <div className="card">
-                                        <div className="card-body">
-                                            <h5 className="card-title">דוח</h5>
-                                            {/* <p><strong>סוג:</strong> {report.type}</p>
+        // ניתוב לעמוד התחברות
+        navigate('/login');
+    };
+
+    return (
+        <body>
+            <div className="development-banner">האתר בשלבי פיתוח</div>
+
+            <header className="navbar navbar-expand-lg navbar-light bg-light">
+                <div className="container">
+                    <span className="navbar-brand"> {user?.name ? ` שלום ${user.name} ` : ''}
+                    </span>
+                    <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
+                        <ul className="navbar-nav mr-auto">
+                            <li className="nav-item">
+                                <a className="nav-link" href="/report">למילוי דוח</a>
+                            </li>
+                        </ul>
+                        <div className="d-flex align-items-center">
+                            <a onClick={handleLogout} className="logout-link">התנתק</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div className="container mt-5">
+                <h1>עמוד עובד</h1>
+                {loading ? (
+                    <p>טוען דוחות...</p>
+                ) : (
+                    <div>
+                        <h2>כל הדוחות</h2>
+                        {reports.length > 0 ? (
+                            <div className="row">
+                                {reports.map((report, index) => (
+                                    <div className="col-md-4 mb-3" key={index}>
+                                        <div className="card">
+                                            <div className="card-body">
+                                                <h5 className="card-title">דוח</h5>
+                                                {/* <p><strong>סוג:</strong> {report.type}</p>
                                             <p><strong>כמות:</strong> {report.quantity}</p>
                                             <p><strong>תעריף:</strong> {report.rate}</p>
                                             <p><strong>תפקיד:</strong> {report.role}</p>
@@ -70,17 +95,19 @@ const Employee: React.FC = () => {
                                             <p><strong>סימן/סעיף:</strong> {report.sign}</p>
                                             <p><strong>סכום סה"כ:</strong> {report.total}</p>
                                             <p><strong>הערה:</strong> {report.common}</p> */}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p>אין דוחות לעובד זה.</p>
-                    )}
-                </div>
-            )}
-        </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p>אין דוחות לעובד זה.</p>
+                        )}
+                    </div>
+                )}
+            </div>
+        </body>
+
     );
 };
 

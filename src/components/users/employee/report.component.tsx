@@ -330,9 +330,38 @@ const Report: React.FC = () => {
     }
   };
 
+  const handleLogout = () => {
+    // מחיקת פרטי ההתחברות מ-localStorage ו-sessionStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('isAdmin');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('isAdmin');
 
+    // ניתוב לעמוד התחברות
+    navigate('/login');
+  };
 
   return (
+    <body>
+    <div className="development-banner">האתר בשלבי פיתוח</div>
+
+    <header className="navbar navbar-expand-lg navbar-light bg-light">
+                <div className="container">
+                    <span className="navbar-brand"> {user?.name ? ` שלום ${user.name} ` : ''}
+                    </span>
+                    <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
+                        <ul className="navbar-nav mr-auto">
+                            <li className="nav-item">
+                                <a className="nav-link" href="/employee">לעמוד הבית שלך</a>
+                            </li>
+                        </ul>
+                        <div className="d-flex align-items-center">
+                            <a onClick={handleLogout} className="logout-link">התנתק</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
     <div className="container mt-5">
       <div className="row justify-content-center">
         <div className="col-md-12">
@@ -412,6 +441,8 @@ const Report: React.FC = () => {
         </div>
       </div>
     </div>
+    </body>
+
   );
 };
 

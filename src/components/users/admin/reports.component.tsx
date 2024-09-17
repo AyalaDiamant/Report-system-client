@@ -6,6 +6,9 @@ import { EmployeeSummary } from '../../../interfaces/employee.interface';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { getSetting } from '../../../services/setting.service';
+import { useUser } from '../../../contexts/user.context';
+import { useNavigate } from 'react-router-dom';
+
 import ExcelJS from 'exceljs';
 
 const Reports: React.FC = () => {
@@ -14,6 +17,9 @@ const Reports: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [employeeNames, setEmployeeNames] = useState<{ [key: number]: string }>({});
     const [setting, setSetting] = useState<any[]>([]); // התחל עם מערך ריק
+
+    const navigate = useNavigate();
+    const { user } = useUser();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -245,78 +251,170 @@ const Reports: React.FC = () => {
         });
     };
 
+    const handleLogout = () => {
+        // מחיקת פרטי ההתחברות מ-localStorage ו-sessionStorage
+        localStorage.removeItem('token');
+        localStorage.removeItem('isAdmin');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('isAdmin');
+
+        // ניתוב לעמוד התחברות
+        navigate('/login');
+    };
+
     return (
-        <div className="container mt-5">
-            <h1>כל הדוחות</h1>
+        <body>
+            <div className="development-banner">האתר בשלבי פיתוח</div>
+            <header className="navbar navbar-expand-lg navbar-light bg-light">
+                <div className="container">
+                    <span className="navbar-brand"> {user?.name ? ` שלום ${user.name} ` : ''}
+                    </span>
+                    <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
+                        <ul className="navbar-nav mr-auto">
+                            <li className="nav-item">
+                                <a className="nav-link" href="/admin">עמוד ניהול</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="/settings">הגדרות</a>
+                            </li>
+                        </ul>
+                        <div className="d-flex align-items-center">
+                            <a onClick={handleLogout} className="logout-link">התנתק</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
 
-            <button
-                className="btn btn-primary mt-3"
-                onClick={exportToExcel}
-            >
-                יצוא דוחות ל-Excel
-            </button>
-
-            {/* הצגת הדוחות */}
-            {loading ? (
-                <p>טוען דוחות...</p>
-            ) : (
-                <div>
-                    {reports.length > 0 ? (
-                        <div className="row">
-                            {reports.map((report, index) => {
-                                // חישוב הסכום הכולל של כל ההספקים בדוח
-                                const totalSum = report.deliverables.reduce((sum, item) => sum + item.total, 0);
-
-                                return (
-                                    <div className="col-md-6 mb-4" key={index}>
-                                        <div className="card">
-                                            <div className="card-body">
-                                                {/* כותרת הדוח */}
-                                                <h5 className="card-title">
-                                                    דוח {employeeNames[report.employeeId] || 'טוען...'}
-                                                </h5>
-                                                <p>תאריך: {report.date}</p>
-                                                {/* הצגת ההספקים */}
-                                                <h6 className="mt-3">הספקים:</h6>
-                                                <ul className="list-group mb-3">
-                                                    {report.deliverables.map((item, idx) => (
-                                                        <li className="list-group-item" key={`${item.type}-${idx}`}>
-                                                            <p><strong>סוג:</strong> {item.type}</p>
-                                                            <p><strong>כמות:</strong> {item.quantity}</p>
-                                                            <p><strong>תעריף:</strong> {item.rate}</p>
-                                                            <p><strong>תפקיד:</strong> {item.role}</p>
-                                                            <p><strong>פרוייקט:</strong> {item.project}</p>
-                                                            <p><strong>מדור:</strong> {item.section}</p>
-                                                            <p><strong>סימן/סעיף:</strong> {item.sign}</p>
-                                                            <p><strong>סכום סה"כ:</strong> {item.total}</p>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-
-                                                {/* הערה לדוח */}
-                                                {report.common && (
-                                                    <p className="card-text">
-                                                        <strong>הערה:</strong> {report.common}
+            <div className="container mt-5">
+                <h1>כל הדוחות</h1>
+                <button className="btn btn-primary mt-3" onClick={exportToExcel}>
+                    יצוא דוחות ל-Excel
+                </button>
+                {loading ? (
+                    <p>טוען דוחות...</p>
+                ) : (
+                    <div>
+                        {reports.length > 0 ? (
+                            <div className="row">
+                                {reports.map((report, index) => {
+                                    const totalSum = report.deliverables.reduce((sum, item) => sum + item.total, 0);
+                                    return (
+                                        <div className="col-md-6 mb-4" key={index}>
+                                            <div className="card">
+                                                <div className="card-body">
+                                                    <h5 className="card-title">דוח {employeeNames[report.employeeId] || 'טוען...'}</h5>
+                                                    <p>תאריך: {report.date}</p>
+                                                    <h6 className="mt-3">הספקים:</h6>
+                                                    <ul className="list-group mb-3">
+                                                        {report.deliverables.map((item, idx) => (
+                                                            <li className="list-group-item" key={`${item.type}-${idx}`}>
+                                                                <p><strong>סוג:</strong> {item.type}</p>
+                                                                <p><strong>כמות:</strong> {item.quantity}</p>
+                                                                <p><strong>תעריף:</strong> {item.rate}</p>
+                                                                <p><strong>תפקיד:</strong> {item.role}</p>
+                                                                <p><strong>פרוייקט:</strong> {item.project}</p>
+                                                                <p><strong>מדור:</strong> {item.section}</p>
+                                                                <p><strong>סימן/סעיף:</strong> {item.sign}</p>
+                                                                <p><strong>סכום סה"כ:</strong> {item.total}</p>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                    {report.common && (
+                                                        <p className="card-text">
+                                                            <strong>הערה:</strong> {report.common}
+                                                        </p>
+                                                    )}
+                                                    <p className="card-text mt-3">
+                                                        <strong>סה"כ:</strong> {totalSum}
                                                     </p>
-                                                )}
-
-                                                {/* סכום כולל */}
-                                                <p className="card-text mt-3">
-                                                    <strong>סה"כ:</strong> {totalSum}
-                                                </p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    ) : (
-                        <p>אין דוחות</p>
-                    )}
-                </div>
-            )}
-        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <p>אין דוחות</p>
+                        )}
+                    </div>
+                )}
+            </div>
+
+        </body>
     );
 
 };
 export default Reports;
+
+
+// ---------
+// {/* <div className="container mt-5">
+// <h1>כל הדוחות</h1>
+
+// <button
+//     className="btn btn-primary mt-3"
+//     onClick={exportToExcel}
+// >
+//     יצוא דוחות ל-Excel
+// </button>
+
+// {/* הצגת הדוחות */}
+// {loading ? (
+//     <p>טוען דוחות...</p>
+// ) : (
+//     <div>
+//         {reports.length > 0 ? (
+//             <div className="row">
+//                 {reports.map((report, index) => {
+//                     // חישוב הסכום הכולל של כל ההספקים בדוח
+//                     const totalSum = report.deliverables.reduce((sum, item) => sum + item.total, 0);
+
+//                     return (
+//                         <div className="col-md-6 mb-4" key={index}>
+//                             <div className="card">
+//                                 <div className="card-body">
+//                                     {/* כותרת הדוח */}
+//                                     <h5 className="card-title">
+//                                         דוח {employeeNames[report.employeeId] || 'טוען...'}
+//                                     </h5>
+//                                     <p>תאריך: {report.date}</p>
+//                                     {/* הצגת ההספקים */}
+//                                     <h6 className="mt-3">הספקים:</h6>
+//                                     <ul className="list-group mb-3">
+//                                         {report.deliverables.map((item, idx) => (
+//                                             <li className="list-group-item" key={`${item.type}-${idx}`}>
+//                                                 <p><strong>סוג:</strong> {item.type}</p>
+//                                                 <p><strong>כמות:</strong> {item.quantity}</p>
+//                                                 <p><strong>תעריף:</strong> {item.rate}</p>
+//                                                 <p><strong>תפקיד:</strong> {item.role}</p>
+//                                                 <p><strong>פרוייקט:</strong> {item.project}</p>
+//                                                 <p><strong>מדור:</strong> {item.section}</p>
+//                                                 <p><strong>סימן/סעיף:</strong> {item.sign}</p>
+//                                                 <p><strong>סכום סה"כ:</strong> {item.total}</p>
+//                                             </li>
+//                                         ))}
+//                                     </ul>
+
+//                                     {/* הערה לדוח */}
+//                                     {report.common && (
+//                                         <p className="card-text">
+//                                             <strong>הערה:</strong> {report.common}
+//                                         </p>
+//                                     )}
+
+//                                     {/* סכום כולל */}
+//                                     <p className="card-text mt-3">
+//                                         <strong>סה"כ:</strong> {totalSum}
+//                                     </p>
+//                                 </div>
+//                             </div>
+//                         </div>
+//                     );
+//                 })}
+//             </div>
+//         ) : (
+//             <p>אין דוחות</p>
+//         )}
+//     </div>
+// )}
+// </div> */}

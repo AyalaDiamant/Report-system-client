@@ -44,55 +44,59 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-12">
-          <div className="card">
-            <div className="card-header text-center">
-              <h2>הרשמה</h2>
-            </div>
-            <div className="card-body">
-              <form onSubmit={register}>
-                <div className="form-group">
-                  <label htmlFor="name">שם</label>
-                  <input id="name" name="name" type="text" onChange={handleChange} placeholder="שם מלא" className="form-control" required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="password">סיסמא</label>
-                  <input id="password" name="password" type="password" onChange={handleChange} placeholder="סיסמא" className="form-control" required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="address">כתובת</label>
-                  <input id="address" name="address" type="text" onChange={handleChange} placeholder="כתובת" className="form-control" required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="city">עיר</label>
-                  <input id="city" name="city" type="text" onChange={handleChange} placeholder="עיר" className="form-control" required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="phoneNumber">מספר טלפון</label>
-                  <input id="phoneNumber" name="phoneNumber" type="text" onChange={handleChange} placeholder="מספר טלפון" className="form-control" required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="bankName">שם הבנק</label>
-                  <input id="bankName" name="bankName" type="text" onChange={handleChange} placeholder="שם הבנק" className="form-control" required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="branchNumber">מספר סניף</label>
-                  <input id="branchNumber" name="branchNumber" type="number" onChange={handleChange} placeholder="מספר סניף" className="form-control" required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="accountNumber">מספר חשבון</label>
-                  <input id="accountNumber" name="accountNumber" type="text" onChange={handleChange} placeholder="מספר חשבון" className="form-control" required />
-                </div>
-                <button type="submit" className="btn btn-primary btn-block">הרשם</button>
-                {errorMessage && <div className="alert alert-danger mt-2">{errorMessage}</div>}
-              </form>
+    <body>
+      <div className="development-banner">האתר בשלבי פיתוח</div>
+      <div className="container mt-5">
+        <div className="row justify-content-center">
+          <div className="col-md-12">
+            <div className="card">
+              <div className="card-header text-center">
+                <h2>הרשמה</h2>
+              </div>
+              <div className="card-body">
+                <form onSubmit={register}>
+                  <div className="form-group">
+                    <label htmlFor="name">שם</label>
+                    <input id="name" name="name" type="text" onChange={handleChange} placeholder="שם מלא" className="form-control" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="password">סיסמא</label>
+                    <input id="password" name="password" type="password" onChange={handleChange} placeholder="סיסמא" className="form-control" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="address">כתובת</label>
+                    <input id="address" name="address" type="text" onChange={handleChange} placeholder="כתובת" className="form-control" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="city">עיר</label>
+                    <input id="city" name="city" type="text" onChange={handleChange} placeholder="עיר" className="form-control" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="phoneNumber">מספר טלפון</label>
+                    <input id="phoneNumber" name="phoneNumber" type="text" onChange={handleChange} placeholder="מספר טלפון" className="form-control" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="bankName">שם הבנק</label>
+                    <input id="bankName" name="bankName" type="text" onChange={handleChange} placeholder="שם הבנק" className="form-control" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="branchNumber">מספר סניף</label>
+                    <input id="branchNumber" name="branchNumber" type="number" onChange={handleChange} placeholder="מספר סניף" className="form-control" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="accountNumber">מספר חשבון</label>
+                    <input id="accountNumber" name="accountNumber" type="text" onChange={handleChange} placeholder="מספר חשבון" className="form-control" required />
+                  </div>
+                  <button type="submit" className="btn btn-primary btn-block">הרשם</button>
+                  {errorMessage && <div className="alert alert-danger mt-2">{errorMessage}</div>}
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </body>
+
   );
 };
 

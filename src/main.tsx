@@ -44,7 +44,7 @@ const router = createBrowserRouter([
     element: <Report />,
   },
   {
-    path: "/setting",
+    path: "/settings",
     element: <Setting />,
   },
   {
