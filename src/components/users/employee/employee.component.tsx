@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ReportService from '../../../services/report.service';
 import { useUser } from '../../../contexts/user.context';
 import { MyReport } from '../../../interfaces/report.interface';
+import Logout from '../../auth/logout.component';
 
 const Employee: React.FC = () => {
     const [reports, setReports] = useState<MyReport[]>([]);
@@ -11,8 +12,8 @@ const Employee: React.FC = () => {
     const { user } = useUser();
 
     const loadReports = async () => {
-        console.log(user,'pppppppe');
-        
+        console.log(user, 'pppppppe');
+
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -45,6 +46,9 @@ const Employee: React.FC = () => {
 
         navigate('/login');
     };
+    const handleReport = () => {
+        navigate('/report');
+    };
 
     return (
         <div>
@@ -57,7 +61,7 @@ const Employee: React.FC = () => {
                     <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
                         <ul className="navbar-nav mr-auto">
                             <li className="nav-item">
-                                <a className="nav-link" href="/report">למילוי דוח</a>
+                                <span className="nav-link" onClick={handleReport}>למילוי דוח</span>
                             </li>
                         </ul>
                         <div className="d-flex align-items-center">
@@ -80,16 +84,20 @@ const Employee: React.FC = () => {
                                     <div className="col-md-4 mb-3" key={index}>
                                         <div className="card">
                                             <div className="card-body">
-                                                <h5 className="card-title">דוח</h5>
-                                                {/* <p><strong>סוג:</strong> {report.type}</p>
-                                            <p><strong>כמות:</strong> {report.quantity}</p>
-                                            <p><strong>תעריף:</strong> {report.rate}</p>
-                                            <p><strong>תפקיד:</strong> {report.role}</p>
-                                            <p><strong>פרוייקט:</strong> {report.project}</p>
-                                            <p><strong>מדור:</strong> {report.section}</p>
-                                            <p><strong>סימן/סעיף:</strong> {report.sign}</p>
-                                            <p><strong>סכום סה"כ:</strong> {report.total}</p>
-                                            <p><strong>הערה:</strong> {report.common}</p> */}
+                                            <ul className="list-group mb-3">
+                                                        {report.deliverables.map((item, idx) => (
+                                                            <li className="list-group-item" key={`${item.type}-${idx}`}>
+                                                                <p><strong>סוג:</strong> {item.type}</p>
+                                                                <p><strong>כמות:</strong> {item.quantity}</p>
+                                                                <p><strong>תעריף:</strong> {item.rate}</p>
+                                                                <p><strong>תפקיד:</strong> {item.role}</p>
+                                                                <p><strong>פרוייקט:</strong> {item.project}</p>
+                                                                <p><strong>מדור:</strong> {item.section}</p>
+                                                                <p><strong>סימן/סעיף:</strong> {item.sign}</p>
+                                                                <p><strong>סכום סה"כ:</strong> {item.total}</p>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
                                             </div>
                                         </div>
                                     </div>

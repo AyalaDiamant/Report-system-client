@@ -148,6 +148,8 @@ td, th {
   
   .navbar-nav .nav-link {
     padding: 10px 15px;
+    cursor: pointer; 
+
   }
   
   .navbar-nav .nav-link:hover {
