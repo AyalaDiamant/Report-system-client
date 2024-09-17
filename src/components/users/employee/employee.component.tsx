@@ -11,7 +11,7 @@ const Employee: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useUser();
 
-    const loadReports = async () => {
+    const loadReports = async () => {        
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -34,7 +34,7 @@ const Employee: React.FC = () => {
 
     useEffect(() => {
         loadReports();
-    }, []);
+    }, [user, navigate]);
 
     const handleReport = () => {
         navigate('/report');
@@ -42,6 +42,7 @@ const Employee: React.FC = () => {
 
     return (
         <div className="container mt-5">
+            <h1>היי {user?.name}</h1>
             <h1>עמוד עובד</h1>
             <Logout />
             <button onClick={handleReport} className="btn btn-primary mt-3">

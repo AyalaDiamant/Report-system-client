@@ -25,7 +25,7 @@ const Login: React.FC = () => {
       localStorage.setItem('isAdmin', res.data.isAdmin);
       setUser({
         employeeId: res.data.employeeId,
-        name: 'בדיקת שם',
+        name: res.data.name,
       });
       navigate(res.data.isAdmin ? '/admin' : '/employee');
     } catch (error) {
