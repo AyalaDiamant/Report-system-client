@@ -19,8 +19,6 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       const res = await AuthService.login(credentials);
-      console.log(res);
-
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('isAdmin', res.data.isAdmin);
       setUser({
@@ -33,52 +31,41 @@ const Login: React.FC = () => {
       console.error('Login error:', error);
     }
   };
-  const handleLogout = () => {
-    // מחיקת פרטי ההתחברות מ-localStorage ו-sessionStorage
-    localStorage.removeItem('token');
-    localStorage.removeItem('isAdmin');
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('isAdmin');
-
-    // ניתוב לעמוד התחברות
-    navigate('/login');
-  };
 
   return (
-    <body>      
-      <div className="development-banner">האתר בשלבי פיתוח</div>
-      <br />
-      <div className="container mt-5">
-        <div className="row justify-content-center">
-          <div className="col-md-6">
-            <div className="card">
-              <div className="card-header text-center">
-                <h2>התחברות/הרשמה</h2>
-              </div>
-              <div className="card-body">
-                <form onSubmit={login}>
-                  <div className="form-group">
-                    <label htmlFor="name">שם:</label>
-                    <input id="name" name="name" type="text" onChange={handleChange} className="form-control" required />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="password">תעודת זהות:</label>
-                    <input id="password" name="password" type="password" onChange={handleChange} className="form-control" required />
-                  </div>
-                  <div className="d-flex justify-content-center align-items-center mt-3">
-                    <button type="submit" className="btn btn-primary me-2">התחבר</button>
-                    <p className="my-0 mx-2">משתמש חדש?</p>
-                    <button type="button" className="btn btn-secondary ms-2" onClick={() => navigate('/register')}>הירשם</button>
-                  </div>
-                  {errorMessage && <div className="alert alert-danger mt-2">{errorMessage}</div>}
-                </form>
-              </div>
+    <div> {/* שים כאן את התג <div> במקום <body> */}
+    <div className="development-banner">האתר בשלבי פיתוח</div>
+    <br />
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-header text-center">
+              <h2>התחברות/הרשמה</h2>
+            </div>
+            <div className="card-body">
+              <form onSubmit={login}>
+                <div className="form-group">
+                  <label htmlFor="name">שם:</label>
+                  <input id="name" name="name" type="text" onChange={handleChange} className="form-control" required />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="password">תעודת זהות:</label>
+                  <input id="password" name="password" type="password" onChange={handleChange} className="form-control" required />
+                </div>
+                <div className="d-flex justify-content-center align-items-center mt-3">
+                  <button type="submit" className="btn btn-primary me-2">התחבר</button>
+                  <p className="my-0 mx-2">משתמש חדש?</p>
+                  <button type="button" className="btn btn-secondary ms-2" onClick={() => navigate('/register')}>הירשם</button>
+                </div>
+                {errorMessage && <div className="alert alert-danger mt-2">{errorMessage}</div>}
+              </form>
             </div>
           </div>
         </div>
       </div>
-
-    </body>
+    </div>
+  </div> // עדכן כאן גם
   );
 };
 

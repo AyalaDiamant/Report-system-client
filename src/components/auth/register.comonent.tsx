@@ -44,8 +44,9 @@ const Register: React.FC = () => {
   };
 
   return (
-    <body>
+    <div>
       <div className="development-banner">האתר בשלבי פיתוח</div>
+      <br />
       <div className="container mt-5">
         <div className="row justify-content-center">
           <div className="col-md-12">
@@ -95,7 +96,7 @@ const Register: React.FC = () => {
           </div>
         </div>
       </div>
-    </body>
+    </div>
 
   );
 };

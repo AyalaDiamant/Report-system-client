@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Logout from '../../auth/logout.component';
 import { useNavigate } from 'react-router-dom';
 import ReportService from '../../../services/report.service';
 import { useUser } from '../../../contexts/user.context';
@@ -12,6 +11,8 @@ const Employee: React.FC = () => {
     const { user } = useUser();
 
     const loadReports = async () => {
+        console.log(user,'pppppppe');
+        
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -36,23 +37,17 @@ const Employee: React.FC = () => {
         loadReports();
     }, [user, navigate]);
 
-    const handleReport = () => {
-        navigate('/report');
-    };
-
     const handleLogout = () => {
-        // מחיקת פרטי ההתחברות מ-localStorage ו-sessionStorage
         localStorage.removeItem('token');
         localStorage.removeItem('isAdmin');
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('isAdmin');
 
-        // ניתוב לעמוד התחברות
         navigate('/login');
     };
 
     return (
-        <body>
+        <div>
             <div className="development-banner">האתר בשלבי פיתוח</div>
 
             <header className="navbar navbar-expand-lg navbar-light bg-light">
@@ -106,7 +101,7 @@ const Employee: React.FC = () => {
                     </div>
                 )}
             </div>
-        </body>
+        </div>
 
     );
 };

@@ -21,7 +21,7 @@ const Admin: React.FC = () => {
   };
 
   return (
-    <body>
+    <div>
       <div className="development-banner">האתר בשלבי פיתוח</div>
       <header className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container">
@@ -46,7 +46,7 @@ const Admin: React.FC = () => {
       <div className="container mt-5">
         <h1>עמוד ניהול</h1>
       </div>
-    </body>
+    </div>
 
   );
 };

@@ -163,7 +163,7 @@ const Setting: React.FC = () => {
   };
 
   return (
-    <body>
+    <div>
       <div className="development-banner">האתר בשלבי פיתוח</div>
 
       <header className="navbar navbar-expand-lg navbar-light bg-light">
@@ -220,7 +220,7 @@ const Setting: React.FC = () => {
         </div>
       </div>
 
-    </body>
+    </div>
 
   );
 };

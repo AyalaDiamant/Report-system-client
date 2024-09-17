@@ -30,8 +30,7 @@ const App: React.FC = () => {
 
   return (
     <div>
-            <div className="development-banner">האתר בשלבי פיתוח</div>
-
+      {/* <div className="development-banner">האתר בשלבי פיתוח</div> */}
     </div>
   );
 };

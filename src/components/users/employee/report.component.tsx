@@ -85,7 +85,7 @@
 //       });
 //     }
 //   };
-  
+
 //   const send = async (e: React.FormEvent<HTMLFormElement>) => {
 //     e.preventDefault();
 
@@ -238,7 +238,7 @@ const Report: React.FC = () => {
     const { name, value } = e.target;
     setDeliverable({ ...deliverable, [name]: value });
 
-        // בדיקה אם המשתמש בוחר את 'אחר'
+    // בדיקה אם המשתמש בוחר את 'אחר'
     if (name === "type" && value === "אחר") {
       setIsOtherSelected(true);
     } else if (name === "type") {
@@ -247,10 +247,10 @@ const Report: React.FC = () => {
   };
 
   function rateCalculation(): number {
-    console.log(isOtherSelected,' ', otherType.customRate, ' ertyuiop');
-    
-      if (isOtherSelected) {
-    return otherType.customRate;
+    console.log(isOtherSelected, ' ', otherType.customRate, ' ertyuiop');
+
+    if (isOtherSelected) {
+      return otherType.customRate;
     }
     const role = deliverable.role;
     let rate: number | undefined;
@@ -265,25 +265,17 @@ const Report: React.FC = () => {
     return rate !== undefined ? rate : 0;
   }
 
-  // const fixDeliverable = () => {
-  //   deliverable.rate = rateCalculation();
-  //   if (isOtherSelected)
-  //     deliverable.total = deliverable.quantity * otherType.customRate;
-  //   deliverable.total = deliverable.quantity * deliverable.rate;
-  // };
   const fixDeliverable = () => {
     deliverable.rate = rateCalculation(); // מחשב את התעריף לפי התפקיד
-    
+
     if (isOtherSelected) {
       deliverable.total = deliverable.quantity * otherType.customRate;
     } else {
       deliverable.total = deliverable.quantity * deliverable.rate;
     }
   };
-  
-  
 
-  const addDeliverable = () => {    
+  const addDeliverable = () => {
     fixDeliverable();
     if (deliverable.type && deliverable.quantity && deliverable.role && deliverable.project) {
       setReport(prevState => ({
@@ -304,14 +296,14 @@ const Report: React.FC = () => {
       });
     }
   };
-  
+
   const send = async (e: React.FormEvent<HTMLFormElement>) => {
+
     e.preventDefault();
     addDeliverable();
 
-    // אם יש הספק אחרון שמולא ולא נוסף, נוסיף אותו למערך בצורה סינכרונית
     if (deliverable.type && deliverable.quantity && deliverable.role && deliverable.project) {
-      report.deliverables.push(deliverable);  // הוספת ההספק ישירות למערך לפני שליחה
+      report.deliverables.push(deliverable);
     }
 
     report.employeeId = user?.employeeId ?? 0;
@@ -342,111 +334,111 @@ const Report: React.FC = () => {
   };
 
   return (
-    <body>
-    <div className="development-banner">האתר בשלבי פיתוח</div>
-
-    <header className="navbar navbar-expand-lg navbar-light bg-light">
-                <div className="container">
-                    <span className="navbar-brand"> {user?.name ? ` שלום ${user.name} ` : ''}
-                    </span>
-                    <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
-                        <ul className="navbar-nav mr-auto">
-                            <li className="nav-item">
-                                <a className="nav-link" href="/employee">לעמוד הבית שלך</a>
-                            </li>
-                        </ul>
-                        <div className="d-flex align-items-center">
-                            <a onClick={handleLogout} className="logout-link">התנתק</a>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-12">
-          <div className="card">
-            <div className="card-header text-center">
-              <h2>מילוי דו"ח</h2>
+    <div>
+      <div className="development-banner">האתר בשלבי פיתוח</div>
+      <header className="navbar navbar-expand-lg navbar-light bg-light">
+        <div className="container">
+          <span className="navbar-brand"> {user?.name ? ` שלום ${user.name} ` : ''}
+          </span>
+          <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
+            <ul className="navbar-nav mr-auto">
+              <li className="nav-item">
+                <a className="nav-link" href="/employee">לעמוד הבית שלך</a>
+              </li>
+            </ul>
+            <div className="d-flex align-items-center">
+              <a onClick={handleLogout} className="logout-link">התנתק</a>
             </div>
-            <div className="card-body">
-              <form onSubmit={send}>
-                <div className="form-group">
-                  <label htmlFor="type">סוג</label>
-                  <select id="type" name="type" value={deliverable.type} onChange={handleChange} className="form-control" required>                     <option value="">בחר סוג</option>
-                  {Object.values(Enums.ReportType).map((type) => (
-                      <option key={type} value={type}>{type}</option>
-                    ))}
-                    <option value="אחר">אחר</option>
-                  </select>
-                </div>
+          </div>
+        </div>
+      </header>
 
-                {/* שדות 'אחר' */}
-                {isOtherSelected && (
-                  <>
-                    <div className="form-group">
-                      <label htmlFor="customRate">תעריף</label>
-                      <input id="customRate" name="customRate" type="number" value={otherType.customRate} onChange={(e) => setOtherType({ ...otherType, customRate: parseFloat(e.target.value) })} className="form-control" required />
-                    </div>
-                  </>
-                )}
+      <div className="container mt-5">
+        <div className="row justify-content-center">
+          <div className="col-md-12">
+            <div className="card">
+              <div className="card-header text-center">
+                <h2>מילוי דו"ח</h2>
+              </div>
+              <div className="card-body">
+                <form onSubmit={send}>
+                  <div className="form-group">
+                    <label htmlFor="type">סוג</label>
+                    <select id="type" name="type" value={deliverable.type} onChange={handleChange} className="form-control" required>                     <option value="">בחר סוג</option>
+                      {Object.values(Enums.ReportType).map((type) => (
+                        <option key={type} value={type}>{type}</option>
+                      ))}
+                      <option value="אחר">אחר</option>
+                    </select>
+                  </div>
 
-                <div className="form-group">
-                  <label htmlFor="quantity">כמות</label>
-                  <input id="quantity" name="quantity" type="number" value={deliverable.quantity} onChange={handleChange} placeholder="כמות" className="form-control" required />
-                </div>
+                  {/* שדות 'אחר' */}
+                  {isOtherSelected && (
+                    <>
+                      <div className="form-group">
+                        <label htmlFor="customRate">תעריף</label>
+                        <input id="customRate" name="customRate" type="number" value={otherType.customRate} onChange={(e) => setOtherType({ ...otherType, customRate: parseFloat(e.target.value) })} className="form-control" required />
+                      </div>
+                    </>
+                  )}
 
-                <div className="form-group">
-                  <label htmlFor="role">תפקיד</label>
-                  <select id="role" name="role" value={deliverable.role} onChange={handleChange} className="form-control" required>
-                    <option value="">בחר תפקיד</option>
-                    {Object.values(Enums.ReportRole).map((role) => (
-                      <option key={role} value={role}>{role}</option>
-                    ))}
-                  </select>
-                </div>
+                  <div className="form-group">
+                    <label htmlFor="quantity">כמות</label>
+                    <input id="quantity" name="quantity" type="number" value={deliverable.quantity} onChange={handleChange} placeholder="כמות" className="form-control" required />
+                  </div>
 
-                <div className="form-group">
-                  <label htmlFor="project">פרוייקט</label>
-                  <input id="project" name="project" type="text" value={deliverable.project} onChange={handleChange} placeholder="פרוייקט" className="form-control" required />
-                </div>
+                  <div className="form-group">
+                    <label htmlFor="role">תפקיד</label>
+                    <select id="role" name="role" value={deliverable.role} onChange={handleChange} className="form-control" required>
+                      <option value="">בחר תפקיד</option>
+                      {Object.values(Enums.ReportRole).map((role) => (
+                        <option key={role} value={role}>{role}</option>
+                      ))}
+                    </select>
+                  </div>
 
-                <div className="form-group">
-                  <label htmlFor="section">מדור</label>
-                  <input id="section" name="section" type="text" value={deliverable.section} onChange={handleChange} placeholder="מדור" className="form-control" required />
-                </div>
+                  <div className="form-group">
+                    <label htmlFor="project">פרוייקט</label>
+                    <input id="project" name="project" type="text" value={deliverable.project} onChange={handleChange} placeholder="פרוייקט" className="form-control" required />
+                  </div>
 
-                <div className="form-group">
-                  <label htmlFor="sign">סימן/סעיף</label>
-                  <input id="sign" name="sign" type="text" value={deliverable.sign} onChange={handleChange} placeholder="סימן/סעיף" className="form-control" required />
-                </div>
+                  <div className="form-group">
+                    <label htmlFor="section">מדור</label>
+                    <input id="section" name="section" type="text" value={deliverable.section} onChange={handleChange} placeholder="מדור" className="form-control" required />
+                  </div>
 
-                <div className="form-group">
-                  <label htmlFor="common">הערה</label>
-                  <input id="common" name="common" type="text" value={report.common} onChange={(e) => setReport({ ...report, common: e.target.value })} placeholder="הערה כללית" className="form-control" />
-                </div>
+                  <div className="form-group">
+                    <label htmlFor="sign">סימן/סעיף</label>
+                    <input id="sign" name="sign" type="text" value={deliverable.sign} onChange={handleChange} placeholder="סימן/סעיף" className="form-control" required />
+                  </div>
 
-                <button type="button" className="btn btn-secondary btn-block" onClick={addDeliverable}>
-                  הוסף הספק
-                </button>
+                  <div className="form-group">
+                    <label htmlFor="common">הערה</label>
+                    <input id="common" name="common" type="text" value={report.common} onChange={(e) => setReport({ ...report, common: e.target.value })} placeholder="הערה כללית" className="form-control" />
+                  </div>
 
-                <button type="submit" className="btn btn-primary btn-block mt-2">
-                  שלח
-                </button>
+                  <button type="button" className="btn btn-secondary btn-block" onClick={addDeliverable}>
+                    הוסף הספק
+                  </button>
 
-                {errorMessage && <div className="alert alert-danger mt-2">{errorMessage}</div>}
-              </form>
+                  <button type="submit" className="btn btn-primary btn-block mt-2">
+                    שלח
+                  </button>
+
+                  {errorMessage && <div className="alert alert-danger mt-2">{errorMessage}</div>}
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    </body>
 
   );
 };
 
 export default Report;
+
 // // --------------------3
 // // import React, { useEffect, useState } from 'react';
 // // import { useNavigate } from 'react-router-dom';

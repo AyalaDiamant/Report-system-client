@@ -16,13 +16,13 @@ const Logout: React.FC = () => {
   };
 
   return (
-    <body>
+    <div>
       <div className="development-banner">האתר בשלבי פיתוח</div>
       <br />
       <button onClick={handleLogout} className="btn btn-danger">
         התנתק
       </button>
-    </body>
+    </div>
   );
 };
 
