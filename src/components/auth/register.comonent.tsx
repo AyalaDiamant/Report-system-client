@@ -38,7 +38,7 @@ const Register: React.FC = () => {
       });
       navigate('/login');
     } catch (error) {
-      setErrorMessage('Registration failed. Please try again.');
+      setErrorMessage('ההרשמה נכשלה. אנא נסה שוב.');
       console.error('Registration error:', error);
     }
   };

@@ -27,7 +27,7 @@ const Login: React.FC = () => {
       });
       navigate(res.data.isAdmin ? '/admin' : '/employee');
     } catch (error) {
-      setErrorMessage('Invalid credentials. Please try again.');
+      setErrorMessage('שדות לא חוקיים. אנא נסה שוב.');
       console.error('Login error:', error);
     }
   };
