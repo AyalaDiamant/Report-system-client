@@ -8,7 +8,6 @@ import { saveAs } from 'file-saver';
 import { getSetting } from '../../../services/setting.service';
 import { useUser } from '../../../contexts/user.context';
 import { useNavigate } from 'react-router-dom';
-
 import ExcelJS from 'exceljs';
 
 const Reports: React.FC = () => {
@@ -252,15 +251,21 @@ const Reports: React.FC = () => {
     };
 
     const handleLogout = () => {
-        // מחיקת פרטי ההתחברות מ-localStorage ו-sessionStorage
         localStorage.removeItem('token');
         localStorage.removeItem('isAdmin');
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('isAdmin');
 
-        // ניתוב לעמוד התחברות
         navigate('/login');
     };
+
+    const handleHome = () => {
+        navigate('/admin');
+      };
+    
+      const handleSetting = () => {
+        navigate('/settings');
+      };
 
     return (
         <div>
@@ -272,10 +277,10 @@ const Reports: React.FC = () => {
                     <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
                         <ul className="navbar-nav mr-auto">
                             <li className="nav-item">
-                                <a className="nav-link" href="/admin">עמוד ניהול</a>
+                                <span className="nav-link" onClick={handleHome}>עמוד הבית</span>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="/settings">הגדרות</a>
+                                <span className="nav-link" onClick={handleSetting}>הגדרות</span>
                             </li>
                         </ul>
                         <div className="d-flex align-items-center">
@@ -287,7 +292,7 @@ const Reports: React.FC = () => {
 
             <div className="container mt-5">
                 <h1>כל הדוחות</h1>
-                <button className="btn btn-primary mt-3" onClick={exportToExcel}>
+                <button className="btn btn-secondary marginBottun mt-3" onClick={exportToExcel}>
                     יצוא דוחות ל-Excel
                 </button>
                 {loading ? (

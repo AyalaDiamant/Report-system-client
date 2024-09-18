@@ -152,15 +152,29 @@ const Setting: React.FC = () => {
   };
 
   const handleLogout = () => {
-    // מחיקת פרטי ההתחברות מ-localStorage ו-sessionStorage
     localStorage.removeItem('token');
     localStorage.removeItem('isAdmin');
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('isAdmin');
 
-    // ניתוב לעמוד התחברות
     navigate('/login');
   };
+
+  const handleHome = () => {
+    navigate('/admin');
+  };
+
+  const handleReports = () => {
+    navigate('/reports');
+  };
+
+  const handleHomeWait = () => {
+    setTimeout(() => {
+      navigate('/admin');
+    }, 2000);
+  };
+
+
 
   return (
     <div>
@@ -173,10 +187,10 @@ const Setting: React.FC = () => {
           <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
-                <a className="nav-link" href="/admin">עמוד ניהול</a>
+                <span className="nav-link" onClick={handleHome}>עמוד הבית</span>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/reports">דוחות</a>
+                <span className="nav-link" onClick={handleReports}>דוחות</span>
               </li>
             </ul>
             <div className="d-flex align-items-center">
@@ -211,8 +225,10 @@ const Setting: React.FC = () => {
                     <label htmlFor="rateIncrease">העלאת תעריף</label>
                     <input id="rateIncrease" type="number" className="form-control" value={rateIncrease} onChange={(e) => setRateIncrease(e.target.valueAsNumber || '')} required />
                   </div>
-                  <button type="submit" className="btn btn-primary">שמור</button>
-                  {message && <p>{message}</p>}
+                  <div className='d-flex align-items-center mt-3'>
+                    <button type="submit" className="btn btn-secondary" onClick={handleHomeWait}>שמור</button>
+                    {message && <p className='marginTop'>{message}</p>}
+                  </div>
                 </form>
               </div>
             </div>

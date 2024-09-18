@@ -10,15 +10,22 @@ const Admin: React.FC = () => {
   const { user } = useUser();
 
   const handleLogout = () => {
-    // מחיקת פרטי ההתחברות מ-localStorage ו-sessionStorage
     localStorage.removeItem('token');
     localStorage.removeItem('isAdmin');
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('isAdmin');
 
-    // ניתוב לעמוד התחברות
     navigate('/login');
   };
+
+  const handleSetting = () => {
+    navigate('/settings');
+  };
+
+  const handleReports = () => {
+    navigate('/reports');
+  };
+
 
   return (
     <div>
@@ -30,10 +37,10 @@ const Admin: React.FC = () => {
           <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
-                <a className="nav-link" href="/settings">הגדרות</a>
+                <span className="nav-link" onClick={handleSetting}>הגדרות</span>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/reports">דוחות</a>
+                <span className="nav-link" onClick={handleReports}>דוחות</span>
               </li>
             </ul>
             <div className="d-flex align-items-center">

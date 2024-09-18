@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ReportService from '../../../services/report.service';
 import { useUser } from '../../../contexts/user.context';
 import { MyReport } from '../../../interfaces/report.interface';
-import Logout from '../../auth/logout.component';
+// import Logout from '../../auth/logout.component';
 
 const Employee: React.FC = () => {
     const [reports, setReports] = useState<MyReport[]>([]);
@@ -80,11 +80,16 @@ const Employee: React.FC = () => {
                         <h2>כל הדוחות</h2>
                         {reports.length > 0 ? (
                             <div className="row">
-                                {reports.map((report, index) => (
-                                    <div className="col-md-4 mb-3" key={index}>
-                                        <div className="card">
-                                            <div className="card-body">
-                                            <ul className="list-group mb-3">
+                                {reports.map((report, index) => {
+                                    const totalSum = report.deliverables.reduce((sum, item) => sum + item.total, 0);
+
+                                    return (
+                                        <div className="col-md-4 mb-3" key={index}>
+                                            <div className="card">
+                                                <div className="card-body">
+                                                    <p>תאריך: {report.date}</p>
+                                                    <h6 className="mt-3">הספקים:</h6>
+                                                    <ul className="list-group mb-3">
                                                         {report.deliverables.map((item, idx) => (
                                                             <li className="list-group-item" key={`${item.type}-${idx}`}>
                                                                 <p><strong>סוג:</strong> {item.type}</p>
@@ -98,10 +103,21 @@ const Employee: React.FC = () => {
                                                             </li>
                                                         ))}
                                                     </ul>
+
+                                                    {report.common && (
+                                                        <p className="card-text">
+                                                            <strong>הערה:</strong> {report.common}
+                                                        </p>
+                                                    )}
+
+                                                    <p className="card-text mt-3">
+                                                        <strong>סה"כ:</strong> {totalSum}
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         ) : (
                             <p>אין דוחות לעובד זה.</p>

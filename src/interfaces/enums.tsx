@@ -6,7 +6,7 @@ const ReportType = Object.freeze({
   
   const ReportRole = Object.freeze({
     BIKORET: 'ביקורת',
-    FIX_BIKORET: 'תיקוני ביקרות',
+    FIX_BIKORET: 'תיקוני ביקורת',
     HGAA: 'הגהה'
   });
   

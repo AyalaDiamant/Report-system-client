@@ -88,8 +88,10 @@ const Register: React.FC = () => {
                     <label htmlFor="accountNumber">מספר חשבון</label>
                     <input id="accountNumber" name="accountNumber" type="text" onChange={handleChange} placeholder="מספר חשבון" className="form-control" required />
                   </div>
-                  <button type="submit" className="btn btn-primary btn-block">הרשם</button>
-                  {errorMessage && <div className="alert alert-danger mt-2">{errorMessage}</div>}
+                  <div className='d-flex align-items-center mt-3'>
+                    <button type="submit" className="btn btn-secondary btn-block">הרשם</button>
+                    {errorMessage && <div className="alert alert-danger mt-2">{errorMessage}</div>}
+                  </div>
                 </form>
               </div>
             </div>

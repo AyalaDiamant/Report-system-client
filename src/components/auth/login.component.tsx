@@ -54,7 +54,7 @@ const Login: React.FC = () => {
                   <input id="password" name="password" type="password" onChange={handleChange} className="form-control" required />
                 </div>
                 <div className="d-flex justify-content-center align-items-center mt-3">
-                  <button type="submit" className="btn btn-primary me-2">התחבר</button>
+                  <button type="submit" className="btn btn-secondary me-2">התחבר</button>
                   <p className="my-0 mx-2">משתמש חדש?</p>
                   <button type="button" className="btn btn-secondary ms-2" onClick={() => navigate('/register')}>הירשם</button>
                 </div>
