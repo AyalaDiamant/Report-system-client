@@ -211,3 +211,101 @@ th {
     margin-top: 15px;
     margin-right: 5px;
 }
+
+/* סגנונות כלליים */
+.reports-container {
+    padding: 20px;
+}
+
+.reports-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* עיצוב כרטיס הדוח */
+.report-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 8px 8px 0 0;
+}
+
+.card-title {
+    font-size: 18px;
+    margin: 0;
+}
+
+/* עיצוב פרטי הדוח */
+.list-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.list-item p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.total-sum {
+    font-weight: bold;
+    font-size: 16px;
+    color: #1564b8;
+    margin-top: 10px;
+}
+
+/* עיצוב אם אין דוחות */
+.no-reports {
+    color: #777;
+    font-style: italic;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* טיונינג קטן */
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+/* ------ */
+
+/* עיצוב כללי של הכרטיסים */
+.report-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 15px;
+    margin: 0 auto; /* מרכז את הכרטיסים בתוך העמודה */
+    max-width: 100%; /* מונע מהכרטיסים להתפשט מעבר לרוחב המסך */
+}
+
+
+/* עיצוב התאריך ופרטי הדוח */
+.report-date {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* עיצוב פרטי הדוח */
+.list-group-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.list-group-item p {
+    margin: 0;
+    font-size: 14px;
+}
+
+
+

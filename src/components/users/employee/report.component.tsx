@@ -117,14 +117,13 @@ const Report: React.FC = () => {
     return count;
   }
 
-
   async function exportStyledReportToExcel(report: MyReport) {    
     const today = new Date();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0'); // חודש (שניים ספרות)
-    const year = today.getFullYear().toString().slice(-2); // שתי ספרות אחרונות של השנה
+    const month = (today.getMonth() + 1).toString().padStart(2, '0'); 
+    const year = today.getFullYear().toString().slice(-2); 
     
     const formattedDate = `${month}-${year}`;
-    console.log(formattedDate); // חודש-שנה (שתי ספרות אחרונות)
+    console.log(formattedDate); 
     
     const date = formattedDate
     const totalSum:number = totalSumCalculation(report);
@@ -183,7 +182,6 @@ const Report: React.FC = () => {
   }
 
   const send = async (e: React.FormEvent<HTMLFormElement>) => {
-
     e.preventDefault();
     addDeliverable();
 

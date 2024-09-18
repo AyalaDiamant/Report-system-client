@@ -261,11 +261,11 @@ const Reports: React.FC = () => {
 
     const handleHome = () => {
         navigate('/admin');
-      };
-    
-      const handleSetting = () => {
+    };
+
+    const handleSetting = () => {
         navigate('/settings');
-      };
+    };
 
     return (
         <div>
@@ -305,9 +305,10 @@ const Reports: React.FC = () => {
                                     const totalSum = report.deliverables.reduce((sum, item) => sum + item.total, 0);
                                     return (
                                         <div className="col-md-6 mb-4" key={index}>
-                                            <div className="card">
-                                                <div className="card-body">
-                                                    <h5 className="card-title">דוח {employeeNames[report.employeeId] || 'טוען...'}</h5>
+                                                <div className="card report-card">
+                                                    <div  className="card-header">
+                                                        <h5 className="card-title">דוח {employeeNames[report.employeeId] || 'טוען...'}</h5>
+                                                    </div>
                                                     <p>תאריך: {report.date}</p>
                                                     <h6 className="mt-3">הספקים:</h6>
                                                     <ul className="list-group mb-3">
@@ -333,7 +334,6 @@ const Reports: React.FC = () => {
                                                         <strong>סה"כ:</strong> {totalSum}
                                                     </p>
                                                 </div>
-                                            </div>
                                         </div>
                                     );
                                 })}
