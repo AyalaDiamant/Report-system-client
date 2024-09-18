@@ -13,13 +13,6 @@ export interface Employee {
 }
 
 export interface EmployeeSummary{
-    // name: string,
-    // netSalary?: number;           // שכר נטו (אופציונלי)
-    // grossSalary?: number;         // שכר ברוטו (אופציונלי)
-    // deduction?: number;           // סכום להורדה (אופציונלי)
-    // addition?: number;            // סכום להוספה (אופציונלי)
-    // transferredFrom?: string;     // שם עובד שממנו הועבר (אופציונלי)
-    // transferredTo?: string;       // שם עובד שאליו הועבר (אופציונלי)
     _id: number;
     name: string;
     totalNetSalary: number;

@@ -9,7 +9,7 @@ const getEmployeeById = async (employeeId: number) => {
         return response.data;
     } catch (error) {
         console.error('Error fetching employee:', error);
-        throw error; // throwing error so it can be caught where the function is called
+        throw error;
     }
 };
 

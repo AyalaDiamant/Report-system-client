@@ -75,53 +75,6 @@ const Employee: React.FC = () => {
                 {loading ? (
                     <p>טוען דוחות...</p>
                 ) : (
-                    // <div>
-                    //     <h2>כל הדוחות</h2>
-                    //     {reports.length > 0 ? (
-                    //         <div className="row">
-                    //             {reports.map((report, index) => {
-                    //                 const totalSum = report.deliverables.reduce((sum, item) => sum + item.total, 0);
-
-                    //                 return (
-                    //                     <div className="col-md-4 mb-3" key={index}>
-                    //                         <div className="card">
-                    //                             <div className="card-body">
-                    //                                 <p>תאריך: {report.date}</p>
-                    //                                 <h6 className="mt-3">הספקים:</h6>
-                    //                                 <ul className="list-group mb-3">
-                    //                                     {report.deliverables.map((item, idx) => (
-                    //                                         <li className="list-group-item" key={`${item.type}-${idx}`}>
-                    //                                             <p><strong>סוג:</strong> {item.type}</p>
-                    //                                             <p><strong>כמות:</strong> {item.quantity}</p>
-                    //                                             <p><strong>תעריף:</strong> {item.rate}</p>
-                    //                                             <p><strong>תפקיד:</strong> {item.role}</p>
-                    //                                             <p><strong>פרוייקט:</strong> {item.project}</p>
-                    //                                             <p><strong>מדור:</strong> {item.section}</p>
-                    //                                             <p><strong>סימן/סעיף:</strong> {item.sign}</p>
-                    //                                             <p><strong>סכום סה"כ:</strong> {item.total}</p>
-                    //                                         </li>
-                    //                                     ))}
-                    //                                 </ul>
-
-                    //                                 {report.common && (
-                    //                                     <p className="card-text">
-                    //                                         <strong>הערה:</strong> {report.common}
-                    //                                     </p>
-                    //                                 )}
-
-                    //                                 <p className="card-text mt-3">
-                    //                                     <strong>סה"כ:</strong> {totalSum}
-                    //                                 </p>
-                    //                             </div>
-                    //                         </div>
-                    //                     </div>
-                    //                 );
-                    //             })}
-                    //         </div>
-                    //     ) : (
-                    //         <p>אין דוחות לעובד זה.</p>
-                    //     )}
-                    // </div>
                     <div className="reports-container">
                         <h2 className="reports-title">כל הדוחות</h2>
                         {reports.length > 0 ? (

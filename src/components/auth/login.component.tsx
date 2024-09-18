@@ -65,7 +65,7 @@ const Login: React.FC = () => {
         </div>
       </div>
     </div>
-  </div> // עדכן כאן גם
+  </div> 
   );
 };
 

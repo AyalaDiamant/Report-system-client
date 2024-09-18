@@ -1,10 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-// import App from './App';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-// import React from 'react';
 
 // ייבוא קומפוננטות לצורך הניווטים
 import Login from './components/auth/login.component';
@@ -13,7 +11,6 @@ import Admin from './components/users/admin/admin.component';
 import Employee from './components/users/employee/employee.component';
 import Setting from './components/users/admin/setting.component';
 import Reports from './components/users/admin/reports.component';
-import Logout from './components/auth/logout.component';
 import Report from './components/users/employee/report.component';
 import { UserProvider } from './contexts/user.context';
 
@@ -34,10 +31,6 @@ const router = createBrowserRouter([
   {
     path: "/employee",
     element: <Employee />,
-  },
-  {
-    path: "/logout",
-    element: <Logout />,
   },
   {
     path: "/report",
