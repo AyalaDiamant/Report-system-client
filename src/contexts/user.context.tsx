@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 // יצירת ה-Context עבור המשתמש
 interface UserContextType {
@@ -21,9 +21,33 @@ export const useUser = () => {
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<{ employeeId: number, name: string } | null>(null);
 
+  // טעינת המשתמש מה-localStorage כאשר הקומפוננטה נטענת
+  useEffect(() => {
+    try {
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+      }
+    } catch (error) {
+      console.error("Error parsing user data from localStorage:", error);
+      // במקרה שיש שגיאה בהמרה, אפשרי למחוק את הפריט מה-localStorage או לטפל בזה בצורה אחרת
+      localStorage.removeItem('user');
+    }
+  }, []);
+
+  // שמירת המשתמש ב-localStorage כאשר הוא משתנה
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [user]);
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );
 };
+

@@ -10,9 +10,7 @@ const Employee: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useUser();
 
-    const loadReports = async () => {
-        console.log(user, 'pppppppe');
-
+    const loadReports = async () => {        
         try {
             const token = localStorage.getItem('token');
             if (!token) {

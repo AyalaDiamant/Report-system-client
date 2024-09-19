@@ -18,7 +18,6 @@ const Register: React.FC = () => {
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
   const navigate = useNavigate();
-
   const { setUser } = useUser();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,14 +28,17 @@ const Register: React.FC = () => {
   const register = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      // Perform registration
       const res = await AuthService.register(employee);
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('isAdmin', res.data.newEmployee.isAdmin);
+      // Login after registration
+      const loginRes = await AuthService.login({ name: employee.name, password: employee.password });
+      localStorage.setItem('token', loginRes.data.token);
+      localStorage.setItem('isAdmin', loginRes.data.isAdmin);
       setUser({
-        employeeId: res.data.employeeId,
-        name: 'בדיקת שם',
+        employeeId: loginRes.data.employeeId,
+        name: loginRes.data.name,
       });
-      navigate('/login');
+      navigate(loginRes.data.isAdmin ? '/admin' : '/employee');
     } catch (error) {
       setErrorMessage('ההרשמה נכשלה. אנא נסה שוב.');
       console.error('Registration error:', error);
@@ -99,8 +101,8 @@ const Register: React.FC = () => {
         </div>
       </div>
     </div>
-
   );
 };
 
 export default Register;
+
