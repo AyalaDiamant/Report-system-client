@@ -5,7 +5,7 @@ const API_URL = 'http://localhost:3000/api/report';
 
 // פונקציה להוספת דוח
 const addReport = async (reportData: MyReport) => {
-  const token = localStorage.getItem('token'); // שליפת הטוקן מה-LocalStorage
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token'); // שליפת הטוקן מה-LocalStorage
   if (!token) {
     throw new Error('No token found. User is not authenticated.');
   }
