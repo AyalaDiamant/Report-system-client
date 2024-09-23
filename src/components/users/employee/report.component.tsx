@@ -21,6 +21,7 @@ const Report: React.FC = () => {
     project: '',
     section: '',
     sign: '',
+    seif:'',
     total: 0
   });
   const [report, setReport] = useState<MyReport>({
@@ -29,7 +30,7 @@ const Report: React.FC = () => {
     deliverables: [],
     common: ''
   });
-
+  const [totalSum, setTotalSum] = useState<number>(0); // הוספת מצב לסכום הכולל
   const [otherType, setOtherType] = useState({ customType: '', customRate: 0 });
   const [isOtherSelected, setIsOtherSelected] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -62,7 +63,10 @@ const Report: React.FC = () => {
     } else if (name === "type") {
       setIsOtherSelected(false);
     }
-    localStorage.setItem('other',JSON.stringify(isOtherSelected));
+    const rate = rateCalculation();
+    const total = deliverable.quantity * (isOtherSelected ? otherType.customRate : rate);
+    setDeliverable(prev => ({ ...prev, rate, total }));
+    setTotalSum(totalSumCalculation({ ...report, deliverables: [...report.deliverables, { ...deliverable, total }] }));
   };
 
   function rateCalculation(): number {
@@ -114,9 +118,11 @@ const Report: React.FC = () => {
         project: '',
         section: '',
         sign: '',
+        seif: '',
         total: 0
       });
     }
+
   };
 
   const totalSumCalculation = (report: MyReport): number => {
@@ -153,7 +159,7 @@ const Report: React.FC = () => {
     });
 
     worksheet.addRow([]);
-    worksheet.addRow(['סוג', 'כמות', 'תעריף', 'תפקיד', 'פרויקט', 'מדור', 'סימן/סעיף', 'סכום סה"כ'])
+    worksheet.addRow(['סוג', 'כמות', 'תעריף', 'תפקיד', 'פרויקט', 'מדור','סימן', 'סעיף', 'סכום סה"כ'])
       .eachCell({ includeEmpty: true }, (cell) => {
         cell.font = { bold: true };
         cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFF00' } };
@@ -169,6 +175,7 @@ const Report: React.FC = () => {
         deliverable.project,
         deliverable.section,
         deliverable.sign,
+        deliverable.seif,
         deliverable.total
       ]);
     });
@@ -274,22 +281,6 @@ const Report: React.FC = () => {
                   )}
 
                   <div className="form-group">
-                    <label htmlFor="quantity">כמות</label>
-                    <input id="quantity" name="quantity" type="number" value={deliverable.quantity} onChange={handleChange} placeholder="כמות" className="form-control" required />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="role">תפקיד</label>
-                    <select id="role" name="role" value={deliverable.role} onChange={handleChange} className="form-control" required={!isOtherSelected}>
-                      <option value="">בחר תפקיד</option>
-                      {setting?.roles?.map((role) => (
-                        <option key={role._id} value={role.name}>
-                          {role.name}
-                        </option>
-                      )) || null}
-                    </select>
-                  </div>
-
-                  <div className="form-group">
                     <label htmlFor="project">פרוייקט</label>
                     <select
                       id="project"
@@ -307,19 +298,44 @@ const Report: React.FC = () => {
                       )) || null}
                     </select>
                   </div>
+
+                  <div className="form-group">
+                    <label htmlFor="role">תפקיד</label>
+                    <select id="role" name="role" value={deliverable.role} onChange={handleChange} className="form-control" required={!isOtherSelected}>
+                      <option value="">בחר תפקיד</option>
+                      {setting?.roles?.map((role) => (
+                        <option key={role._id} value={role.name}>
+                          {role.name}
+                        </option>
+                      )) || null}
+                    </select>
+                  </div>
+
                   <div className="form-group">
                     <label htmlFor="section">מדור</label>
                     <input id="section" name="section" type="text" value={deliverable.section} onChange={handleChange} placeholder="מדור" className="form-control" required />
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="sign">סימן/סעיף</label>
-                    <input id="sign" name="sign" type="text" value={deliverable.sign} onChange={handleChange} placeholder="סימן/סעיף" className="form-control" required />
+                    <label htmlFor="sign">סימן</label>
+                    <input id="sign" name="sign" type="text" value={deliverable.sign} onChange={handleChange} placeholder="סימן" className="form-control" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="sign">סעיף</label>
+                    <input id="seif" name="seif" type="text" value={deliverable.seif} onChange={handleChange} placeholder="סעיף" className="form-control" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="quantity">כמות</label>
+                    <input id="quantity" name="quantity" type="number" value={deliverable.quantity} onChange={handleChange} placeholder="כמות" className="form-control" required />
                   </div>
 
                   <div className="form-group">
                     <label htmlFor="common">הערה</label>
                     <input id="common" name="common" type="text" value={report.common} onChange={(e) => setReport({ ...report, common: e.target.value })} placeholder="הערה כללית" className="form-control" />
+                  </div>
+                  <div className="form-group">
+                    <label>סה"כ רווח:</label>
+                    <input type="text" value={totalSum} readOnly className="form-control" />
                   </div>
                   <div className='d-flex align-items-center mt-3 gap-2'>
                     <button type="button" className="btn btn-secondary" onClick={addDeliverable}>
