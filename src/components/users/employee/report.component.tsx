@@ -5,11 +5,13 @@ import Enums from '../../../interfaces/enums';
 import { useUser } from '../../../contexts/user.context';
 import { getSetting } from '../../../services/setting.service';
 import { MyReport, Deliverable } from '../../../interfaces/report.interface';
+import { Settings } from '../../../interfaces/settings.interface';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import ExcelJS from 'exceljs';
 
 const Report: React.FC = () => {
+
   const { user } = useUser();
   const [deliverable, setDeliverable] = useState<Deliverable>({
     type: '',
@@ -30,16 +32,20 @@ const Report: React.FC = () => {
 
   const [otherType, setOtherType] = useState({ customType: '', customRate: 0 });
   const [isOtherSelected, setIsOtherSelected] = useState(false);
-
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [setting, setSetting] = useState<Settings | null>(null);
+
   const navigate = useNavigate();
-  const [setting, setSetting] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchSettings = async () => {
       try {
         const settingsData = await getSetting();
-        setSetting(settingsData);
+        const settings = settingsData[0] || {};
+        setSetting({
+          roles: settings.roles || [],
+          projects: settings.projects || []
+        });
       } catch (error) {
         console.error('Error fetching settings:', error);
       }
@@ -56,24 +62,28 @@ const Report: React.FC = () => {
     } else if (name === "type") {
       setIsOtherSelected(false);
     }
+    localStorage.setItem('other',JSON.stringify(isOtherSelected));
   };
 
   function rateCalculation(): number {
-    console.log(isOtherSelected, ' ', otherType.customRate, ' ertyuiop');
 
     if (isOtherSelected) {
       return otherType.customRate;
     }
     const role = deliverable.role;
     let rate: number | undefined;
+    if (setting)
+      for (let index = 0; index < setting.roles.length; index++) {
+        const set = setting.roles[index];
+        console.log(set, 'set');
 
-    for (let index = 0; index < setting.length; index++) {
-      const set = setting[index];
-      if (set.role === role) {
-        rate = set.rate;
-        break;
+        if (set.name === role) {
+          rate = set.rate;
+          console.log(rate, 'rate');
+
+          break;
+        }
       }
-    }
     return rate !== undefined ? rate : 0;
   }
 
@@ -109,7 +119,7 @@ const Report: React.FC = () => {
     }
   };
 
-  const totalSumCalculation = (report: MyReport) : number => {
+  const totalSumCalculation = (report: MyReport): number => {
     let count = 0
     for (let index = 0; index < report.deliverables.length; index++) {
       count += report.deliverables[index].total;
@@ -117,22 +127,22 @@ const Report: React.FC = () => {
     return count;
   }
 
-  async function exportStyledReportToExcel(report: MyReport) {    
+  async function exportStyledReportToExcel(report: MyReport) {
     const today = new Date();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0'); 
-    const year = today.getFullYear().toString().slice(-2); 
-    
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const year = today.getFullYear().toString().slice(-2);
+
     const formattedDate = `${month}-${year}`;
-    console.log(formattedDate); 
-    
+    console.log(formattedDate);
+
     const date = formattedDate
-    const totalSum:number = totalSumCalculation(report);
+    const totalSum: number = totalSumCalculation(report);
 
     const fileName = `דוח_${user?.name}_${date}.xlsx`;
-  
+
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('דוח');
-  
+
     // עיצוב כותרות
     worksheet.addRow([
       `${formattedDate}`,
@@ -141,14 +151,14 @@ const Report: React.FC = () => {
       cell.font = { bold: true };
       cell.alignment = { vertical: 'middle', horizontal: 'center' };
     });
-  
+
     worksheet.addRow([]);
     worksheet.addRow(['סוג', 'כמות', 'תעריף', 'תפקיד', 'פרויקט', 'מדור', 'סימן/סעיף', 'סכום סה"כ'])
       .eachCell({ includeEmpty: true }, (cell) => {
         cell.font = { bold: true };
         cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFF00' } };
       });
-  
+
     // הוספת הנתונים
     report.deliverables.forEach(deliverable => {
       worksheet.addRow([
@@ -162,13 +172,13 @@ const Report: React.FC = () => {
         deliverable.total
       ]);
     });
-  
+
     worksheet.addRow([]); // שורה ריקה
-    worksheet.addRow(['הערה כללית',report.common, 'סכום סה"כ', totalSum, '', '', '', '', ])
-      // .eachCell({ includeEmpty: true }, (cell) => {
-      //   cell.alignment = { horizontal: 'right', vertical: 'middle', textRotation: 0, wrapText: true };
-      // });
-  
+    worksheet.addRow(['הערה כללית', report.common, 'סכום סה"כ', totalSum, '', '', '', '',])
+    // .eachCell({ includeEmpty: true }, (cell) => {
+    //   cell.alignment = { horizontal: 'right', vertical: 'middle', textRotation: 0, wrapText: true };
+    // });
+
     await workbook.xlsx.writeBuffer().then((buffer) => {
       // יצירת אובייקט Blob ושמירה לקובץ
       const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -267,22 +277,36 @@ const Report: React.FC = () => {
                     <label htmlFor="quantity">כמות</label>
                     <input id="quantity" name="quantity" type="number" value={deliverable.quantity} onChange={handleChange} placeholder="כמות" className="form-control" required />
                   </div>
-
                   <div className="form-group">
                     <label htmlFor="role">תפקיד</label>
-                    <select id="role" name="role" value={deliverable.role} onChange={handleChange} className="form-control" required>
+                    <select id="role" name="role" value={deliverable.role} onChange={handleChange} className="form-control" required={!isOtherSelected}>
                       <option value="">בחר תפקיד</option>
-                      {Object.values(Enums.ReportRole).map((role) => (
-                        <option key={role} value={role}>{role}</option>
-                      ))}
+                      {setting?.roles?.map((role) => (
+                        <option key={role._id} value={role.name}>
+                          {role.name}
+                        </option>
+                      )) || null}
                     </select>
                   </div>
 
                   <div className="form-group">
                     <label htmlFor="project">פרוייקט</label>
-                    <input id="project" name="project" type="text" value={deliverable.project} onChange={handleChange} placeholder="פרוייקט" className="form-control" required />
+                    <select
+                      id="project"
+                      name="project"
+                      value={deliverable.project}
+                      onChange={handleChange}
+                      className="form-control"
+                      required
+                    >
+                      <option value="">בחר פרוייקט</option>
+                      {setting?.projects.map((project, index) => (
+                        <option key={index} value={project}>
+                          {project}
+                        </option>
+                      )) || null}
+                    </select>
                   </div>
-
                   <div className="form-group">
                     <label htmlFor="section">מדור</label>
                     <input id="section" name="section" type="text" value={deliverable.section} onChange={handleChange} placeholder="מדור" className="form-control" required />
@@ -298,7 +322,7 @@ const Report: React.FC = () => {
                     <input id="common" name="common" type="text" value={report.common} onChange={(e) => setReport({ ...report, common: e.target.value })} placeholder="הערה כללית" className="form-control" />
                   </div>
                   <div className='d-flex align-items-center mt-3 gap-2'>
-                    <button type="button" className="btn btn-secondary"  onClick={addDeliverable}>
+                    <button type="button" className="btn btn-secondary" onClick={addDeliverable}>
                       הוסף הספק
                     </button>
 

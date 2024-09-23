@@ -73,14 +73,6 @@ export const getSetting = async () => {
   }
 };
 
-// export const updateRole = async (roleIndex:any, updatedRole:any) => {
-//   const settings = await getSetting(); // החלף בפונקציה שלך לקבלת ההגדרות
-//   if (settings.length > 0) {
-//     settings[0].roles[roleIndex] = updatedRole; // עדכון התפקיד ברשימה
-//     await saveSetting(settings); // החלף בפונקציה שלך לשמירת ההגדרות
-//   }
-// };
-
 export const updateRole = async (index: any, updatedRole:any) => {
   await axios.patch(`${API_URL}/update-role`, { index, updatedRole });
 };

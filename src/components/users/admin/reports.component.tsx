@@ -9,13 +9,14 @@ import { getSetting } from '../../../services/setting.service';
 import { useUser } from '../../../contexts/user.context';
 import { useNavigate } from 'react-router-dom';
 import ExcelJS from 'exceljs';
+import { Settings } from '../../../interfaces/settings.interface';
 
 const Reports: React.FC = () => {
     const [reports, setReports] = useState<MyReport[]>([]);
     const [originalReports, setOriginalReports] = useState<MyReport[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [employeeNames, setEmployeeNames] = useState<{ [key: number]: string }>({});
-    const [setting, setSetting] = useState<any[]>([]); // התחל עם מערך ריק
+    const [setting, setSetting] = useState<Settings | null>(null);
 
     const navigate = useNavigate();
     const { user } = useUser();
@@ -35,7 +36,11 @@ const Reports: React.FC = () => {
 
                 // טעינת ההגדרות
                 const settingsData = await getSetting();
-                setSetting(settingsData);
+                const settings = settingsData[0] || {};
+                setSetting({
+                    roles: settings.roles || [],
+                    projects: settings.projects || []
+                });
 
                 // טעינת שמות העובדים
                 const namesMap: { [key: number]: string } = {};
@@ -68,32 +73,28 @@ const Reports: React.FC = () => {
         const sheet = workbook.addWorksheet('דוחות מקור');
         const sheetUpdated = workbook.addWorksheet('דוחות לאחר שינוי');
         const sheetCalculations = workbook.addWorksheet('טבלת חישובים');
-        const sheetSummary = workbook.addWorksheet('התאמות שכר'); // גיליון חדש עבור התאמות שכר
-
-        // עיצוב כותרות עם רקע צבעוני וכיתוב מודגש
+        const sheetSummary = workbook.addWorksheet('התאמות שכר');
+    
         const headerStyle = {
             font: { bold: true },
             fill: {
                 type: 'pattern',
                 pattern: 'solid',
-                fgColor: { argb: 'FFFFFF00' } // צבע רקע צהוב
+                fgColor: { argb: 'FFFFFF00' }
             },
             alignment: { horizontal: 'center' as ExcelJS.Alignment['horizontal'] }
         };
-
-        // כותרות לדוחות מקור
+    
         const headers = ["שם עובד", "פרוייקט", "סימן/סעיף", "תפקיד", "תעריף", "סה\"כ", "כמות", "הערה"];
         const headerRow = sheet.addRow(headers);
         headerRow.eachCell(cell => {
             cell.font = headerStyle.font;
-            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } }; // תיקון כאן
+            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } };
             cell.alignment = headerStyle.alignment;
         });
-
-        // נתונים לדוחות מקור
+    
         originalReports.forEach(report => {
-            for (let index = 0; index < report.deliverables.length; index++) {
-                const e = report.deliverables[index];
+            report.deliverables.forEach(e => {
                 sheet.addRow([
                     employeeNames[report.employeeId] || 'טוען...',
                     e.project,
@@ -104,20 +105,20 @@ const Reports: React.FC = () => {
                     e.quantity,
                     report.common
                 ]);
-            }
-
+            });
         });
-
-        // חישוב דוחות לאחר שינוי
+    
         const updatedReports = reports.map(report => {
-            // מעתיקים את כל ההספקים המקוריים, ועושים שינויים איפה שצריך
             const updatedDeliverables = report.deliverables.map(e => {
-                const settingForRole = setting.find(set => set.role === e.role);
+                const settingForRole = setting?.roles.find(set => set.name === e.role);
+    
+                if (e.type === 'אחר') {
+                    return e; // לא משנה כלום אם type הוא "אחר"
+                }
+    
                 if (settingForRole) {
                     const newRate = e.rate + settingForRole.rateIncrease;
                     const newTotal = e.quantity * newRate;
-
-                    // מחזירים את ההספק עם השינויים
                     return {
                         ...e,
                         rate: newRate,
@@ -126,26 +127,22 @@ const Reports: React.FC = () => {
                 }
                 return e;
             });
-
+    
             return {
                 ...report,
                 deliverables: updatedDeliverables
             };
         });
-
-
-        // כותרות לדוחות לאחר שינוי
+    
         const updatedHeaderRow = sheetUpdated.addRow(headers);
         updatedHeaderRow.eachCell(cell => {
             cell.font = headerStyle.font;
-            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } }; // תיקון כאן
+            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } };
             cell.alignment = headerStyle.alignment;
         });
-
-        // נתונים לדוחות לאחר שינוי
+    
         updatedReports.forEach(report => {
-            for (let index = 0; index < report.deliverables.length; index++) {
-                const e = report.deliverables[index];
+            report.deliverables.forEach(e => {
                 sheetUpdated.addRow([
                     employeeNames[report.employeeId] || 'טוען...',
                     e.project,
@@ -156,29 +153,36 @@ const Reports: React.FC = () => {
                     e.quantity,
                     report.common
                 ]);
-            }
+            });
         });
-
-        // כותרות לטבלת חישובים
+    
         const calcHeaders = ["שם עובד", "שכר נטו", "שכר ברוטו", "הפרש 15%", "יתרה"];
         const calcHeaderRow = sheetCalculations.addRow(calcHeaders);
         calcHeaderRow.eachCell(cell => {
             cell.font = headerStyle.font;
-            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } }; // תיקון כאן
+            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } };
             cell.alignment = headerStyle.alignment;
         });
-
-        // נתונים לטבלת חישובים
+    
         reports.forEach(report => {
-            for (let index = 0; index < report.deliverables.length; index++) {
-                const e = report.deliverables[index];
-                const settingForRole = setting.find(set => set.role === e.role);
-
-                const grossSalary = e.quantity * (e.rate + settingForRole.rateIncrease);
-                const netSalary = e.total;
-                const deduction = grossSalary * 0.15;
-                const balance = grossSalary - netSalary - deduction;
-
+            report.deliverables.forEach(e => {
+                const settingForRole = setting?.roles.find(set => set.name === e.role);
+                let grossSalary = 0;
+                let netSalary = 0;
+                let deduction = 0;
+                let balance = 0;
+    
+                if (e.type === 'אחר') {
+                    // אם type הוא "אחר", נטו וברוטו יהיו שווים
+                    grossSalary = e.quantity * e.rate; // ברוטו מחושב רגיל
+                    netSalary = grossSalary; // נטו שווה לברוטו
+                } else if (settingForRole) {
+                    grossSalary = e.quantity * (e.rate + settingForRole.rateIncrease);
+                    netSalary = e.total;
+                    deduction = grossSalary * 0.15;
+                    balance = grossSalary - netSalary - deduction;
+                }
+    
                 // הוספת השורה לטבלת החישובים
                 sheetCalculations.addRow([
                     employeeNames[report.employeeId] || 'טוען...',
@@ -187,32 +191,27 @@ const Reports: React.FC = () => {
                     deduction,
                     balance
                 ]);
-            }
+            });
         });
-        // הכנת הנתונים לסיכום לכל עובד
-        const employeeSummaries: EmployeeSummary[] = [];
-
+    
+        const employeeSummaries: { _id: number; name: string; totalNetSalary: number; totalGrossSalary: number; difference: number; }[] = [];
+    
         reports.forEach(report => {
-            // חישוב שכר נטו ושכר ברוטו
             const totalNetSalary = report.deliverables.reduce((sum, e) => sum + e.total, 0);
             const totalGrossSalary = report.deliverables.reduce((sum, e) => {
-                const settingForRole = setting.find(set => set.role === e.role);
+                const settingForRole = setting?.roles.find(set => set.name === e.role);
                 return sum + (e.quantity * (e.rate + (settingForRole?.rateIncrease || 0)));
             }, 0);
-
-            // חישוב ההפרש
+    
             const difference = totalGrossSalary > 3000 ? totalGrossSalary - 3000 : 0;
-
-            // חיפוש או הוספת עובד
+    
             let existingEmployee = employeeSummaries.find(emp => emp._id === report.employeeId);
-
+    
             if (existingEmployee) {
-                // עדכון סכומים אם העובד כבר קיים ברשימה
                 existingEmployee.totalNetSalary += totalNetSalary;
                 existingEmployee.totalGrossSalary += totalGrossSalary;
-                existingEmployee.difference = existingEmployee.totalGrossSalary - 3000 > 0 ? existingEmployee.totalGrossSalary - 3000 : 0; // עדכון ההפרש
+                existingEmployee.difference = existingEmployee.totalGrossSalary - 3000 > 0 ? existingEmployee.totalGrossSalary - 3000 : 0;
             } else {
-                // הוספת עובד חדש לרשימה
                 employeeSummaries.push({
                     _id: report.employeeId,
                     name: employeeNames[report.employeeId] || 'טוען...',
@@ -222,18 +221,15 @@ const Reports: React.FC = () => {
                 });
             }
         });
-
-
-        // יצירת גיליון עם הנתונים
+    
         const summaryHeaders = ["שם עובד", "שכר נטו", "שכר ברוטו", "הפרש"];
         const summaryHeaderRow = sheetSummary.addRow(summaryHeaders);
         summaryHeaderRow.eachCell(cell => {
             cell.font = headerStyle.font;
-            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } }; // צבע רקע
+            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } };
             cell.alignment = headerStyle.alignment;
         });
-
-        // הוספת נתונים לגיליון
+    
         employeeSummaries.forEach(emp => {
             sheetSummary.addRow([
                 emp.name,
@@ -242,13 +238,13 @@ const Reports: React.FC = () => {
                 emp.difference
             ]);
         });
-
-        // שמירת הקובץ כ-Excel
+    
         workbook.xlsx.writeBuffer().then(buffer => {
             const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
             saveAs(blob, `דוחות_${new Date().toISOString().split('T')[0]}.xlsx`);
         });
     };
+    
 
     const handleLogout = () => {
         localStorage.removeItem('token');
