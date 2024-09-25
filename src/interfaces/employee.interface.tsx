@@ -10,6 +10,13 @@ export interface Employee {
         branchNumber: string;
         accountNumber: string;
     };
+    role:
+    {
+        name: string,
+        rate: number,
+        rateIncrease: number,
+    },
+    project: string,
 }
 
 export interface EmployeeSummary{

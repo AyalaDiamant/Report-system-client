@@ -139,6 +139,7 @@ const Setting: React.FC = () => {
             <div className="card">
               <div className="card-header text-center">
                 <h2>הגדרות</h2>
+                <h5>לאחר הוספת תפקיד/פרוייקט יש ללחוץ על הכפתו 'שמור' למטה אחרת השינויים לא ישמרו!</h5>
               </div>
               <div className="card-body">
                 <form onSubmit={handleSubmit}>

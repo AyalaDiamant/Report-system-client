@@ -29,9 +29,10 @@ const getReportByEmployee = async (employeeId: number) => {
   try {
     const response = await axios.get(`${API_URL}/${employeeId}`, {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`, // שליחת הטוקן עם הבקשה
+        'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}`, // שליחת הטוקן עם הבקשה
       },
     });
+    console.log(response);
     return response.data;
   } catch (error: any) {
     console.error('Error getting reports:', error.response ? error.response.data : error.message);

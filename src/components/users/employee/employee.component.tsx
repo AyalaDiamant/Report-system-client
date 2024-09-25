@@ -159,11 +159,13 @@ const Employee: React.FC = () => {
     const loadReports = async () => {
         try {
             const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
             if (!token) {
                 throw new Error('No token found. User is not authenticated.');
             }
+            
             let employeeId = user?.employeeId;
-
+            
             if (!employeeId) {
                 throw new Error('Employee ID not found.');
             }
@@ -179,7 +181,7 @@ const Employee: React.FC = () => {
 
     useEffect(() => {
         loadReports();
-    }, [user, navigate]);
+    }, [user,navigate]);
 
     const handleLogout = () => {
         localStorage.removeItem('token');

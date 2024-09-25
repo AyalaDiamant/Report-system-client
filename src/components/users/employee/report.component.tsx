@@ -11,7 +11,6 @@ import { saveAs } from 'file-saver';
 import ExcelJS from 'exceljs';
 
 const Report: React.FC = () => {
-
   const { user } = useUser();
   const [deliverable, setDeliverable] = useState<Deliverable>({
     type: '',

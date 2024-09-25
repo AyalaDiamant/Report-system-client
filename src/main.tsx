@@ -6,7 +6,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 // ייבוא קומפוננטות לצורך הניווטים
 import Login from './components/auth/login.component';
-import Register from './components/auth/register.comonent';
+// לאחר השיוני שמנהל רושם עובדים אין צורך בפונקציית רישום כרגע
+// import Register from './components/auth/register.comonent';
 import Admin from './components/users/admin/admin.component';
 import Employee from './components/users/employee/employee.component';
 import Setting from './components/users/admin/setting.component';
@@ -20,10 +21,11 @@ const router = createBrowserRouter([
     path: "/login",
     element: <Login />,
   },
-  {
-    path: "/register",
-    element: <Register />,
-  },
+  // לאחר השיוני שמנהל רושם עובדים אין צורך בפונקציית רישום כרגע
+  // {
+  //   path: "/register",
+  //   element: <Register />,
+  // },
   {
     path: "/admin",
     element: <Admin />,
