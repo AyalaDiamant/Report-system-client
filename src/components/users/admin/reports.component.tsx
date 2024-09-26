@@ -45,7 +45,6 @@ const Reports: React.FC = () => {
                 // טעינת שמות העובדים
                 const namesMap: { [key: number]: string } = {};
 
-                // צריך לבדוק למה כל דבר פה קורה פעמיים
                 for (const report of reportData) {
                     try {
                         const employee = await EmployeeService.getEmployeeById(report.employeeId);

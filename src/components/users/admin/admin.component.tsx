@@ -26,6 +26,10 @@ const Admin: React.FC = () => {
     navigate('/reports');
   };
 
+  const handleEmployeeManagement = () => {
+    navigate('/employee-management'); // Add this line
+};
+
 
   return (
     <div>
@@ -41,6 +45,9 @@ const Admin: React.FC = () => {
               </li>
               <li className="nav-item">
                 <span className="nav-link" onClick={handleReports}>דוחות</span>
+              </li>
+              <li className="nav-item">
+                <span className="nav-link" onClick={handleEmployeeManagement}>ניהול עובדים</span>
               </li>
             </ul>
             <div className="d-flex align-items-center">
