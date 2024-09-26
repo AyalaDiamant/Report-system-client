@@ -26,6 +26,7 @@ const Report: React.FC = () => {
     total: 0
   });
   const [report, setReport] = useState<MyReport>({
+    _id: 0,
     employeeId: user?.employeeId ?? 0,
     date: '',
     deliverables: [],
@@ -95,6 +96,7 @@ const Report: React.FC = () => {
       deliverable.rate = rate; 
       deliverable.role = employee.role.name;
       deliverable.project= employee.project
+      deliverable.total = deliverable.quantity * deliverable.rate
     }
 
   };
@@ -107,7 +109,7 @@ const Report: React.FC = () => {
         deliverables: [...prevState.deliverables, deliverable]        
       }));
       console.log(deliverable, 'd');
-      
+
 
       // איפוס ההספק למילוי חדש
       setDeliverable({
@@ -316,3 +318,4 @@ const Report: React.FC = () => {
 };
 
 export default Report;
+

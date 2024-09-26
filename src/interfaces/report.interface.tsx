@@ -10,6 +10,7 @@ export interface Deliverable {
 }
 
 export interface MyReport {
+    _id: number
     employeeId: number; // מספר עובד
     date: String,
     deliverables: Deliverable[]; // מערך של הספקים

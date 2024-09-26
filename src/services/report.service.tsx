@@ -10,7 +10,7 @@ const addReport = async (reportData: MyReport) => {
     throw new Error('No token found. User is not authenticated.');
   }
 
-  try {    
+  try {
     const response = await axios.post(API_URL, reportData, {
       headers: {
         'Content-Type': 'application/json',
@@ -54,10 +54,41 @@ const getAllReports = async () => {
   }
 };
 
+const deleteReport = async (id: number) => {
+  try {
+    const response = await axios.delete(`${API_URL}/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}`, // שליחת הטוקן עם הבקשה
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error('Error delete reports:', error.response ? error.response.data : error.message);
+    throw error;
+  }
+}
+
+const updateReport = async (id: any, updatedData: any) => {
+  try {
+    const response = await axios.delete(`${API_URL}/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}`, // שליחת הטוקן עם הבקשה
+      },
+    });
+
+    return response.data;
+  } catch (error: any) {
+    console.error('Error update reports:', error.response ? error.response.data : error.message);
+    throw error;
+  }
+};
+
 const ReportService = {
   addReport,
   getReportByEmployee,
-  getAllReports
+  getAllReports,
+  deleteReport,
+  updateReport
 };
 
 export default ReportService;
