@@ -114,6 +114,11 @@ const EmployeeManagement: React.FC = () => {
     const handleSetting = () => {
         navigate('/settings');
     };
+
+    const handleReport = () => {
+        navigate('/reports');
+    }
+    
     return (
         <div>
             <div className="development-banner">האתר בשלבי פיתוח</div>
@@ -125,6 +130,9 @@ const EmployeeManagement: React.FC = () => {
                         <ul className="navbar-nav mr-auto">
                             <li className="nav-item">
                                 <span className="nav-link" onClick={handleHome}>עמוד הבית</span>
+                            </li>
+                            <li className="nav-item">
+                                <span className="nav-link" onClick={handleReport}>דוחות</span>
                             </li>
                             <li className="nav-item">
                                 <span className="nav-link" onClick={handleSetting}>הגדרות</span>

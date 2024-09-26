@@ -24,7 +24,7 @@ const Reports: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = localStorage.getItem('token');
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
                 if (!token) {
                     throw new Error('No token found. User is not authenticated.');
                 }
