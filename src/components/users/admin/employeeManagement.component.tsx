@@ -90,11 +90,13 @@ const EmployeeManagement: React.FC = () => {
     };
 
     const handleDeleteEmployee = async (employeeId: number) => {
-        try {
-            await employeeService.deleteEmployee(employeeId);
-            fetchEmployees(); // refresh employee list
-        } catch (error) {
-            console.error('Error deleting employee:', error);
+        if (confirm('האם אתה בטוח שברצונך למחוק עובד זה?')) {
+            try {
+                await employeeService.deleteEmployee(employeeId);
+                fetchEmployees(); // refresh employee list
+            } catch (error) {
+                console.error('Error deleting employee:', error);
+            }
         }
     };
 
@@ -118,7 +120,7 @@ const EmployeeManagement: React.FC = () => {
     const handleReport = () => {
         navigate('/reports');
     }
-    
+
     return (
         <div>
             <div className="development-banner">האתר בשלבי פיתוח</div>

@@ -9,18 +9,20 @@ import { Settings } from '../../../interfaces/settings.interface';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import ExcelJS from 'exceljs';
+import employeeService from '../../../services/employee.service';
+import { Employee } from '../../../interfaces/employee.interface';
 
 const Report: React.FC = () => {
   const { user } = useUser();
+  const [employee, setEmployee] = useState<Employee | null>(null)
   const [deliverable, setDeliverable] = useState<Deliverable>({
     type: '',
     quantity: 0,
     rate: 0,
-    role: '',
-    project: '',
-    section: '',
+    role: employee?.role?.name || '',
+    project: employee?.project || '',
     sign: '',
-    seif:'',
+    seif: '',
     total: 0
   });
   const [report, setReport] = useState<MyReport>({
@@ -30,83 +32,82 @@ const Report: React.FC = () => {
     common: ''
   });
   const [totalSum, setTotalSum] = useState<number>(0); // הוספת מצב לסכום הכולל
-  const [otherType, setOtherType] = useState({ customType: '', customRate: 0 });
-  const [isOtherSelected, setIsOtherSelected] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [setting, setSetting] = useState<Settings | null>(null);
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const settingsData = await getSetting();
-        const settings = settingsData[0] || {};
-        setSetting({
-          roles: settings.roles || [],
-          projects: settings.projects || []
-        });
-      } catch (error) {
-        console.error('Error fetching settings:', error);
-      }
-    };
-    fetchSettings();
+    // הגדרות - אם יצתרכו להשאיר
+    // const fetchSettings = async () => {
+    //   try {
+    //     const settingsData = await getSetting();
+    //     const settings = settingsData[0] || {};
+    //     setSetting({
+    //       roles: settings.roles || [],
+    //       projects: settings.projects || []
+    //     });
+    //   } catch (error) {
+    //     console.error('Error fetching settings:', error);
+    //   }
+    // };
+    getEmployeeById();
+    // fetchSettings();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setDeliverable({ ...deliverable, [name]: value });
 
-    if (name === "type" && value === "אחר") {
-      setIsOtherSelected(true);
-    } else if (name === "type") {
-      setIsOtherSelected(false);
+    const rate = employee?.role.rate;
+    if (rate) {
+      const total = deliverable.quantity * rate;
+      setDeliverable(prev => ({ ...prev, rate, total }));
+      setTotalSum(totalSumCalculation({ ...report, deliverables: [...report.deliverables, { ...deliverable, total }] }));
     }
-    const rate = rateCalculation();
-    const total = deliverable.quantity * (isOtherSelected ? otherType.customRate : rate);
-    setDeliverable(prev => ({ ...prev, rate, total }));
-    setTotalSum(totalSumCalculation({ ...report, deliverables: [...report.deliverables, { ...deliverable, total }] }));
   };
 
-  function rateCalculation(): number {
+  // חישוב תפקיד לפי הגדרה כרגע לא נצרך
+  // function rateCalculation(): number {
 
-    if (isOtherSelected) {
-      return otherType.customRate;
+  //   if (isOtherSelected) {
+  //     return otherType.customRate;
+  //   }
+  //   const role = deliverable.role;
+  //   let rate: number | undefined;
+  //   if (setting)
+  //     for (let index = 0; index < setting.roles.length; index++) {
+  //       const set = setting.roles[index];
+  //       console.log(set, 'set');
+
+  //       if (set.name === role) {
+  //         rate = set.rate;
+  //         console.log(rate, 'rate');
+
+  //         break;
+  //       }
+  //     }
+  //   return rate !== undefined ? rate : 0;
+  // }
+
+  const fixDeliverable = () => { 
+    const rate = employee?.role.rate;
+    if (rate)
+    {
+      deliverable.rate = rate; 
+      deliverable.role = employee.role.name;
+      deliverable.project= employee.project
     }
-    const role = deliverable.role;
-    let rate: number | undefined;
-    if (setting)
-      for (let index = 0; index < setting.roles.length; index++) {
-        const set = setting.roles[index];
-        console.log(set, 'set');
 
-        if (set.name === role) {
-          rate = set.rate;
-          console.log(rate, 'rate');
-
-          break;
-        }
-      }
-    return rate !== undefined ? rate : 0;
-  }
-
-  const fixDeliverable = () => {
-    deliverable.rate = rateCalculation(); // מחשב את התעריף לפי התפקיד
-
-    if (isOtherSelected) {
-      deliverable.total = deliverable.quantity * otherType.customRate;
-    } else {
-      deliverable.total = deliverable.quantity * deliverable.rate;
-    }
   };
 
   const addDeliverable = () => {
     fixDeliverable();
-    if (deliverable.type && deliverable.quantity && deliverable.role && deliverable.project) {
+    if (deliverable.quantity) {
       setReport(prevState => ({
         ...prevState,
-        deliverables: [...prevState.deliverables, deliverable]
+        deliverables: [...prevState.deliverables, deliverable]        
       }));
+      console.log(deliverable, 'd');
+      
 
       // איפוס ההספק למילוי חדש
       setDeliverable({
@@ -115,7 +116,6 @@ const Report: React.FC = () => {
         rate: 0,
         role: '',
         project: '',
-        section: '',
         sign: '',
         seif: '',
         total: 0
@@ -158,7 +158,7 @@ const Report: React.FC = () => {
     });
 
     worksheet.addRow([]);
-    worksheet.addRow(['סוג', 'כמות', 'תעריף', 'תפקיד', 'פרויקט', 'מדור','סימן', 'סעיף', 'סכום סה"כ'])
+    worksheet.addRow(['סוג', 'כמות', 'תעריף', 'תפקיד', 'פרויקט', 'סימן', 'סעיף', 'סכום סה"כ'])
       .eachCell({ includeEmpty: true }, (cell) => {
         cell.font = { bold: true };
         cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFF00' } };
@@ -172,7 +172,6 @@ const Report: React.FC = () => {
         deliverable.rate,
         deliverable.role,
         deliverable.project,
-        deliverable.section,
         deliverable.sign,
         deliverable.seif,
         deliverable.total
@@ -201,7 +200,7 @@ const Report: React.FC = () => {
     e.preventDefault();
     addDeliverable();
 
-    if (deliverable.type && deliverable.quantity && deliverable.role && deliverable.project) {
+    if (deliverable.quantity && deliverable.role && deliverable.project) {
       report.deliverables.push(deliverable);
     }
 
@@ -220,6 +219,12 @@ const Report: React.FC = () => {
       console.error('שגיאה בשליחת הדוח:', error);
     }
   };
+
+  const getEmployeeById = async () => {
+    let userIdFromSend = user?.employeeId;
+    if (userIdFromSend)
+      setEmployee(await employeeService.getEmployeeById(userIdFromSend));
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -265,56 +270,8 @@ const Report: React.FC = () => {
                       {Object.values(Enums.ReportType).map((type) => (
                         <option key={type} value={type}>{type}</option>
                       ))}
-                      <option value="אחר">אחר</option>
                     </select>
                   </div>
-
-                  {/* שדות 'אחר' */}
-                  {isOtherSelected && (
-                    <>
-                      <div className="form-group">
-                        <label htmlFor="customRate">תעריף</label>
-                        <input id="customRate" name="customRate" type="number" value={otherType.customRate} onChange={(e) => setOtherType({ ...otherType, customRate: parseFloat(e.target.value) })} className="form-control" required />
-                      </div>
-                    </>
-                  )}
-
-                  <div className="form-group">
-                    <label htmlFor="project">פרוייקט</label>
-                    <select
-                      id="project"
-                      name="project"
-                      value={deliverable.project}
-                      onChange={handleChange}
-                      className="form-control"
-                      required
-                    >
-                      <option value="">בחר פרוייקט</option>
-                      {setting?.projects.map((project, index) => (
-                        <option key={index} value={project}>
-                          {project}
-                        </option>
-                      )) || null}
-                    </select>
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="role">תפקיד</label>
-                    <select id="role" name="role" value={deliverable.role} onChange={handleChange} className="form-control" required={!isOtherSelected}>
-                      <option value="">בחר תפקיד</option>
-                      {setting?.roles?.map((role) => (
-                        <option key={role._id} value={role.name}>
-                          {role.name}
-                        </option>
-                      )) || null}
-                    </select>
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="section">מדור</label>
-                    <input id="section" name="section" type="text" value={deliverable.section} onChange={handleChange} placeholder="מדור" className="form-control" required />
-                  </div>
-
                   <div className="form-group">
                     <label htmlFor="sign">סימן</label>
                     <input id="sign" name="sign" type="text" value={deliverable.sign} onChange={handleChange} placeholder="סימן" className="form-control" required />

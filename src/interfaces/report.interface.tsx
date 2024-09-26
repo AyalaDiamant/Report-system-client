@@ -4,7 +4,6 @@ export interface Deliverable {
     rate: number; // תעריף
     role: string; // תפקיד
     project: string; // פרוייקט
-    section: string; // מדור
     sign: string; // סימן/סעיף
     seif: string;
     total: number; // סכום סה"כ

@@ -321,7 +321,6 @@ const Reports: React.FC = () => {
                                                             <p><strong>תעריף:</strong> {item.rate}</p>
                                                             <p><strong>תפקיד:</strong> {item.role}</p>
                                                             <p><strong>פרוייקט:</strong> {item.project}</p>
-                                                            <p><strong>מדור:</strong> {item.section}</p>
                                                             <p><strong>סימן/סעיף:</strong> {item.sign}</p>
                                                             <p><strong>סכום סה"כ:</strong> {item.total}</p>
                                                         </li>
