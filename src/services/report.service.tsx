@@ -44,7 +44,7 @@ const getAllReports = async () => {
   try {
     const response = await axios.get(API_URL, {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`, // שליחת הטוקן עם הבקשה
+        'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}`, // שליחת הטוקן עם הבקשה
       },
     });
     return response.data;
@@ -70,18 +70,19 @@ const deleteReport = async (id: number) => {
 
 const updateReport = async (id: any, updatedData: any) => {
   try {
-    const response = await axios.delete(`${API_URL}/${id}`, {
+    const response = await axios.put(`${API_URL}/${id}`, updatedData, {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}`, // שליחת הטוקן עם הבקשה
+        'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}`, // sending the token with the request
       },
     });
 
     return response.data;
   } catch (error: any) {
-    console.error('Error update reports:', error.response ? error.response.data : error.message);
+    console.error('Error updating report:', error.response ? error.response.data : error.message);
     throw error;
   }
 };
+
 
 const ReportService = {
   addReport,

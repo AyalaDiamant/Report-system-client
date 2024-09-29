@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import ReportService from '../../../services/report.service';
 import EmployeeService from '../../../services/employee.service';
-import { MyReport } from '../../../interfaces/report.interface';
-import { EmployeeSummary } from '../../../interfaces/employee.interface';
-import * as XLSX from 'xlsx';
+import { Deliverable, MyReport } from '../../../interfaces/report.interface';
 import { saveAs } from 'file-saver';
 import { getSetting } from '../../../services/setting.service';
 import { useUser } from '../../../contexts/user.context';
 import { useNavigate } from 'react-router-dom';
 import ExcelJS from 'exceljs';
 import { Settings } from '../../../interfaces/settings.interface';
+import Enums from '../../../interfaces/enums';
 
 const Reports: React.FC = () => {
     const [reports, setReports] = useState<MyReport[]>([]);
@@ -17,55 +16,59 @@ const Reports: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [employeeNames, setEmployeeNames] = useState<{ [key: number]: string }>({});
     const [setting, setSetting] = useState<Settings | null>(null);
+    const [editingReportId, setEditingReportId] = useState<number | null>(null);
+    const [editedReportData, setEditedReportData] = useState<any>({});
+    const [originalReportData, setOriginalReportData] = useState<MyReport | null>(null);
 
     const navigate = useNavigate();
     const { user } = useUser();
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                if (!token) {
-                    throw new Error('No token found. User is not authenticated.');
-                }
-
-                // טעינת הדוחות
-                const reportData = await ReportService.getAllReports();
-                setReports(reportData);
-                setOriginalReports([...reportData]);
-
-                // טעינת ההגדרות
-                const settingsData = await getSetting();
-                const settings = settingsData[0] || {};
-                setSetting({
-                    roles: settings.roles || [],
-                    projects: settings.projects || []
-                });
-
-                // טעינת שמות העובדים
-                const namesMap: { [key: number]: string } = {};
-
-                for (const report of reportData) {
-                    try {
-                        const employee = await EmployeeService.getEmployeeById(report.employeeId);
-                        namesMap[report.employeeId] = employee.name;
-                    } catch (error) {
-                        console.error(`Error loading employee with ID ${report.employeeId}:`, error);
-                        namesMap[report.employeeId] = 'שגיאה';
-                    }
-                }
-                setEmployeeNames(namesMap);
-
-
-            } catch (error) {
-                console.error('Error loading reports:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchData();
     }, []);
+
+    const fetchData = async () => {
+        try {
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found. User is not authenticated.');
+            }
+
+            // טעינת הדוחות
+            const reportData = await ReportService.getAllReports();
+            setReports(reportData);
+            setOriginalReports([...reportData]);
+
+            // טעינת ההגדרות
+            const settingsData = await getSetting();
+            const settings = settingsData[0] || {};
+            setSetting({
+                roles: settings.roles || [],
+                projects: settings.projects || []
+            });
+
+            // טעינת שמות העובדים
+            const namesMap: { [key: number]: string } = {};
+
+            for (const report of reportData) {
+                try {
+                    const employee = await EmployeeService.getEmployeeById(report.employeeId);
+                    namesMap[report.employeeId] = employee.name;
+                } catch (error) {
+                    console.error(`Error loading employee with ID ${report.employeeId}:`, error);
+                    namesMap[report.employeeId] = 'שגיאה';
+                }
+            }
+            setEmployeeNames(namesMap);
+
+
+        } catch (error) {
+            console.error('Error loading reports:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     const exportToExcel = () => {
         const workbook = new ExcelJS.Workbook();
@@ -260,13 +263,62 @@ const Reports: React.FC = () => {
     const handleSetting = () => {
         navigate('/settings');
     };
-    // const removeReport = async (index: number) => {
 
-    // };
+    // פונקציה למחיקת דוח
+    const handleDelete = async (reportId: number) => {
+        if (confirm('אתה בטוח שברצונך למחוק את הדוח?')) {
+            try {
+                await ReportService.deleteReport(reportId);
+                setReports(reports.filter((report) => report._id !== reportId));
+            } catch (error) {
+                console.error('Error deleting report:', error);
+            }
+        }
+    };
 
-    // const editReport = (index: number) => {
+    const handleEditReport = (report: MyReport) => {
+        setEditingReportId(report._id);
+        setOriginalReportData(report);
+        setEditedReportData(report.deliverables.map((item) => ({
+            type: item.type,
+            quantity: item.quantity,
+            seif: item.seif || '',
+            sign: item.sign || '',
+        })));
+    };
 
-    // };
+    const handleChange = (idx: number, field: keyof Deliverable, value: string | number) => {
+        setEditedReportData((prevData: any) => {
+            const updatedData = [...prevData];
+            updatedData[idx] = { ...updatedData[idx], [field]: value };
+
+            return updatedData;
+        });
+    };
+
+    const handleSaveEdit = async () => {
+        if (!originalReportData) return;
+
+        const updatedReport: MyReport = {
+            ...originalReportData,
+            deliverables: editedReportData.map((deliverable: any, idx: string | number) => ({
+                ...originalReportData.deliverables[Number(idx)],
+                ...deliverable,
+            })),
+        };
+
+        try {
+            const response = await ReportService.updateReport(originalReportData._id, updatedReport);
+            await fetchData();
+            console.log('Updated Report:', response);
+        } catch (error) {
+            console.error('Error saving changes:', error);
+        }
+
+        setEditingReportId(null);
+        setEditedReportData([]);
+        // loadReports();
+    };
 
 
     return (
@@ -323,12 +375,9 @@ const Reports: React.FC = () => {
                                                             <p><strong>פרוייקט:</strong> {item.project}</p>
                                                             <p><strong>סימן/סעיף:</strong> {item.sign}</p>
                                                             <p><strong>סכום סה"כ:</strong> {item.total}</p>
+
                                                         </li>
                                                     ))}
-                                                    {/* <div>
-                                                        <button type="button" className="btn btn-sm btn-warning btn-padding" onClick={() => editReport(index)}>ערוך</button>
-                                                        <button type="button" className="btn btn-sm btn-danger btn-padding" onClick={() => removeReport(index)}>מחק</button>
-                                                    </div> */}
                                                 </ul>
                                                 {report.common && (
                                                     <p className="card-text">
@@ -338,8 +387,67 @@ const Reports: React.FC = () => {
                                                 <p className="card-text mt-3">
                                                     <strong>סה"כ:</strong> {totalSum}
                                                 </p>
+                                                <div className='d-flex justify-content-between'>
+                                                    <button className="btn btn-primary" onClick={() => handleEditReport(report)}>
+                                                        ערוך
+                                                    </button>
+                                                    <button className="btn btn-danger" onClick={() => handleDelete(report._id)}>
+                                                        מחק
+                                                    </button>
+                                                </div>
                                             </div>
+                                            {editingReportId === report._id && (
+                                                <div className="card-body mt-3">
+                                                    <h6>ערוך דוח</h6>
+                                                    {editedReportData.map((deliverable: Deliverable, idx: number) => (
+                                                        <div key={idx} className="mb-3">
+                                                            <select
+                                                                id="type"
+                                                                name="type"
+                                                                value={deliverable.type}
+                                                                onChange={(e) => handleChange(idx, 'type', e.target.value)}
+                                                                className="form-control"
+                                                                required
+                                                            >
+                                                                <option value="">בחר סוג</option>
+                                                                {Object.values(Enums.ReportType).map((type) => (
+                                                                    <option key={type} value={type}>{type}</option>
+                                                                ))}
+                                                            </select>
+                                                            <input
+                                                                type="number"
+                                                                className="form-control mt-2"
+                                                                placeholder="כמות"
+                                                                value={deliverable.quantity}
+                                                                onChange={(e) => handleChange(idx, 'quantity', e.target.value)}
+                                                            />
+                                                            <input
+                                                                type="text"
+                                                                className="form-control mt-2"
+                                                                placeholder="סעיף"
+                                                                value={deliverable.seif}
+                                                                onChange={(e) => handleChange(idx, 'seif', e.target.value)}
+                                                            />
+                                                            <input
+                                                                type="text"
+                                                                className="form-control mt-2"
+                                                                placeholder="סימן"
+                                                                value={deliverable.sign}
+                                                                onChange={(e) => handleChange(idx, 'sign', e.target.value)}
+                                                            />
+                                                        </div>
+                                                    ))}
+                                                    <button className="btn btn-success mt-2" onClick={handleSaveEdit}>
+                                                        שמור שינויים
+                                                    </button>
+                                                    <button className="btn btn-secondary mt-2" onClick={() => setEditingReportId(null)}>
+                                                        ביטול
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
+
+
                                     );
                                 })}
                             </div>
