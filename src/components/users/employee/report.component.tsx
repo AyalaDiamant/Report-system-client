@@ -12,6 +12,7 @@ import { saveAs } from 'file-saver';
 import ExcelJS from 'exceljs';
 import employeeService from '../../../services/employee.service';
 import { Employee } from '../../../interfaces/employee.interface';
+import Header from '../../header.component';
 
 const Report: React.FC = () => {
   const { user } = useUser();
@@ -69,10 +70,10 @@ const Report: React.FC = () => {
   };
 
   useEffect(() => {
-    const rate = employee?.role?.rate || 0; 
-    const total = deliverable.quantity * rate; 
+    const rate = employee?.role?.rate || 0;
+    const total = deliverable.quantity * rate;
     setDeliverable((prev) => ({ ...prev, rate, total }));
-    setTotalSum(total); 
+    setTotalSum(total);
   }, [deliverable.quantity, employee]);
 
   // חישוב תפקיד לפי הגדרה כרגע לא נצרך
@@ -98,14 +99,13 @@ const Report: React.FC = () => {
   //   return rate !== undefined ? rate : 0;
   // }
 
-  const fixDeliverable = () => { 
+  const fixDeliverable = () => {
     const rate = employee?.role.rate;
-    if (rate)
-    {
-      deliverable.rate = rate; 
+    if (rate) {
+      deliverable.rate = rate;
       deliverable.role = employee.role.name;
       deliverable.rateIncrease = employee.role.rateIncrease;
-      deliverable.project= employee.project
+      deliverable.project = employee.project
       deliverable.total = deliverable.quantity * deliverable.rate
     }
 
@@ -116,7 +116,7 @@ const Report: React.FC = () => {
     if (deliverable.quantity) {
       setReport(prevState => ({
         ...prevState,
-        deliverables: [...prevState.deliverables, deliverable]        
+        deliverables: [...prevState.deliverables, deliverable]
       }));
       console.log(deliverable, 'd');
 
@@ -248,25 +248,29 @@ const Report: React.FC = () => {
     navigate('/login');
   };
 
+  const handleReport = () => {
+    navigate('/report');
+  };
+
+  const handleHome = () => {
+    navigate('/employee');
+  };
+
+  const toggleShowReports = () => {
+
+  };
+
   return (
     <div>
       <div className="development-banner">האתר בשלבי פיתוח</div>
-      <header className="navbar navbar-expand-lg navbar-light bg-light">
-        <div className="container">
-          <span className="navbar-brand"> {user?.name ? ` שלום ${user.name} ` : ''}
-          </span>
-          <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <a className="nav-link" href="/employee">לעמוד הבית שלך</a>
-              </li>
-            </ul>
-            <div className="d-flex align-items-center">
-              <a onClick={handleLogout} className="logout-link">התנתק</a>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header
+        user={user}
+        role="employee" // מצב של עובד
+        handleLogout={handleLogout}
+        handleReport={handleReport}
+        toggleShowReports={toggleShowReports} // העברת פונקציה
+        handleHome={handleHome}
+      />
 
       <div className="container mt-5">
         <div className="row justify-content-center">

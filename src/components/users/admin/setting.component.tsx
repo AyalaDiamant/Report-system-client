@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { saveSetting, getSetting, updateRole, removeRole, removeProject } from '../../../services/setting.service';
 import { useUser } from '../../../contexts/user.context';
 import { useNavigate } from 'react-router-dom';
+import Header from '../../header.component';
 
 const Setting: React.FC = () => {
   const [projects, setProjects] = useState<string[]>([]);
@@ -110,32 +111,44 @@ const Setting: React.FC = () => {
     setEditingIndex(null);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('isAdmin');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('isAdmin');
+
+    navigate('/login');
+  };
+
+  const handleHome = () => {
+    navigate('/admin');
+  };
+
+  const handleSetting = () => {
+    navigate('/settings');
+  };
+
+  const handleReport = () => {
+    navigate('/reports');
+  }
+  const handleEmployeeManagement = () => {
+    navigate('/employee-management');
+  };
+
   return (
     <div>
-      <div className="development-banner">האתר בשלבי פיתוח</div>
-      <header className="navbar navbar-expand-lg navbar-light bg-light">
-        <div className="container">
-          <span className="navbar-brand"> {user?.name ? `שלום ${user.name}` : ''}</span>
-          <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item"><span className="nav-link" onClick={() => navigate('/admin')}>דף הבית</span></li>
-              <li className="nav-item"><span className="nav-link" onClick={() => navigate('/reports')}>דוחות</span></li>
-            </ul>
-            <div className="d-flex align-items-center">
-              <a onClick={() => {
-                localStorage.removeItem('token');
-                localStorage.removeItem('isAdmin');
-                sessionStorage.removeItem('token');
-                sessionStorage.removeItem('isAdmin');
-                navigate('/login');
-              }} className="logout-link">התנתקות</a>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header
+        user={user}
+        role="manager" // מצב של מנהל
+        handleLogout={handleLogout}
+        handleReport={handleReport}
+        handleEmployeeManagement={handleEmployeeManagement}
+        handleHome={handleHome}
+        handleSettings={handleSetting}
+      />
       <div className="container mt-5">
         <div className="row justify-content-center">
-          <div className="col-md-8"> {/* Increased width here */}
+          <div className="col-md-8">
             <div className="card">
               <div className="card-header text-center">
                 <h4>כרגע אין צורך בדף הגדרות....</h4>

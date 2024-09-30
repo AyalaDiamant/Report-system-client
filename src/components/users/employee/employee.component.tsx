@@ -4,6 +4,7 @@ import ReportService from '../../../services/report.service';
 import { useUser } from '../../../contexts/user.context';
 import { Deliverable, MyReport } from '../../../interfaces/report.interface';
 import Enums from '../../../interfaces/enums';
+import Header from '../../header.component';
 
 const Employee: React.FC = () => {
     const [reports, setReports] = useState<MyReport[]>([]);
@@ -43,6 +44,10 @@ const Employee: React.FC = () => {
 
     const toggleShowReports = () => {
         setShowReports(!showReports);
+    };
+
+    const handleHome = () => {
+        navigate('/employee');
     };
 
     // פונקציה למחיקת דוח
@@ -104,32 +109,14 @@ const Employee: React.FC = () => {
     return (
         <div>
             <div className="development-banner">האתר בשלבי פיתוח</div>
-
-            <header className="navbar navbar-expand-lg navbar-light bg-light">
-                <div className="container">
-                    <span className="navbar-brand">
-                        {user?.name ? `שלום ${user.name}` : ''}
-                    </span>
-                    <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
-                        <ul className="navbar-nav mr-auto">
-                            <li className="nav-item">
-                                <button className="nav-link btn" onClick={toggleShowReports}>
-                                    הדוחות שלי
-                                </button>
-                            </li>
-                            <li className="nav-item">
-                                <span className="nav-link" onClick={handleReport}>
-                                    למילוי דוח
-                                </span>
-                            </li>
-                        </ul>
-                        <div className="d-flex align-items-center">
-                            <a onClick={handleLogout} className="logout-link">התנתק</a>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
+            <Header
+                user={user}
+                role="employee" // מצב של עובד
+                handleLogout={handleLogout}
+                handleReport={handleReport}
+                toggleShowReports={toggleShowReports} // העברת פונקציה
+                handleHome={handleHome}
+            />
             <div className="container mt-5">
                 <h1>עמוד עובד</h1>
                 {showReports && (

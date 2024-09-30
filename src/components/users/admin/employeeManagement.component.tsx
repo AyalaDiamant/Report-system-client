@@ -3,6 +3,7 @@ import employeeService from '../../../services/employee.service';
 import { Employee } from '../../../interfaces/employee.interface'; // נוודא לייבא את הממשק
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../../contexts/user.context';
+import Header from '../../header.component';
 
 const EmployeeManagement: React.FC = () => {
     const [employees, setEmployees] = useState<Employee[]>([]);
@@ -120,32 +121,21 @@ const EmployeeManagement: React.FC = () => {
     const handleReport = () => {
         navigate('/reports');
     }
+    const handleEmployeeManagement = () => {
+        navigate('/employee-management');
+    };
 
     return (
         <div>
-            <div className="development-banner">האתר בשלבי פיתוח</div>
-            <header className="navbar navbar-expand-lg navbar-light bg-light">
-                <div className="container">
-                    <span className="navbar-brand"> {user?.name ? ` שלום ${user.name} ` : ''}
-                    </span>
-                    <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
-                        <ul className="navbar-nav mr-auto">
-                            <li className="nav-item">
-                                <span className="nav-link" onClick={handleHome}>עמוד הבית</span>
-                            </li>
-                            <li className="nav-item">
-                                <span className="nav-link" onClick={handleReport}>דוחות</span>
-                            </li>
-                            <li className="nav-item">
-                                <span className="nav-link" onClick={handleSetting}>הגדרות</span>
-                            </li>
-                        </ul>
-                        <div className="d-flex align-items-center">
-                            <a onClick={handleLogout} className="logout-link">התנתק</a>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <Header
+                user={user}
+                role="manager" // מצב של מנהל
+                handleLogout={handleLogout}
+                handleReport={handleReport}
+                handleEmployeeManagement={handleEmployeeManagement}
+                handleHome={handleHome}
+                handleSettings={handleSetting}
+            />
             <div className="container mt-5">
                 <h2 className="text-center">ניהול עובדים</h2>
                 <div className="">

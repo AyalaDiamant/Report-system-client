@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import ExcelJS from 'exceljs';
 import { Settings } from '../../../interfaces/settings.interface';
 import Enums from '../../../interfaces/enums';
+import Header from '../../header.component';
 
 const Reports: React.FC = () => {
     const [reports, setReports] = useState<MyReport[]>([]);
@@ -87,7 +88,7 @@ const Reports: React.FC = () => {
             alignment: { horizontal: 'center' as ExcelJS.Alignment['horizontal'] }
         };
 
-        const headers = ["שם עובד", "פרוייקט", "סימן","סעיף", "תפקיד", "תעריף", "סה\"כ", "כמות", "הערה"];
+        const headers = ["שם עובד", "פרוייקט", "סימן", "סעיף", "תפקיד", "תעריף", "סה\"כ", "כמות", "הערה"];
         const headerRow = sheet.addRow(headers);
         headerRow.eachCell(cell => {
             cell.font = headerStyle.font;
@@ -113,22 +114,22 @@ const Reports: React.FC = () => {
 
         const updatedReports = reports.map(report => {
             const updatedDeliverables = report.deliverables.map(e => {
-                const newRate = e.rate + (e.rateIncrease || 0); 
-                const newTotal = e.quantity * newRate;  
-        
+                const newRate = e.rate + (e.rateIncrease || 0);
+                const newTotal = e.quantity * newRate;
+
                 return {
                     ...e,
                     rate: newRate,
-                    total: newTotal  
+                    total: newTotal
                 };
             });
-        
+
             return {
                 ...report,
-                deliverables: updatedDeliverables  
+                deliverables: updatedDeliverables
             };
         });
-        
+
         const updatedHeaderRow = sheetUpdated.addRow(headers);
         updatedHeaderRow.eachCell(cell => {
             cell.font = headerStyle.font;
@@ -166,16 +167,16 @@ const Reports: React.FC = () => {
                 let netSalary = 0;
                 let deduction = 0;
                 let balance = 0;
-        
+
                 netSalary = e.quantity * e.rate;
-        
-                const newRate = e.rate + (e.rateIncrease || 0); 
+
+                const newRate = e.rate + (e.rateIncrease || 0);
                 grossSalary = e.quantity * newRate;
-        
+
                 deduction = grossSalary * 0.15;
-        
+
                 balance = grossSalary - netSalary - deduction;
-        
+
                 sheetCalculations.addRow([
                     employeeNames[report.employeeId] || 'טוען...',
                     netSalary,
@@ -185,13 +186,13 @@ const Reports: React.FC = () => {
                 ]);
             });
         });
-        
+
 
         const employeeSummaries: { _id: number; name: string; totalNetSalary: number; totalGrossSalary: number; difference: number; }[] = [];
 
         // שינוי: קבלת הנטו והברוטו מתוך טבלת החישובים
         sheetCalculations.eachRow((row, rowIndex) => {
-            if (rowIndex > 1) {  
+            if (rowIndex > 1) {
                 const employeeName = row.getCell(1).value;
                 const netSalary = row.getCell(2).value;
                 const grossSalary = row.getCell(3).value;
@@ -238,27 +239,6 @@ const Reports: React.FC = () => {
             const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
             saveAs(blob, `דוחות_${new Date().toISOString().split('T')[0]}.xlsx`);
         });
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('isAdmin');
-        sessionStorage.removeItem('token');
-        sessionStorage.removeItem('isAdmin');
-
-        navigate('/login');
-    };
-
-    const handleHome = () => {
-        navigate('/admin');
-    };
-
-    const handleSetting = () => {
-        navigate('/settings');
-    };
-
-    const handleEmployee = () => {
-        navigate('/employee-management');
     };
 
     // פונקציה למחיקת דוח
@@ -317,33 +297,41 @@ const Reports: React.FC = () => {
         // loadReports();
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('isAdmin');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('isAdmin');
+
+        navigate('/login');
+    };
+
+    const handleHome = () => {
+        navigate('/admin');
+    };
+
+    const handleSetting = () => {
+        navigate('/settings');
+    };
+
+    const handleReport = () => {
+        navigate('/reports');
+    }
+    const handleEmployeeManagement = () => {
+        navigate('/employee-management');
+    };
 
     return (
         <div>
-            <div className="development-banner">האתר בשלבי פיתוח</div>
-            <header className="navbar navbar-expand-lg navbar-light bg-light">
-                <div className="container">
-                    <span className="navbar-brand"> {user?.name ? ` שלום ${user.name} ` : ''}
-                    </span>
-                    <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
-                        <ul className="navbar-nav mr-auto">
-                            <li className="nav-item">
-                                <span className="nav-link" onClick={handleHome}>עמוד הבית</span>
-                            </li>
-                            <li className="nav-item">
-                                <span className="nav-link" onClick={handleSetting}>הגדרות</span>
-                            </li>
-                            <li className="nav-item">
-                                <span className="nav-link" onClick={handleEmployee}>ניהול עובדים</span>
-                            </li>
-                        </ul>
-                        <div className="d-flex align-items-center">
-                            <a onClick={handleLogout} className="logout-link">התנתק</a>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
+            <Header
+                user={user}
+                role="manager" // מצב של מנהל
+                handleLogout={handleLogout}
+                handleReport={handleReport}
+                handleEmployeeManagement={handleEmployeeManagement}
+                handleHome={handleHome}
+                handleSettings={handleSetting}
+            />
             <div className="container mt-5">
                 <h1>כל הדוחות</h1>
                 <button className="btn btn-secondary marginBottun mt-3" onClick={exportToExcel}>

@@ -3,6 +3,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../../contexts/user.context';
+import Header from '../../header.component';
 
 const Admin: React.FC = () => {
 
@@ -22,41 +23,30 @@ const Admin: React.FC = () => {
     navigate('/settings');
   };
 
-  const handleReports = () => {
+  const handleReport = () => {
     navigate('/reports');
   };
 
   const handleEmployeeManagement = () => {
-    navigate('/employee-management'); // Add this line
-};
+    navigate('/employee-management');
+  };
+
+  const handleHome = () => {
+    navigate('/admin');
+  };
 
 
   return (
     <div>
-      <div className="development-banner">האתר בשלבי פיתוח</div>
-      <header className="navbar navbar-expand-lg navbar-light bg-light">
-        <div className="container">
-          <span className="navbar-brand"> {user?.name ? ` שלום ${user.name} ` : ''}
-          </span>
-          <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <span className="nav-link" onClick={handleSetting}>הגדרות</span>
-              </li>
-              <li className="nav-item">
-                <span className="nav-link" onClick={handleReports}>דוחות</span>
-              </li>
-              <li className="nav-item">
-                <span className="nav-link" onClick={handleEmployeeManagement}>ניהול עובדים</span>
-              </li>
-            </ul>
-            <div className="d-flex align-items-center">
-              <a onClick={handleLogout} className="logout-link">התנתק</a>
-            </div>
-          </div>
-        </div>
-      </header>
-
+      <Header
+        user={user}
+        role="manager" // מצב של מנהל
+        handleLogout={handleLogout}
+        handleReport={handleReport}
+        handleEmployeeManagement={handleEmployeeManagement}
+        handleHome={handleHome}
+        handleSettings={handleSetting}
+      />
       <div className="container mt-5">
         <h1>עמוד ניהול</h1>
       </div>
