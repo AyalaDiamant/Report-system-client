@@ -87,7 +87,7 @@ const Reports: React.FC = () => {
             alignment: { horizontal: 'center' as ExcelJS.Alignment['horizontal'] }
         };
 
-        const headers = ["שם עובד", "פרוייקט", "סימן/סעיף", "תפקיד", "תעריף", "סה\"כ", "כמות", "הערה"];
+        const headers = ["שם עובד", "פרוייקט", "סימן","סעיף", "תפקיד", "תעריף", "סה\"כ", "כמות", "הערה"];
         const headerRow = sheet.addRow(headers);
         headerRow.eachCell(cell => {
             cell.font = headerStyle.font;
@@ -101,6 +101,7 @@ const Reports: React.FC = () => {
                     employeeNames[report.employeeId] || 'טוען...',
                     e.project,
                     e.sign,
+                    e.seif,
                     e.role,
                     e.rate,
                     e.total,
@@ -141,6 +142,7 @@ const Reports: React.FC = () => {
                     employeeNames[report.employeeId] || 'טוען...',
                     e.project,
                     e.sign,
+                    e.seif,
                     e.role,
                     e.rate,
                     e.total,
