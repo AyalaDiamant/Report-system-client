@@ -112,30 +112,22 @@ const Reports: React.FC = () => {
 
         const updatedReports = reports.map(report => {
             const updatedDeliverables = report.deliverables.map(e => {
-                const settingForRole = setting?.roles.find(set => set.name === e.role);
-
-                if (e.type === 'אחר') {
-                    return e; // לא משנה כלום אם type הוא "אחר"
-                }
-
-                if (settingForRole) {
-                    const newRate = e.rate + settingForRole.rateIncrease;
-                    const newTotal = e.quantity * newRate;
-                    return {
-                        ...e,
-                        rate: newRate,
-                        total: newTotal
-                    };
-                }
-                return e;
+                const newRate = e.rate + (e.rateIncrease || 0); 
+                const newTotal = e.quantity * newRate;  
+        
+                return {
+                    ...e,
+                    rate: newRate,
+                    total: newTotal  
+                };
             });
-
+        
             return {
                 ...report,
-                deliverables: updatedDeliverables
+                deliverables: updatedDeliverables  
             };
         });
-
+        
         const updatedHeaderRow = sheetUpdated.addRow(headers);
         updatedHeaderRow.eachCell(cell => {
             cell.font = headerStyle.font;
@@ -168,22 +160,20 @@ const Reports: React.FC = () => {
 
         reports.forEach(report => {
             report.deliverables.forEach(e => {
-                const settingForRole = setting?.roles.find(set => set.name === e.role);
                 let grossSalary = 0;
                 let netSalary = 0;
                 let deduction = 0;
                 let balance = 0;
-
-                if (e.type === 'אחר') {
-                    grossSalary = e.quantity * e.rate;
-                    netSalary = grossSalary;
-                } else if (settingForRole) {
-                    grossSalary = e.quantity * (e.rate + settingForRole.rateIncrease);
-                    netSalary = e.total;
-                    deduction = grossSalary * 0.15;
-                    balance = grossSalary - netSalary - deduction;
-                }
-
+        
+                netSalary = e.quantity * e.rate;
+        
+                const newRate = e.rate + (e.rateIncrease || 0); 
+                grossSalary = e.quantity * newRate;
+        
+                deduction = grossSalary * 0.15;
+        
+                balance = grossSalary - netSalary - deduction;
+        
                 sheetCalculations.addRow([
                     employeeNames[report.employeeId] || 'טוען...',
                     netSalary,
@@ -193,12 +183,13 @@ const Reports: React.FC = () => {
                 ]);
             });
         });
+        
 
         const employeeSummaries: { _id: number; name: string; totalNetSalary: number; totalGrossSalary: number; difference: number; }[] = [];
 
         // שינוי: קבלת הנטו והברוטו מתוך טבלת החישובים
         sheetCalculations.eachRow((row, rowIndex) => {
-            if (rowIndex > 1) {  // דילוג על שורת הכותרת
+            if (rowIndex > 1) {  
                 const employeeName = row.getCell(1).value;
                 const netSalary = row.getCell(2).value;
                 const grossSalary = row.getCell(3).value;
@@ -262,6 +253,10 @@ const Reports: React.FC = () => {
 
     const handleSetting = () => {
         navigate('/settings');
+    };
+
+    const handleEmployee = () => {
+        navigate('/employee-management');
     };
 
     // פונקציה למחיקת דוח
@@ -335,6 +330,9 @@ const Reports: React.FC = () => {
                             </li>
                             <li className="nav-item">
                                 <span className="nav-link" onClick={handleSetting}>הגדרות</span>
+                            </li>
+                            <li className="nav-item">
+                                <span className="nav-link" onClick={handleEmployee}>ניהול עובדים</span>
                             </li>
                         </ul>
                         <div className="d-flex align-items-center">

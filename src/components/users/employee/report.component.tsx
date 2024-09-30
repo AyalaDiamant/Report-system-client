@@ -19,6 +19,7 @@ const Report: React.FC = () => {
     type: '',
     quantity: 0,
     rate: 0,
+    rateIncrease: 0,
     role: employee?.role?.name || '',
     project: employee?.project || '',
     sign: '',
@@ -95,6 +96,7 @@ const Report: React.FC = () => {
     {
       deliverable.rate = rate; 
       deliverable.role = employee.role.name;
+      deliverable.rateIncrease = employee.role.rateIncrease;
       deliverable.project= employee.project
       deliverable.total = deliverable.quantity * deliverable.rate
     }
@@ -116,6 +118,7 @@ const Report: React.FC = () => {
         type: '',
         quantity: 0,
         rate: 0,
+        rateIncrease: 0,
         role: '',
         project: '',
         sign: '',

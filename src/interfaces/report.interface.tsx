@@ -2,6 +2,7 @@ export interface Deliverable {
     type: string; // סוג
     quantity: number; // כמות
     rate: number; // תעריף
+    rateIncrease: number, // העלאת תעריף
     role: string; // תפקיד
     project: string; // פרוייקט
     sign: string; // סימן/סעיף
