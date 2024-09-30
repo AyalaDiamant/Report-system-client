@@ -262,7 +262,6 @@ const Report: React.FC = () => {
 
   return (
     <div>
-      <div className="development-banner">האתר בשלבי פיתוח</div>
       <Header
         user={user}
         role="employee" // מצב של עובד

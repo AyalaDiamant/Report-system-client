@@ -22,45 +22,49 @@ const Header: React.FC<HeaderProps> = ({
     handleSettings
 }) => {
     return (
-        <header className="navbar navbar-expand-lg navbar-light bg-light">
-            <div className="container">
-                <span className="navbar-brand">{user?.name ? `שלום ${user.name}` : ''}</span>
-                <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
-                    <ul className="navbar-nav mr-auto">
-                        <li className="nav-item">
-                            <span className="nav-link" onClick={handleHome}>עמוד הבית</span>
-                        </li>
-                        <li className="nav-item">
-                            {role === 'employee' ? (
-                                <button className="nav-link btn" onClick={toggleShowReports}>
-                                    הדוחות שלי
-                                </button>
-                            ) : (
-                                <span className="nav-link" onClick={handleReport}>דוחות</span>
-                            )}
-                        </li>
-                        {role === 'employee' && (
+        <div>
+            <div className="development-banner">האתר בשלבי פיתוח</div>
+
+            <header className="navbar navbar-expand-lg navbar-light bg-light">
+                <div className="container">
+                    <span className="navbar-brand">{user?.name ? `שלום ${user.name}` : ''}</span>
+                    <div className="collapse navbar-collapse d-flex justify-content-between align-items-center">
+                        <ul className="navbar-nav mr-auto">
                             <li className="nav-item">
-                                <span className="nav-link" onClick={handleReport}>למילוי דוח</span>
+                                <span className="nav-link" onClick={handleHome}>עמוד הבית</span>
                             </li>
-                        )}
-                        {role === 'manager' && (
-                            <>
+                            <li className="nav-item">
+                                {role === 'employee' ? (
+                                    <button className="nav-link btn" onClick={toggleShowReports}>
+                                        הדוחות שלי
+                                    </button>
+                                ) : (
+                                    <span className="nav-link" onClick={handleReport}>דוחות</span>
+                                )}
+                            </li>
+                            {role === 'employee' && (
                                 <li className="nav-item">
-                                    <span className="nav-link" onClick={handleEmployeeManagement}>ניהול עובדים</span>
+                                    <span className="nav-link" onClick={handleReport}>למילוי דוח</span>
                                 </li>
-                                <li className="nav-item">
-                                    <span className="nav-link" onClick={handleSettings}>הגדרות</span>
-                                </li>
-                            </>
-                        )}
-                    </ul>
-                    <div className="d-flex align-items-center">
-                        <a onClick={handleLogout} className="logout-link">התנתק</a>
+                            )}
+                            {role === 'manager' && (
+                                <>
+                                    <li className="nav-item">
+                                        <span className="nav-link" onClick={handleEmployeeManagement}>ניהול עובדים</span>
+                                    </li>
+                                    <li className="nav-item">
+                                        <span className="nav-link" onClick={handleSettings}>הגדרות</span>
+                                    </li>
+                                </>
+                            )}
+                        </ul>
+                        <div className="d-flex align-items-center">
+                            <a onClick={handleLogout} className="logout-link">התנתק</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </header>
+            </header>
+        </div>
     );
 };
 
