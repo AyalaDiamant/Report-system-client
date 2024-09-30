@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import ReportService from '../../../services/report.service';
 import Enums from '../../../interfaces/enums';
 import { useUser } from '../../../contexts/user.context';
-import { getSetting } from '../../../services/setting.service';
 import { MyReport, Deliverable } from '../../../interfaces/report.interface';
-import { Settings } from '../../../interfaces/settings.interface';
+// בשביל ההגדרות
+// import { Settings } from '../../../interfaces/settings.interface';
+// import { getSetting } from '../../../services/setting.service';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import ExcelJS from 'exceljs';
@@ -66,6 +67,13 @@ const Report: React.FC = () => {
       setTotalSum(totalSumCalculation({ ...report, deliverables: [...report.deliverables, { ...deliverable, total }] }));
     }
   };
+
+  useEffect(() => {
+    const rate = employee?.role?.rate || 0; 
+    const total = deliverable.quantity * rate; 
+    setDeliverable((prev) => ({ ...prev, rate, total }));
+    setTotalSum(total); 
+  }, [deliverable.quantity, employee]);
 
   // חישוב תפקיד לפי הגדרה כרגע לא נצרך
   // function rateCalculation(): number {
@@ -289,14 +297,12 @@ const Report: React.FC = () => {
                     <label htmlFor="quantity">כמות</label>
                     <input id="quantity" name="quantity" type="number" value={deliverable.quantity} onChange={handleChange} placeholder="כמות" className="form-control" required />
                   </div>
-
                   <div className="form-group">
                     <label htmlFor="common">הערה</label>
                     <input id="common" name="common" type="text" value={report.common} onChange={(e) => setReport({ ...report, common: e.target.value })} placeholder="הערה כללית" className="form-control" />
                   </div>
-                  <div className="form-group">
-                    <label>סה"כ רווח:</label>
-                    <input type="text" value={totalSum} readOnly className="form-control" />
+                  <div className="form-group totalSum">
+                    <h4>סה"כ : {totalSum}</h4>
                   </div>
                   <div className='d-flex align-items-center mt-3 gap-2'>
                     <button type="button" className="btn btn-secondary" onClick={addDeliverable}>
