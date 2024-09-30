@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { Employee } from '../interfaces/employee.interface';
-const API_URL = 'http://localhost:3000/api/';
 
+const serverUrl = `${process.env.REACT_APP_API_URL}`
 interface Credentials {
   name: string;
   password: string;
@@ -12,7 +11,7 @@ interface Credentials {
 // };
 
 const login = (credentials: Credentials) => {
-  return axios.post(`${API_URL}login`, credentials);
+  return axios.post(`${serverUrl}login`, credentials);
 };
 
 const AuthService = {

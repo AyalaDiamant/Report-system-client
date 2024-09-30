@@ -1,10 +1,10 @@
 // import axios from "axios";
 
-// const API_URL = 'http://localhost:3000/api/setting';
+// const serverUrl = `${process.env.REACT_APP_API_URL}setting`;
 
 // export const saveSetting = async (setting: any) => {
 //   try {
-//     const response = await fetch(API_URL, {
+//     const response = await fetch(serverUrl, {
 //       method: 'POST',
 //       headers: {
 //         'Content-Type': 'application/json'
@@ -19,12 +19,11 @@
 //     console.error('Error saving setting:', error);
 //     throw error;
 //   }
-
 // };
 
 // export const getSetting = async () => {
 //   try {
-//     const response = await axios.get(`${API_URL}`, {
+//     const response = await axios.get(`${serverUrl}`, {
 //       headers: {
 //         'Authorization': `Bearer ${localStorage.getItem('token')}`, // שליחת הטוקן עם הבקשה
 //       },
@@ -36,53 +35,50 @@
 //   }
 // };
 
+// export const updateRole = async (index: any, updatedRole:any) => {
+//   await axios.patch(`${serverUrl}/update-role`, { index, updatedRole });
+// };
+
+// export const removeRole = async (index:any) => {
+//   await axios.delete(`${serverUrl}/delete-role`, { data: { index } });
+// };
+
+// export const removeProject = async (index:any) => {
+//   await axios.delete(`${serverUrl}/delete-project`, { data: { index } });
+// };
+
+
 import axios from "axios";
 
-const API_URL = 'http://localhost:3000/api/setting';
+const serverUrl = `${process.env.REACT_APP_API_URL}setting`;
 
-export const saveSetting = async (setting: any) => {
-  try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(setting)
-    });
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error saving setting:', error);
-    throw error;
+const apiRequest = async (method: string, url: string, data?: any) => {
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+  if (!token) {
+    throw new Error('No token found. User is not authenticated.');
   }
-};
 
-export const getSetting = async () => {
   try {
-    const response = await axios.get(`${API_URL}`, {
+    const response = await axios({
+      method,
+      url: `${serverUrl}/${url}`,
+      data,
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`, // שליחת הטוקן עם הבקשה
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
     });
     return response.data;
   } catch (error: any) {
-    console.error('Error getting settings:', error.response ? error.response.data : error.message);
-    throw error;
+    console.error(`Error during ${method.toUpperCase()} request to ${url}:`, error.response ? error.response.data : error.message);
+    throw new Error(`Error during ${method.toUpperCase()} request to ${url}: ${error.response ? error.response.data : error.message}`);
   }
 };
 
-export const updateRole = async (index: any, updatedRole:any) => {
-  await axios.patch(`${API_URL}/update-role`, { index, updatedRole });
-};
-
-export const removeRole = async (index:any) => {
-  await axios.delete(`${API_URL}/delete-role`, { data: { index } });
-};
-
-export const removeProject = async (index:any) => {
-  await axios.delete(`${API_URL}/delete-project`, { data: { index } });
-};
-
+// פונקציות ספציפיות
+export const saveSetting = (setting: any) => apiRequest('post', '', setting);
+export const getSetting = () => apiRequest('get', '');
+export const updateRole = (index: any, updatedRole: any) => apiRequest('patch', 'update-role', { index, updatedRole });
+export const removeRole = (index: any) => apiRequest('delete', 'delete-role', { index });
+export const removeProject = (index: any) => apiRequest('delete', 'delete-project', { index });
 
