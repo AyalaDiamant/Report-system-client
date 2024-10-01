@@ -7,8 +7,8 @@ import { MyReport, Deliverable } from '../../../interfaces/report.interface';
 // בשביל ההגדרות
 // import { Settings } from '../../../interfaces/settings.interface';
 // import { getSetting } from '../../../services/setting.service';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
+// import * as XLSX from 'xlsx';
+// import { saveAs } from 'file-saver';
 import ExcelJS from 'exceljs';
 import employeeService from '../../../services/employee.service';
 import { Employee } from '../../../interfaces/employee.interface';

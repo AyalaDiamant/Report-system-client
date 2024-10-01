@@ -3,11 +3,9 @@ import ReportService from '../../../services/report.service';
 import EmployeeService from '../../../services/employee.service';
 import { Deliverable, MyReport } from '../../../interfaces/report.interface';
 import { saveAs } from 'file-saver';
-import { getSetting } from '../../../services/setting.service';
 import { useUser } from '../../../contexts/user.context';
 import { useNavigate } from 'react-router-dom';
 import ExcelJS from 'exceljs';
-import { Settings } from '../../../interfaces/settings.interface';
 import Enums from '../../../interfaces/enums';
 import Header from '../../header.component';
 
@@ -16,11 +14,11 @@ const Reports: React.FC = () => {
     const [originalReports, setOriginalReports] = useState<MyReport[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [employeeNames, setEmployeeNames] = useState<{ [key: number]: string }>({});
-    const [setting, setSetting] = useState<Settings | null>(null);
+    // const [setting, setSetting] = useState<Settings | null>(null);
     const [editingReportId, setEditingReportId] = useState<number | null>(null);
     const [editedReportData, setEditedReportData] = useState<any>({});
     const [originalReportData, setOriginalReportData] = useState<MyReport | null>(null);
-
+    
     const navigate = useNavigate();
     const { user } = useUser();
 
@@ -40,13 +38,13 @@ const Reports: React.FC = () => {
             setReports(reportData);
             setOriginalReports([...reportData]);
 
-            // טעינת ההגדרות
-            const settingsData = await getSetting();
-            const settings = settingsData[0] || {};
-            setSetting({
-                roles: settings.roles || [],
-                projects: settings.projects || []
-            });
+            // // טעינת ההגדרות
+            // const settingsData = await getSetting();
+            // const settings = settingsData[0] || {};
+            // setSetting({
+            //     roles: settings.roles || [],
+            //     projects: settings.projects || []
+            // });
 
             // טעינת שמות העובדים
             const namesMap: { [key: number]: string } = {};
