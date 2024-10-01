@@ -220,7 +220,7 @@ const Report: React.FC = () => {
     report.employeeId = user?.employeeId ?? 0;
 
     try {
-      const res = await ReportService.addReport(report);
+      await ReportService.addReport(report);
       if (window.confirm('תרצה להוריד את הדוח לאקסל?')) {
         exportStyledReportToExcel(report);
         navigate('/employee');
