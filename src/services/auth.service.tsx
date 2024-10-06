@@ -15,7 +15,6 @@ interface Credentials {
 // };
 
 const login = (credentials: Credentials) => {
-  alert(serverUrl)
   return axios.post(`${serverUrl}login`, credentials);
 };
 

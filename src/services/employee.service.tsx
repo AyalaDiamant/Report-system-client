@@ -104,7 +104,11 @@
 
 import axios from 'axios';
 
-const API_URL = `${process.env.REACT_APP_API_URL}employee/`;
+const apiUrl = (process.env.NODE_ENV === 'development' 
+    ? 'http://localhost:3000/api/' 
+    : 'https://report-system-server.onrender.com/api/');
+
+const API_URL = `${apiUrl}employee/`;
 
 const apiRequest = async (method: string, url: string, data?: any) => {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token'); 
