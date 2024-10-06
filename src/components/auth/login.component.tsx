@@ -66,8 +66,6 @@ const Login: React.FC = () => {
                 <form onSubmit={login}>
                   <div className="form-group">
                     <label htmlFor="name">שם:</label>
-                    <p>Current NODE_ENV: {process.env.NODE_ENV};
-                    </p>
                     <input id="name" name="name" type="text" onChange={handleChange} className="form-control" required />
                   </div>
                   <div className="form-group">
