@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const serverUrl = `${process.env.REACT_APP_API_URL}`
+const apiUrl = (process.env.NODE_ENV === 'development' 
+  ? 'http://localhost:3000/api/' 
+  : 'https://report-system-server.onrender.com/api/');
+
+const serverUrl = `${apiUrl}`
 interface Credentials {
   name: string;
   password: string;
@@ -11,6 +15,7 @@ interface Credentials {
 // };
 
 const login = (credentials: Credentials) => {
+  alert(serverUrl)
   return axios.post(`${serverUrl}login`, credentials);
 };
 
