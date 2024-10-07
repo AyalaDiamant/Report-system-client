@@ -60,6 +60,7 @@ const Login: React.FC = () => {
           <div className="col-md-6">
             <div className="card">
               <div className="card-header text-center">
+                <p>עובד לוקאלית</p>
                 <h2>התחברות</h2>
               </div>
               <div className="card-body">
