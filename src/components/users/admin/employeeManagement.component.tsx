@@ -164,6 +164,7 @@ const EmployeeManagement: React.FC = () => {
                                     ))}
                                 </ul>
                             </div>
+                            <button className='btn btn-primary card row mb-12' onClick={handleAddEmployee}>הוסף עובד</button>
                         </div>
                     )}
 

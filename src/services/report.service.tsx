@@ -95,8 +95,8 @@
 import axios from 'axios';
 import { MyReport } from '../interfaces/report.interface';
 
-const apiUrl = (process.env.NODE_ENV === 'development' 
-  ? 'http://localhost:3000/api/' 
+const apiUrl = (process.env.NODE_ENV === 'development'
+  ? 'http://localhost:3000/api/'
   : 'https://report-system-server.onrender.com/api/');
 
 const serverUrl = `${apiUrl}report`;
