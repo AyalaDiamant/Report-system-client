@@ -139,28 +139,35 @@ const EmployeeManagement: React.FC = () => {
             <div className="container mt-5">
                 <h2 className="text-center">ניהול עובדים</h2>
                 <div className="">
-                    <div className="card">
-                        <div className="card-header text-center">
-                            <h3>רשימת עובדים</h3>
+                    {employees.length === 1 ? (
+                        <div>
+                            <p className="no-reports">עדיין אין עובדים</p>
+                            <button className='btn btn-primary card row mb-12' onClick={handleAddEmployee}>הוסף עובד</button>
                         </div>
-                        <div className="card-body">
-                            <ul className="list-group mb-4">
-                                {employees.map((employee) => (
-                                    employee._id !== 0 && (
-                                        <li key={employee._id} className="list-group-item d-flex justify-content-between align-items-center">
-                                            {employee.name} - {employee.role?.name}
-                                            <div>
-                                                <button type="button" className="btn btn-warning btn-sm" onClick={() => setEditEmployee(employee)}>ערוך</button>
-                                                <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteEmployee(employee._id)}>מחק</button>
-                                            </div>
-                                        </li>
-                                    )
-                                ))}
-                            </ul>
+                    ) : (
+                        <div className="card">
+                            <div className="card-header text-center">
+                                <h3>רשימת עובדים</h3>
+                            </div>
+                            <div className="card-body">
+                                <ul className="list-group mb-4">
+                                    {employees.map((employee) => (
+                                        employee._id !== 0 && (
+                                            <li key={employee._id} className="list-group-item d-flex justify-content-between align-items-center">
+                                                {employee.name} - {employee.role?.name}
+                                                <div>
+                                                    <button type="button" className="btn btn-warning btn-sm" onClick={() => setEditEmployee(employee)}>ערוך</button>
+                                                    <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteEmployee(employee._id)}>מחק</button>
+                                                </div>
+                                            </li>
+                                        )
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    )}
+
                 </div>
-                <button className='btn btn-primary card row mb-12' onClick={handleAddEmployee}>הוסף עובד</button>
                 {handleAdd ? (
                     <div className="row mb-4">
                         <div className="col-md-12">
@@ -301,7 +308,6 @@ const EmployeeManagement: React.FC = () => {
                     <p></p>
                 )
                 }
-
                 {
                     editEmployee && (
                         <div className="card mb-2">

@@ -18,7 +18,7 @@ const Reports: React.FC = () => {
     const [editingReportId, setEditingReportId] = useState<number | null>(null);
     const [editedReportData, setEditedReportData] = useState<any>({});
     const [originalReportData, setOriginalReportData] = useState<MyReport | null>(null);
-    
+
     const navigate = useNavigate();
     const { user } = useUser();
 
@@ -331,16 +331,16 @@ const Reports: React.FC = () => {
                 handleSettings={handleSetting}
             />
             <div className="container mt-5">
-                <h1>כל הדוחות</h1>
-                <button className="btn btn-secondary marginBottun mt-3" onClick={exportToExcel}>
-                    יצוא דוחות ל-Excel
-                </button>
                 {loading ? (
                     <p>טוען דוחות...</p>
                 ) : (
                     <div>
                         {reports.length > 0 ? (
                             <div className="row">
+                                <h1>כל הדוחות</h1>
+                                <button className="btn btn-secondary marginBottun mt-3" onClick={exportToExcel}>
+                                    יצוא דוחות ל-Excel
+                                </button>
                                 {reports.map((report, index) => {
                                     const totalSum = report.deliverables.reduce((sum, item) => sum + item.total, 0);
                                     return (
@@ -438,7 +438,7 @@ const Reports: React.FC = () => {
                                 })}
                             </div>
                         ) : (
-                            <p>אין דוחות</p>
+                            <p className="no-reports">כרגע אין דוחות.</p>
                         )}
                     </div>
                 )}
