@@ -1,4 +1,4 @@
-// // src/components/FileUpload.tsx
+// קונטרולר קובץ, כרגע לא נוגעים בו
 // import React, { useState } from 'react';
 // import fileService from '../../../services/file.service';
 // import { FileData } from '../../../interfaces/file.interface';

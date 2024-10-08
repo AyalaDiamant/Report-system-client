@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReportService from '../../../services/report.service';
-import FileService from '../../../services/file.service';
+// import FileService from '../../../services/file.service'; // סרויס לקובץ
 import { useUser } from '../../../contexts/user.context';
 import { Deliverable, MyReport } from '../../../interfaces/report.interface';
 import Enums from '../../../interfaces/enums';
@@ -14,7 +14,7 @@ const Employee: React.FC = () => {
     const [editingReportId, setEditingReportId] = useState<number | null>(null);
     const [editedReportData, setEditedReportData] = useState<any>({});
     const [originalReportData, setOriginalReportData] = useState<MyReport | null>(null);
-    const [file, setFile] = useState<File | null>(null); // מצב לקובץ
+    // const [file, setFile] = useState<File | null>(null); // מצב לקובץ
 
 
     const navigate = useNavigate();
@@ -109,33 +109,31 @@ const Employee: React.FC = () => {
         loadReports();
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files.length > 0) {
-            setFile(e.target.files[0]);
-        }
-    };
+    // פונצקיה להעלאת קובץכרגע לא נוגעים בה
+    // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     if (e.target.files && e.target.files.length > 0) {
+    //         setFile(e.target.files[0]);
+    //     }
+    // };
 
 
-    const handleUpload = async () => {
-        if (!file) {
-            alert('אנא בחר קובץ להעלות.');
-            return;
-        }
-    
-        // const formData: File = ;
-        // formData.append('file', file); // כאן אנחנו מוסיפים את הקובץ ל-FormData
-    
-        try {
-            let id = user?.employeeId || 0;
-            await FileService.uploadFile(file, id); // ודא שהפונקציה uploadFile מקבלת FormData
-            alert('הקובץ הועלה בהצלחה!');
-            setFile(null); // ניקוי מצב הקובץ לאחר ההעלאה
-        } catch (error) {
-            console.error('Error uploading file:', error);
-            alert('שגיאה בהעלאת הקובץ.');
-        }
-    };
-    
+    // const handleUpload = async () => {
+    //     if (!file) {
+    //         alert('אנא בחר קובץ להעלות.');
+    //         return;
+    //     }
+
+    //     try {
+    //         let id = user?.employeeId || 0;
+    //         await FileService.uploadFile(file, id); // ודא שהפונקציה uploadFile מקבלת FormData
+    //         alert('הקובץ הועלה בהצלחה!');
+    //         setFile(null); // ניקוי מצב הקובץ לאחר ההעלאה
+    //     } catch (error) {
+    //         console.error('Error uploading file:', error);
+    //         alert('שגיאה בהעלאת הקובץ.');
+    //     }
+    // };
+
 
     return (
         <div>
@@ -149,15 +147,9 @@ const Employee: React.FC = () => {
             />
             <div className="container mt-5">
                 <h1>עמוד עובד</h1>
-
-                {/* <div className="file-upload">
-                    <input type="file" onChange={handleFileChange} />
-                    <button className="btn btn-primary mt-2" onClick={handleUpload}>
-                        העלה קובץ
-                    </button>
-                </div> */}
-                <input type="file" onChange={handleFileChange} />
-                <button onClick={handleUpload} disabled={!file}>העלה קובץ</button>
+                {/* כפתור להעלאת קובץ כרגע לא נוגעים בו */}
+                {/* <input type="file" onChange={handleFileChange} />
+                <button onClick={handleUpload} disabled={!file}>העלה קובץ</button> */}
                 {showReports && (
                     loading ? (
                         <p>טוען דוחות...</p>
