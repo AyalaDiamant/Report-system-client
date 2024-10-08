@@ -18,7 +18,7 @@ const Report: React.FC = () => {
   const { user } = useUser();
   const [employee, setEmployee] = useState<Employee | null>(null)
   const [deliverable, setDeliverable] = useState<Deliverable>({
-    type: '',
+    // type: '',
     quantity: 0,
     rate: 0,
     rateIncrease: 0,
@@ -123,7 +123,7 @@ const Report: React.FC = () => {
 
       // איפוס ההספק למילוי חדש
       setDeliverable({
-        type: '',
+        // type: '',
         quantity: 0,
         rate: 0,
         rateIncrease: 0,
@@ -171,7 +171,7 @@ const Report: React.FC = () => {
     });
 
     worksheet.addRow([]);
-    worksheet.addRow(['סוג', 'כמות', 'תעריף', 'תפקיד', 'פרויקט', 'סימן', 'סעיף', 'סכום סה"כ'])
+    worksheet.addRow(['כמות', 'תעריף', 'תפקיד', 'פרויקט', 'סימן', 'סעיף', 'סכום סה"כ'])
       .eachCell({ includeEmpty: true }, (cell) => {
         cell.font = { bold: true };
         cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFF00' } };
@@ -180,7 +180,7 @@ const Report: React.FC = () => {
     // הוספת הנתונים
     report.deliverables.forEach(deliverable => {
       worksheet.addRow([
-        deliverable.type,
+        // deliverable.type,
         deliverable.quantity,
         deliverable.rate,
         deliverable.role,
@@ -280,17 +280,63 @@ const Report: React.FC = () => {
               </div>
               <div className="card-body">
                 <form onSubmit={send}>
-                  <div className="form-group">
+                  {/* <div className="form-group">
                     <label htmlFor="type">סוג</label>
-                    <select id="type" name="type" value={deliverable.type} onChange={handleChange} className="form-control" required>                     <option value="">בחר סוג</option>
+                    <select id="type" name="type" value={deliverable.project} onChange={handleChange} className="form-control" required>                     <option value="">בחר סוג</option>
                       {Object.values(Enums.ReportType).map((type) => (
                         <option key={type} value={type}>{type}</option>
                       ))}
                     </select>
+                  </div> */}
+
+                  <div className="form-group">
+                    <label htmlFor="project">פרוייקט</label>
+                    <input
+                      id="project"
+                      name="project"
+                      type="text"
+                      value={employee?.project} // מניח שהמידע של העובד קיים כאן
+                      readOnly // מאפשר לקרוא אך לא לערוך את השדה
+                      className="form-control"
+                      style={{ backgroundColor: '#cbcaca', color: 'white', border: '1px solid #cbcaca' }} // צבע רקע כהה עם טקסט לבן
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="role">תפקיד</label>
+                    <input
+                      id="role"
+                      name="role"
+                      type="text"
+                      value={employee?.role?.name} // מניח שהמידע קיים כאן
+                      readOnly // מאפשר לקרוא אך לא לערוך את השדה
+                      className="form-control"
+                      style={{ backgroundColor: '#cbcaca', color: 'white', border: '1px solid #cbcaca' }} // צבע רקע כהה עם טקסט לבן
+                    />
+                  </div>
+
+                  {/* שדה שכר */}
+                  <div className="form-group">
+                    <label htmlFor="rate">שכר</label>
+                    <input
+                      id="rate"
+                      name="rate"
+                      type="number"
+                      value={employee?.role?.rate} // מניח שהמידע קיים כאן
+                      readOnly // מאפשר לקרוא אך לא לערוך את השדה
+                      className="form-control"
+                      style={{ backgroundColor: '#cbcaca', color: 'white', border: '1px solid #cbcaca' }} // צבע רקע כהה עם טקסט לבן
+                    />
                   </div>
                   <div className="form-group">
                     <label htmlFor="sign">סימן</label>
-                    <input id="sign" name="sign" type="text" value={deliverable.sign} onChange={handleChange} placeholder="סימן" className="form-control" required />
+                    <input id="sign"
+                      name="sign" type="text"
+                      value={deliverable.sign}
+                      onChange={handleChange}
+                      placeholder="סימן"
+                      className="form-control"
+                      required />
                   </div>
                   <div className="form-group">
                     <label htmlFor="sign">סעיף</label>
@@ -298,7 +344,16 @@ const Report: React.FC = () => {
                   </div>
                   <div className="form-group">
                     <label htmlFor="quantity">כמות</label>
-                    <input id="quantity" name="quantity" type="number" value={deliverable.quantity} onChange={handleChange} placeholder="כמות" className="form-control" required />
+                    <input
+                      id="quantity"
+                      name="quantity"
+                      type="number"
+                      value={deliverable.quantity !== 0 ? deliverable.quantity : ''} // אם הכמות היא 0, השאר ריק
+                      onChange={handleChange}
+                      placeholder="כמות"
+                      className="form-control"
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label htmlFor="common">הערה</label>

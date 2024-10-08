@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
 import { useUser } from '../../contexts/user.context';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Login: React.FC = () => {
   const [credentials, setCredentials] = useState<{ name: string; password: string }>({ name: '', password: '' });
@@ -27,6 +28,11 @@ const Login: React.FC = () => {
     setCredentials({ ...credentials, [name]: value });
   };
 
+  const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    handleChange(e);
+  };
+
   const handleRememberMeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRememberMe(e.target.checked); // מעדכן את מצב תיבת הסימון
   };
@@ -35,21 +41,29 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       const res = await AuthService.login(credentials);
-      
+
       const storage = rememberMe ? localStorage : sessionStorage; // בוחר בין localStorage ל-sessionStorage
       storage.setItem('token', res.data.token);
       storage.setItem('isAdmin', res.data.isAdmin);
-      storage.setItem('user',res.data.employee)
+      storage.setItem('user', res.data.employee)
       setUser({
         employeeId: res.data.employeeId,
         name: res.data.name,
       });
       navigate(res.data.isAdmin ? '/admin' : '/employee');
     } catch (error) {
-      setErrorMessage('שדות לא חוקיים. אנא נסה שוב.');
+      setErrorMessage('שם או סיסמא לא נכונים. אנא נסה שוב.');
       console.error('Login error:', error);
     }
   };
+
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // ניהול מצב הצגת הסיסמה
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword); // שינוי מצב הסיסמה בין מוצגת למוסתרת
+  };
+
 
   return (
     <div>
@@ -68,9 +82,32 @@ const Login: React.FC = () => {
                     <label htmlFor="name">שם:</label>
                     <input id="name" name="name" type="text" onChange={handleChange} className="form-control" required />
                   </div>
-                  <div className="form-group">
+                  {/* <div className="form-group">
                     <label htmlFor="password">סיסמא:</label>
                     <input id="password" name="password" type="password" onChange={handleChange} className="form-control" required />
+                  </div> */}
+                  <div className="form-group">
+                    <label htmlFor="password">סיסמא:</label>
+                    <div className="input-group">
+                      <input
+                        id="password"
+                        name="password"
+                        type={showPassword ? "text" : "password"} // הצגת הסיסמה בהתאם למצב
+                        onChange={handleChangePassword}
+                        value={password}
+                        className="form-control"
+                        placeholder="הכנס סיסמא"
+                        required
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={togglePasswordVisibility}
+                        style={{ display: 'flex', alignItems: 'center' }}
+                      >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />} {/* אייקון עין */}
+                      </button>
+                    </div>
                   </div>
                   <div className="form-group">
                     <input

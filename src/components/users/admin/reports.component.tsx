@@ -252,26 +252,44 @@ const Reports: React.FC = () => {
     };
 
     const handleEditReport = (report: MyReport) => {
+        // debugger
         setEditingReportId(report._id);
         setOriginalReportData(report);
         setEditedReportData(report.deliverables.map((item) => ({
-            type: item.type,
+            // type: item.type,
             quantity: item.quantity,
             seif: item.seif || '',
             sign: item.sign || '',
+            total: item.quantity * item.rate
         })));
     };
 
-    const handleChange = (idx: number, field: keyof Deliverable, value: string | number) => {
+    const handleChange = (idx: number, field: keyof Deliverable, value: string | number, total: keyof Deliverable) => {
         setEditedReportData((prevData: any) => {
-            const updatedData = [...prevData];
-            updatedData[idx] = { ...updatedData[idx], [field]: value };
+            const updatedData = [...prevData];            
+            const rate = convertToInt(value) * 1
+            updatedData[idx] = { ...updatedData[idx], [field]: value, [total]: rate };
 
             return updatedData;
         });
     };
 
+
+    function convertToInt(value: string | number): number {
+        if (typeof value === "string") {
+            const num = parseInt(value, 10);
+            if (isNaN(num)) {
+                console.error("שגיאה: הערך לא ניתן להמרה למספר שלם");
+                return 0; // או לזרוק שגיאה, תלוי בהקשר שלך
+            }
+            return num;
+        }
+        return value; // אם value הוא כבר מספר
+    }
+
     const handleSaveEdit = async () => {
+        // debugger
+
         if (!originalReportData) return;
 
         const updatedReport: MyReport = {
@@ -353,8 +371,8 @@ const Reports: React.FC = () => {
                                                 <h6 className="mt-3">הספקים:</h6>
                                                 <ul className="list-group mb-3">
                                                     {report.deliverables.map((item, idx) => (
-                                                        <li className="list-group-item" key={`${item.type}-${idx}`}>
-                                                            <p><strong>סוג:</strong> {item.type}</p>
+                                                        <li className="list-group-item" key={`${item.project}-${idx}`}>
+                                                            {/* <p><strong>סוג:</strong> {item.type}</p> */}
                                                             <p><strong>כמות:</strong> {item.quantity}</p>
                                                             <p><strong>תעריף:</strong> {item.rate}</p>
                                                             <p><strong>תפקיד:</strong> {item.role}</p>
@@ -385,21 +403,8 @@ const Reports: React.FC = () => {
                                             {editingReportId === report._id && (
                                                 <div className="card-body mt-3">
                                                     <h6>ערוך דוח</h6>
-                                                    {editedReportData.map((deliverable: Deliverable, idx: number) => (
+                                                    {/* {editedReportData.map((deliverable: Deliverable, idx: number) => (
                                                         <div key={idx} className="mb-3">
-                                                            <select
-                                                                id="type"
-                                                                name="type"
-                                                                value={deliverable.type}
-                                                                onChange={(e) => handleChange(idx, 'type', e.target.value)}
-                                                                className="form-control"
-                                                                required
-                                                            >
-                                                                <option value="">בחר סוג</option>
-                                                                {Object.values(Enums.ReportType).map((type) => (
-                                                                    <option key={type} value={type}>{type}</option>
-                                                                ))}
-                                                            </select>
                                                             <input
                                                                 type="number"
                                                                 className="form-control mt-2"
@@ -422,6 +427,37 @@ const Reports: React.FC = () => {
                                                                 onChange={(e) => handleChange(idx, 'sign', e.target.value)}
                                                             />
                                                         </div>
+                                                    ))}
+                                                    <button className="btn btn-success mt-2" onClick={handleSaveEdit}>
+                                                        שמור שינויים
+                                                    </button>
+                                                    <button className="btn btn-secondary mt-2" onClick={() => setEditingReportId(null)}>
+                                                        ביטול
+                                                    </button> */}
+                                                    {editedReportData.map((deliverable: Deliverable, idx: number) => (
+                                                        <div key={idx} className="mb-3">
+                                                            <input
+                                                                type="number"
+                                                                className="form-control mt-2"
+                                                                placeholder="כמות"
+                                                                value={deliverable.quantity}
+                                                                onChange={(e) => handleChange(idx, 'quantity', e.target.value, 'total')}
+                                                            />
+                                                            <input
+                                                                type="text"
+                                                                className="form-control mt-2"
+                                                                placeholder="סעיף"
+                                                                value={deliverable.seif}
+                                                                onChange={(e) => handleChange(idx, 'seif', e.target.value, 'total')}
+                                                            />
+                                                            <input
+                                                                type="text"
+                                                                className="form-control mt-2"
+                                                                placeholder="סימן"
+                                                                value={deliverable.sign}
+                                                                onChange={(e) => handleChange(idx, 'sign', e.target.value, 'total')}
+                                                            />
+                                                            {deliverable.total}                                                        </div>
                                                     ))}
                                                     <button className="btn btn-success mt-2" onClick={handleSaveEdit}>
                                                         שמור שינויים

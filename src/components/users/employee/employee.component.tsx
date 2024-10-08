@@ -69,7 +69,7 @@ const Employee: React.FC = () => {
         setEditingReportId(report._id);
         setOriginalReportData(report); // שמירת הנתונים המקוריים
         setEditedReportData(report.deliverables.map((item) => ({
-            type: item.type,
+            // type: item.type,
             quantity: item.quantity,
             seif: item.seif || '', // וודא שהשדה הזה קיים
             sign: item.sign || '',
@@ -170,9 +170,9 @@ const Employee: React.FC = () => {
                                                         <h6 className="mb-3">הספקים:</h6>
                                                         <ul className="list-group mb-3">
                                                             {report.deliverables.map((item, idx) => (
-                                                                <li className="list-group-item" key={`${item.type}-${idx}`}>
+                                                                <li className="list-group-item" key={`${item.project}-${idx}`}>
                                                                     <div className="list-item">
-                                                                        <p><strong>סוג:</strong> {item.type}</p>
+                                                                        {/* <p><strong>סוג:</strong> {item.type}</p> */}
                                                                         <p><strong>כמות:</strong> {item.quantity}</p>
                                                                         <p><strong>תפקיד:</strong> {item.role}</p>
                                                                         <p><strong>פרוייקט:</strong> {item.project}</p>
@@ -206,7 +206,7 @@ const Employee: React.FC = () => {
                                                             <h6>ערוך דוח</h6>
                                                             {editedReportData.map((deliverable: Deliverable, idx: number) => (
                                                                 <div key={idx} className="mb-3">
-                                                                    <select
+                                                                    {/* <select
                                                                         id="type"
                                                                         name="type"
                                                                         value={deliverable.type}
@@ -218,7 +218,7 @@ const Employee: React.FC = () => {
                                                                         {Object.values(Enums.ReportType).map((type) => (
                                                                             <option key={type} value={type}>{type}</option>
                                                                         ))}
-                                                                    </select>
+                                                                    </select> */}
                                                                     <input
                                                                         type="number"
                                                                         className="form-control mt-2"

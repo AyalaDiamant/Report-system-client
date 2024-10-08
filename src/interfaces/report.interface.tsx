@@ -1,5 +1,5 @@
 export interface Deliverable {
-    type: string; // סוג
+    // type: string; // סוג
     quantity: number; // כמות
     rate: number; // תעריף
     rateIncrease: number, // העלאת תעריף

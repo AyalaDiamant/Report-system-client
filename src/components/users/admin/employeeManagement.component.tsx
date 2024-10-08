@@ -4,6 +4,7 @@ import { Employee } from '../../../interfaces/employee.interface'; // נוודא
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../../contexts/user.context';
 import Header from '../../header.component';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const EmployeeManagement: React.FC = () => {
     const [employees, setEmployees] = useState<Employee[]>([]);
@@ -28,6 +29,8 @@ const EmployeeManagement: React.FC = () => {
     });
     const [editEmployee, setEditEmployee] = useState<Employee | null>(null);
     const [handleAdd, setHandleAdd] = useState<boolean>(false);
+    const [showPassword, setShowPassword] = useState(false);
+
 
     const navigate = useNavigate();
     const { user } = useUser();
@@ -125,6 +128,10 @@ const EmployeeManagement: React.FC = () => {
         navigate('/employee-management');
     };
 
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
     return (
         <div>
             <Header
@@ -151,8 +158,10 @@ const EmployeeManagement: React.FC = () => {
                             </div>
                             <div className="card-body">
                                 <ul className="list-group mb-4">
-                                    {employees.map((employee) => (
-                                        employee._id !== 0 && (
+                                    {employees
+                                        .filter((employee) => employee._id !== 0) // מסנן את העובד עם _id שווה ל-0
+                                        .sort((a, b) => a.name.localeCompare(b.name)) // ממיין לפי סדר אלפביתי של השם
+                                        .map((employee) => (
                                             <li key={employee._id} className="list-group-item d-flex justify-content-between align-items-center">
                                                 {employee.name} - {employee.role?.name}
                                                 <div>
@@ -160,12 +169,12 @@ const EmployeeManagement: React.FC = () => {
                                                     <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteEmployee(employee._id)}>מחק</button>
                                                 </div>
                                             </li>
-                                        )
-                                    ))}
+                                        ))}
                                 </ul>
                             </div>
                             <button className='btn btn-primary card row mb-12' onClick={handleAddEmployee}>הוסף עובד</button>
                         </div>
+
                     )}
 
                 </div>
@@ -177,7 +186,7 @@ const EmployeeManagement: React.FC = () => {
                                     <h3>הוסף עובד חדש</h3>
                                 </div>
                                 <div className="card-body">
-                                    <form>
+                                    <form autoComplete="false">
                                         <div className="form-group">
                                             <label>שם</label>
                                             <input
@@ -188,7 +197,7 @@ const EmployeeManagement: React.FC = () => {
                                                 onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })}
                                             />
                                         </div>
-                                        <div className="form-group">
+                                        {/* <div className="form-group">
                                             <label>סיסמה</label>
                                             <input
                                                 type="password"
@@ -197,6 +206,24 @@ const EmployeeManagement: React.FC = () => {
                                                 value={newEmployee.password}
                                                 onChange={(e) => setNewEmployee({ ...newEmployee, password: e.target.value })}
                                             />
+                                        </div> */}
+                                        <div className="form-group">
+                                            <label>סיסמה</label>
+                                            <div className="input-group">
+                                                <input
+                                                    type={showPassword ? "text" : "password"}
+                                                    className="form-control"
+                                                    placeholder="הכנס סיסמה"
+                                                    value={newEmployee.password}
+                                                    onChange={(e) => setNewEmployee({ ...newEmployee, password: e.target.value })}
+                                                    autoComplete="new-password"
+                                                />
+                                                <div className="input-group-append">
+                                                    <span className="input-group-text" onClick={togglePasswordVisibility} style={{ cursor: 'pointer' }}>
+                                                        {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div className="form-group">
                                             <label>כתובת</label>
@@ -206,6 +233,7 @@ const EmployeeManagement: React.FC = () => {
                                                 placeholder="הכנס כתובת"
                                                 value={newEmployee.address}
                                                 onChange={(e) => setNewEmployee({ ...newEmployee, address: e.target.value })}
+                                                autoComplete="new-text"
                                             />
                                         </div>
                                         <div className="form-group">
@@ -216,6 +244,7 @@ const EmployeeManagement: React.FC = () => {
                                                 placeholder="הכנס עיר"
                                                 value={newEmployee.city}
                                                 onChange={(e) => setNewEmployee({ ...newEmployee, city: e.target.value })}
+                                                autoComplete="new-text"
                                             />
                                         </div>
                                         <div className="form-group">
@@ -226,6 +255,7 @@ const EmployeeManagement: React.FC = () => {
                                                 placeholder="הכנס מספר טלפון"
                                                 value={newEmployee.phoneNumber}
                                                 onChange={(e) => setNewEmployee({ ...newEmployee, phoneNumber: e.target.value })}
+                                                autoComplete="new-text"
                                             />
                                         </div>
                                         <div className="form-group">
@@ -236,6 +266,7 @@ const EmployeeManagement: React.FC = () => {
                                                 placeholder="הכנס שם בנק"
                                                 value={newEmployee.bankDetails.bankName}
                                                 onChange={(e) => setNewEmployee({ ...newEmployee, bankDetails: { ...newEmployee.bankDetails, bankName: e.target.value } })}
+                                                autoComplete="new-text"
                                             />
                                         </div>
                                         <div className="form-group">
@@ -246,6 +277,7 @@ const EmployeeManagement: React.FC = () => {
                                                 placeholder="הכנס מספר סניף"
                                                 value={newEmployee.bankDetails.branchNumber}
                                                 onChange={(e) => setNewEmployee({ ...newEmployee, bankDetails: { ...newEmployee.bankDetails, branchNumber: e.target.value } })}
+                                                autoComplete="new-text"
                                             />
                                         </div>
                                         <div className="form-group">
@@ -256,6 +288,7 @@ const EmployeeManagement: React.FC = () => {
                                                 placeholder="הכנס מספר חשבון"
                                                 value={newEmployee.bankDetails.accountNumber}
                                                 onChange={(e) => setNewEmployee({ ...newEmployee, bankDetails: { ...newEmployee.bankDetails, accountNumber: e.target.value } })}
+                                                autoComplete="new-text"
                                             />
                                         </div>
                                         <div className="form-group">
@@ -266,6 +299,7 @@ const EmployeeManagement: React.FC = () => {
                                                 placeholder="הכנס תפקיד"
                                                 value={newEmployee.role.name}
                                                 onChange={(e) => setNewEmployee({ ...newEmployee, role: { ...newEmployee.role, name: e.target.value } })}
+                                                autoComplete="new-text"
                                             />
                                         </div>
                                         <div className="form-group">
@@ -274,8 +308,15 @@ const EmployeeManagement: React.FC = () => {
                                                 type="number"
                                                 className="form-control"
                                                 placeholder="הכנס שכר"
-                                                value={newEmployee.role.rate}
-                                                onChange={(e) => setNewEmployee({ ...newEmployee, role: { ...newEmployee.role, rate: Number(e.target.value) } })}
+                                                value={newEmployee.role.rate === 0 ? '' : newEmployee.role.rate}
+                                                onChange={(e) => setNewEmployee({
+                                                    ...newEmployee,
+                                                    role: {
+                                                        ...newEmployee.role,
+                                                        rate: e.target.value === '' ? 0 : Number(e.target.value)
+                                                    }
+                                                })}
+                                                autoComplete="new-nummber"
                                             />
                                         </div>
                                         <div className="form-group">
@@ -284,8 +325,15 @@ const EmployeeManagement: React.FC = () => {
                                                 type="number"
                                                 className="form-control"
                                                 placeholder="הכנס עליית שכר"
-                                                value={newEmployee.role.rateIncrease}
-                                                onChange={(e) => setNewEmployee({ ...newEmployee, role: { ...newEmployee.role, rateIncrease: Number(e.target.value) } })}
+                                                value={newEmployee.role.rateIncrease === 0 ? '' : newEmployee.role.rateIncrease}
+                                                onChange={(e) => setNewEmployee({
+                                                    ...newEmployee,
+                                                    role: {
+                                                        ...newEmployee.role,
+                                                        rateIncrease: e.target.value === '' ? 0 : Number(e.target.value)
+                                                    }
+                                                })}
+                                                autoComplete="new-nummber"
                                             />
                                         </div>
                                         <div className="form-group">
@@ -296,6 +344,7 @@ const EmployeeManagement: React.FC = () => {
                                                 placeholder="הכנס פרויקט"
                                                 value={newEmployee.project}
                                                 onChange={(e) => setNewEmployee({ ...newEmployee, project: e.target.value })}
+                                                autoComplete="new-text"
                                             />
                                         </div>
                                         <button type="button" className="btn btn-primary" onClick={handleCreateEmployee}>הוסף עובד</button>
