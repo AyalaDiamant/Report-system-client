@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReportService from '../../../services/report.service';
-import Enums from '../../../interfaces/enums';
 import { useUser } from '../../../contexts/user.context';
 import { MyReport, Deliverable } from '../../../interfaces/report.interface';
+import ExcelJS from 'exceljs';
+import employeeService from '../../../services/employee.service';
+import { Employee } from '../../../interfaces/employee.interface';
+import Header from '../../header.component';
+
 // בשביל ההגדרות
 // import { Settings } from '../../../interfaces/settings.interface';
 // import { getSetting } from '../../../services/setting.service';
 // import * as XLSX from 'xlsx';
 // import { saveAs } from 'file-saver';
-import ExcelJS from 'exceljs';
-import employeeService from '../../../services/employee.service';
-import { Employee } from '../../../interfaces/employee.interface';
-import Header from '../../header.component';
 
 const Report: React.FC = () => {
   const { user } = useUser();
@@ -22,7 +22,7 @@ const Report: React.FC = () => {
     quantity: 0,
     rate: 0,
     rateIncrease: 0,
-    role: employee?.role?.name || '',
+    role: employee?.roles[0]?.name || '',
     project: employee?.project || '',
     sign: '',
     seif: '',
@@ -37,6 +37,9 @@ const Report: React.FC = () => {
   });
   const [totalSum, setTotalSum] = useState<number>(0); // הוספת מצב לסכום הכולל
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [rateState, setRateState] = useState<number>(0);
+  const [roleState, setRoleState] = useState<string>('');
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -61,8 +64,8 @@ const Report: React.FC = () => {
     const { name, value } = e.target;
     setDeliverable({ ...deliverable, [name]: value });
 
-    const rate = employee?.role.rate;
-    if (rate) {
+    const rate = rateState;
+    if (rate != 0) {
       const total = deliverable.quantity * rate;
       setDeliverable(prev => ({ ...prev, rate, total }));
       setTotalSum(totalSumCalculation({ ...report, deliverables: [...report.deliverables, { ...deliverable, total }] }));
@@ -70,7 +73,7 @@ const Report: React.FC = () => {
   };
 
   useEffect(() => {
-    const rate = employee?.role?.rate || 0;
+    const rate = rateState;
     const total = deliverable.quantity * rate;
     setDeliverable((prev) => ({ ...prev, rate, total }));
     setTotalSum(total);
@@ -100,12 +103,13 @@ const Report: React.FC = () => {
   // }
 
   const fixDeliverable = () => {
-    const rate = employee?.role.rate;
-    if (rate) {
+    const rate = rateState;
+    const foundRole = employee?.roles.find(role => role.name === roleState);
+    if (rate != 0 && foundRole) {
       deliverable.rate = rate;
-      deliverable.role = employee.role.name;
-      deliverable.rateIncrease = employee.role.rateIncrease;
-      deliverable.project = employee.project
+      deliverable.role = roleState;
+      deliverable.rateIncrease = foundRole.rateIncrease;
+      deliverable.project = employee?.project || ''
       deliverable.total = deliverable.quantity * deliverable.rate
     }
 
@@ -118,7 +122,6 @@ const Report: React.FC = () => {
         ...prevState,
         deliverables: [...prevState.deliverables, deliverable]
       }));
-      console.log(deliverable, 'd');
 
 
       // איפוס ההספק למילוי חדש
@@ -260,6 +263,14 @@ const Report: React.FC = () => {
 
   };
 
+  const handleRoleChange = (e: any) => {
+    const selectedRole = employee?.roles.find(role => role.name === e.target.value);
+    if (selectedRole) {
+      setRoleState(selectedRole.name);
+      setRateState(selectedRole.rate);
+    }
+  };
+
   return (
     <div>
       <Header
@@ -270,7 +281,6 @@ const Report: React.FC = () => {
         toggleShowReports={toggleShowReports} // העברת פונקציה
         handleHome={handleHome}
       />
-
       <div className="container mt-5">
         <div className="row justify-content-center">
           <div className="col-md-12">
@@ -280,23 +290,14 @@ const Report: React.FC = () => {
               </div>
               <div className="card-body">
                 <form onSubmit={send}>
-                  {/* <div className="form-group">
-                    <label htmlFor="type">סוג</label>
-                    <select id="type" name="type" value={deliverable.project} onChange={handleChange} className="form-control" required>                     <option value="">בחר סוג</option>
-                      {Object.values(Enums.ReportType).map((type) => (
-                        <option key={type} value={type}>{type}</option>
-                      ))}
-                    </select>
-                  </div> */}
-
                   <div className="form-group">
                     <label htmlFor="project">פרוייקט</label>
                     <input
                       id="project"
                       name="project"
                       type="text"
-                      value={employee?.project} // מניח שהמידע של העובד קיים כאן
-                      readOnly // מאפשר לקרוא אך לא לערוך את השדה
+                      value={employee?.project} // המידע של העובד
+                      readOnly
                       className="form-control"
                       style={{ backgroundColor: '#cbcaca', color: 'white', border: '1px solid #cbcaca' }} // צבע רקע כהה עם טקסט לבן
                     />
@@ -304,15 +305,26 @@ const Report: React.FC = () => {
 
                   <div className="form-group">
                     <label htmlFor="role">תפקיד</label>
-                    <input
-                      id="role"
-                      name="role"
-                      type="text"
-                      value={employee?.role?.name} // מניח שהמידע קיים כאן
-                      readOnly // מאפשר לקרוא אך לא לערוך את השדה
-                      className="form-control"
-                      style={{ backgroundColor: '#cbcaca', color: 'white', border: '1px solid #cbcaca' }} // צבע רקע כהה עם טקסט לבן
-                    />
+                    {employee?.roles.length === 1 ? (
+                      <input
+                        id="role"
+                        name="role"
+                        type="text"
+                        value={employee.roles[0].name} // אם יש רק תפקיד אחד
+                        readOnly
+                        className="form-control"
+                        style={{ backgroundColor: '#cbcaca', color: 'white', border: '1px solid #cbcaca' }} // צבע רקע כהה עם טקסט לבן
+                      />
+                    ) : (
+                      <select id="role" name="role" onChange={handleRoleChange} className="form-control" required>
+                        <option value="">בחר תפקיד</option>
+                        {employee?.roles.map(role => (
+                          <option key={role.name} value={role.name}>
+                            {role.name}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                   </div>
 
                   {/* שדה שכר */}
@@ -322,25 +334,38 @@ const Report: React.FC = () => {
                       id="rate"
                       name="rate"
                       type="number"
-                      value={employee?.role?.rate} // מניח שהמידע קיים כאן
-                      readOnly // מאפשר לקרוא אך לא לערוך את השדה
+                      value={rateState} // נעדכן את השכר לפי התפקיד שנבחר
+                      readOnly
                       className="form-control"
                       style={{ backgroundColor: '#cbcaca', color: 'white', border: '1px solid #cbcaca' }} // צבע רקע כהה עם טקסט לבן
                     />
                   </div>
+
                   <div className="form-group">
                     <label htmlFor="sign">סימן</label>
-                    <input id="sign"
-                      name="sign" type="text"
+                    <input
+                      id="sign"
+                      name="sign"
+                      type="text"
                       value={deliverable.sign}
                       onChange={handleChange}
                       placeholder="סימן"
                       className="form-control"
-                      required />
+                      required
+                    />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="sign">סעיף</label>
-                    <input id="seif" name="seif" type="text" value={deliverable.seif} onChange={handleChange} placeholder="סעיף" className="form-control" required />
+                    <label htmlFor="seif">סעיף</label>
+                    <input
+                      id="seif"
+                      name="seif"
+                      type="text"
+                      value={deliverable.seif}
+                      onChange={handleChange}
+                      placeholder="סעיף"
+                      className="form-control"
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label htmlFor="quantity">כמות</label>
@@ -357,7 +382,15 @@ const Report: React.FC = () => {
                   </div>
                   <div className="form-group">
                     <label htmlFor="common">הערה</label>
-                    <input id="common" name="common" type="text" value={report.common} onChange={(e) => setReport({ ...report, common: e.target.value })} placeholder="הערה כללית" className="form-control" />
+                    <input
+                      id="common"
+                      name="common"
+                      type="text"
+                      value={report.common}
+                      onChange={(e) => setReport({ ...report, common: e.target.value })}
+                      placeholder="הערה כללית"
+                      className="form-control"
+                    />
                   </div>
                   <div className="form-group totalSum">
                     <h4>סה"כ : {totalSum}</h4>
