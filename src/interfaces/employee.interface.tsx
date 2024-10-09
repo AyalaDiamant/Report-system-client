@@ -1,5 +1,5 @@
 export interface Employee {
-    _id: number
+    _id: number;
     name: string;
     password: string;
     address: string;
@@ -10,19 +10,10 @@ export interface Employee {
         branchNumber: string;
         accountNumber: string;
     };
-    role:
-    {
-        name: string,
-        rate: number,
-        rateIncrease: number,
-    },
-    project: string,
-}
-
-export interface EmployeeSummary{
-    _id: number;
-    name: string;
-    totalNetSalary: number;
-    totalGrossSalary: number;
-    difference: number;
+    roles: {
+        name: string;
+        rate: number;
+        rateIncrease: number;
+    }[];
+    project: string;
 }

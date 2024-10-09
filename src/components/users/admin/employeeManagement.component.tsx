@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import employeeService from '../../../services/employee.service';
-import { Employee } from '../../../interfaces/employee.interface'; // נוודא לייבא את הממשק
+import { Employee } from '../../../interfaces/employee.interface';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../../contexts/user.context';
 import Header from '../../header.component';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+// import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const EmployeeManagement: React.FC = () => {
     const [employees, setEmployees] = useState<Employee[]>([]);
@@ -20,18 +20,17 @@ const EmployeeManagement: React.FC = () => {
             branchNumber: '',
             accountNumber: '',
         },
-        role: {
+        roles: [{
             name: '',
             rate: 0,
             rateIncrease: 0,
-        },
+        }],
         project: '',
     });
     const [editEmployee, setEditEmployee] = useState<Employee | null>(null);
     const [handleAdd, setHandleAdd] = useState<boolean>(false);
-    const [showPassword, setShowPassword] = useState(false);
-
-
+    // const [showPassword, setShowPassword] = useState(false);
+    const [isAdding, setIsAdding] = useState(false);
     const navigate = useNavigate();
     const { user } = useUser();
 
@@ -49,6 +48,7 @@ const EmployeeManagement: React.FC = () => {
     };
 
     const handleAddEmployee = () => {
+        setIsAdding(!isAdding);
         setHandleAdd(!handleAdd);
     }
 
@@ -67,26 +67,24 @@ const EmployeeManagement: React.FC = () => {
                     branchNumber: '',
                     accountNumber: '',
                 },
-                role: {
-                    name: '',
-                    rate: 0,
-                    rateIncrease: 0,
-                },
+                roles: [{ name: '', rate: 0, rateIncrease: 0 }],
                 project: '',
-            }); // reset form
-            fetchEmployees(); // refresh employee list
-            setHandleAdd(false)
+            });
+            fetchEmployees();
+            setHandleAdd(false);
+            setIsAdding(!isAdding);
         } catch (error) {
             console.error('Error creating employee:', error);
         }
     };
 
+
     const handleUpdateEmployee = async () => {
         if (editEmployee) {
             try {
                 await employeeService.updateEmployee(editEmployee._id, editEmployee);
-                setEditEmployee(null); // reset edit form
-                fetchEmployees(); // refresh employee list
+                setEditEmployee(null);
+                fetchEmployees();
             } catch (error) {
                 console.error('Error updating employee:', error);
             }
@@ -128,9 +126,9 @@ const EmployeeManagement: React.FC = () => {
         navigate('/employee-management');
     };
 
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
-    };
+    // const togglePasswordVisibility = () => {
+    //     setShowPassword(!showPassword);
+    // };
 
     return (
         <div>
@@ -163,7 +161,7 @@ const EmployeeManagement: React.FC = () => {
                                         .sort((a, b) => a.name.localeCompare(b.name)) // ממיין לפי סדר אלפביתי של השם
                                         .map((employee) => (
                                             <li key={employee._id} className="list-group-item d-flex justify-content-between align-items-center">
-                                                {employee.name} - {employee.role?.name}
+                                                {employee.name} - {employee.roles[0]?.name}
                                                 <div>
                                                     <button type="button" className="btn btn-warning btn-sm" onClick={() => setEditEmployee(employee)}>ערוך</button>
                                                     <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteEmployee(employee._id)}>מחק</button>
@@ -172,7 +170,9 @@ const EmployeeManagement: React.FC = () => {
                                         ))}
                                 </ul>
                             </div>
-                            <button className='btn btn-primary card row mb-12' onClick={handleAddEmployee}>הוסף עובד</button>
+                            <button type="button" className="btn btn-primary" onClick={handleAddEmployee}>
+                                {isAdding ? 'ביטול' : 'הוסף עובד'}
+                            </button>
                         </div>
 
                     )}
@@ -197,17 +197,17 @@ const EmployeeManagement: React.FC = () => {
                                                 onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })}
                                             />
                                         </div>
-                                        {/* <div className="form-group">
+                                        <div className="form-group">
                                             <label>סיסמה</label>
                                             <input
-                                                type="password"
+                                                type="text"
                                                 className="form-control"
                                                 placeholder="הכנס סיסמה"
                                                 value={newEmployee.password}
                                                 onChange={(e) => setNewEmployee({ ...newEmployee, password: e.target.value })}
                                             />
-                                        </div> */}
-                                        <div className="form-group">
+                                        </div>
+                                        {/* <div className="form-group">
                                             <label>סיסמה</label>
                                             <div className="input-group">
                                                 <input
@@ -224,7 +224,7 @@ const EmployeeManagement: React.FC = () => {
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> */}
                                         <div className="form-group">
                                             <label>כתובת</label>
                                             <input
@@ -291,51 +291,65 @@ const EmployeeManagement: React.FC = () => {
                                                 autoComplete="new-text"
                                             />
                                         </div>
-                                        <div className="form-group">
-                                            <label>תפקיד</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                placeholder="הכנס תפקיד"
-                                                value={newEmployee.role.name}
-                                                onChange={(e) => setNewEmployee({ ...newEmployee, role: { ...newEmployee.role, name: e.target.value } })}
-                                                autoComplete="new-text"
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>שכר</label>
-                                            <input
-                                                type="number"
-                                                className="form-control"
-                                                placeholder="הכנס שכר"
-                                                value={newEmployee.role.rate === 0 ? '' : newEmployee.role.rate}
-                                                onChange={(e) => setNewEmployee({
-                                                    ...newEmployee,
-                                                    role: {
-                                                        ...newEmployee.role,
-                                                        rate: e.target.value === '' ? 0 : Number(e.target.value)
-                                                    }
-                                                })}
-                                                autoComplete="new-nummber"
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>עליית שכר</label>
-                                            <input
-                                                type="number"
-                                                className="form-control"
-                                                placeholder="הכנס עליית שכר"
-                                                value={newEmployee.role.rateIncrease === 0 ? '' : newEmployee.role.rateIncrease}
-                                                onChange={(e) => setNewEmployee({
-                                                    ...newEmployee,
-                                                    role: {
-                                                        ...newEmployee.role,
-                                                        rateIncrease: e.target.value === '' ? 0 : Number(e.target.value)
-                                                    }
-                                                })}
-                                                autoComplete="new-nummber"
-                                            />
-                                        </div>
+                                        {newEmployee.roles.map((role, index) => (
+                                            <div key={index} className="form-group">
+                                                <div className="row mb-2">
+                                                    <div className="col-4">
+                                                        <label>תפקיד {index + 1}</label>
+                                                        <input
+                                                            type="text"
+                                                            className="form-control"
+                                                            placeholder="הכנס תפקיד"
+                                                            value={role.name}
+                                                            onChange={(e) => {
+                                                                const updatedRoles = [...newEmployee.roles];
+                                                                updatedRoles[index].name = e.target.value;
+                                                                setNewEmployee({ ...newEmployee, roles: updatedRoles });
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="col-4">
+                                                        <label>שכר</label>
+                                                        <input
+                                                            type="number"
+                                                            className="form-control"
+                                                            placeholder="הכנס שכר"
+                                                            value={role.rate === 0 ? '' : role.rate}
+                                                            onChange={(e) => {
+                                                                const updatedRoles = [...newEmployee.roles];
+                                                                updatedRoles[index].rate = e.target.value === '' ? 0 : Number(e.target.value);
+                                                                setNewEmployee({ ...newEmployee, roles: updatedRoles });
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="col-4">
+                                                        <label>עליית שכר</label>
+                                                        <input
+                                                            type="number"
+                                                            className="form-control"
+                                                            placeholder="הכנס עליית שכר"
+                                                            value={role.rateIncrease === 0 ? '' : role.rateIncrease}
+                                                            onChange={(e) => {
+                                                                const updatedRoles = [...newEmployee.roles];
+                                                                updatedRoles[index].rateIncrease = e.target.value === '' ? 0 : Number(e.target.value);
+                                                                setNewEmployee({ ...newEmployee, roles: updatedRoles });
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+
+
+                                        <button type="button" className="btn btn-secondary" onClick={() => {
+                                            setNewEmployee({
+                                                ...newEmployee,
+                                                roles: [...newEmployee.roles, { name: '', rate: 0, rateIncrease: 0 }]
+                                            });
+                                        }}>
+                                            הוסף תפקיד
+                                        </button>
+
                                         <div className="form-group">
                                             <label>פרויקט</label>
                                             <input
@@ -358,60 +372,147 @@ const EmployeeManagement: React.FC = () => {
                     <p></p>
                 )
                 }
-                {
-                    editEmployee && (
-                        <div className="card mb-2">
-                            <div className="card-header text-center">
-                                <h3>עריכת תפקיד ופרוייקט</h3>
-                            </div>
-                            <div className="card-body">
-                                <form>
-                                    <div className="form-group">
-                                        <label>תפקיד</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="הכנס תפקיד"
-                                            value={editEmployee.role.name}
-                                            onChange={(e) => setEditEmployee({ ...editEmployee, role: { ...editEmployee.role, name: e.target.value } })}
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>שכר</label>
-                                        <input
-                                            type="number"
-                                            className="form-control"
-                                            placeholder="הכנס שכר"
-                                            value={editEmployee.role.rate}
-                                            onChange={(e) => setEditEmployee({ ...editEmployee, role: { ...editEmployee.role, rate: Number(e.target.value) } })}
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>עליית שכר</label>
-                                        <input
-                                            type="number"
-                                            className="form-control"
-                                            placeholder="הכנס עליית שכר"
-                                            value={editEmployee.role.rateIncrease}
-                                            onChange={(e) => setEditEmployee({ ...editEmployee, role: { ...editEmployee.role, rateIncrease: Number(e.target.value) } })}
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>פרויקט</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="הכנס פרויקט"
-                                            value={editEmployee.project}
-                                            onChange={(e) => setEditEmployee({ ...editEmployee, project: e.target.value })}
-                                        />
-                                    </div>
-                                    <button type="button" className="btn btn-success" onClick={handleUpdateEmployee}>שמור שינויים</button>
-                                </form>
-                            </div>
+                {editEmployee && (
+                    <div className="card mb-2">
+                        <div className="card-header text-center">
+                            <h3>עריכת עובד</h3>
                         </div>
-                    )
-                }
+                        <div className="card-body">
+                            <form>
+                                {editEmployee.roles.map((role, index) => (
+                                    <div className="row mb-2">
+                                        <div className="col-4">
+                                            <label>תפקיד {index + 1}</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="הכנס תפקיד"
+                                                value={role.name}
+                                                onChange={(e) => {
+                                                    const updatedRoles = [...editEmployee.roles];
+                                                    updatedRoles[index].name = e.target.value; // עדכון תפקיד
+                                                    setEditEmployee({ ...editEmployee, roles: updatedRoles });
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="col-4">
+                                            <label>שכר</label>
+                                            <input
+                                                type="number"
+                                                className="form-control"
+                                                placeholder="הכנס שכר"
+                                                value={role.rate}
+                                                onChange={(e) => {
+                                                    const updatedRoles = [...editEmployee.roles];
+                                                    updatedRoles[index].rate = Number(e.target.value); // עדכון שכר
+                                                    setEditEmployee({ ...editEmployee, roles: updatedRoles });
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="col-4">
+                                            <label>עליית שכר</label>
+                                            <input
+                                                type="number"
+                                                className="form-control"
+                                                placeholder="הכנס עליית שכר"
+                                                value={role.rateIncrease}
+                                                onChange={(e) => {
+                                                    const updatedRoles = [...editEmployee.roles];
+                                                    updatedRoles[index].rateIncrease = Number(e.target.value); // עדכון עליית שכר
+                                                    setEditEmployee({ ...editEmployee, roles: updatedRoles });
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                ))}
+
+                                <div className="form-group">
+                                    <label>פרויקט</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="הכנס פרויקט"
+                                        value={editEmployee.project}
+                                        onChange={(e) => setEditEmployee({ ...editEmployee, project: e.target.value })}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>כתובת</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="הכנס כתובת"
+                                        value={editEmployee.address}
+                                        onChange={(e) => setEditEmployee({ ...editEmployee, address: e.target.value })}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>עיר</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="הכנס עיר"
+                                        value={editEmployee.city}
+                                        onChange={(e) => setEditEmployee({ ...editEmployee, city: e.target.value })}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>טלפון</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="הכנס טלפון"
+                                        value={editEmployee.phoneNumber}
+                                        onChange={(e) => setEditEmployee({ ...editEmployee, phoneNumber: e.target.value })}
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>שם בנק</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="הכנס שם בנק"
+                                        value={editEmployee.bankDetails.bankName}
+                                        onChange={(e) => setEditEmployee({
+                                            ...editEmployee,
+                                            bankDetails: { ...editEmployee.bankDetails, bankName: e.target.value }
+                                        })}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>סניף</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="הכנס סניף"
+                                        value={editEmployee.bankDetails.branchNumber}
+                                        onChange={(e) => setEditEmployee({
+                                            ...editEmployee,
+                                            bankDetails: { ...editEmployee.bankDetails, branchNumber: e.target.value }
+                                        })}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>מספר חשבון</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="הכנס מספר חשבון"
+                                        value={editEmployee.bankDetails.accountNumber}
+                                        onChange={(e) => setEditEmployee({
+                                            ...editEmployee,
+                                            bankDetails: { ...editEmployee.bankDetails, accountNumber: e.target.value }
+                                        })}
+                                    />
+                                </div>
+
+                                <button type="button" className="btn btn-success" onClick={handleUpdateEmployee}>שמור שינויים</button>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </div >
         </div>
 

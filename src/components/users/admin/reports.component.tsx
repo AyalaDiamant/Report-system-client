@@ -280,16 +280,14 @@ const Reports: React.FC = () => {
             const num = parseInt(value, 10);
             if (isNaN(num)) {
                 console.error("שגיאה: הערך לא ניתן להמרה למספר שלם");
-                return 0; // או לזרוק שגיאה, תלוי בהקשר שלך
+                return 0; 
             }
             return num;
         }
-        return value; // אם value הוא כבר מספר
+        return value; 
     }
 
     const handleSaveEdit = async () => {
-        // debugger
-
         if (!originalReportData) return;
 
         const updatedReport: MyReport = {
