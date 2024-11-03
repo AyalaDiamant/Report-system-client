@@ -15,6 +15,7 @@ import EmployeeManagement from './components/users/admin/employeeManagement.comp
 import Reports from './components/users/admin/reports.component';
 import Report from './components/users/employee/report.component';
 import { UserProvider } from './contexts/user.context';
+import ReportsEmployee from './components/users/employee/reportsEmployee.component';
 
 
 const router = createBrowserRouter([
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
   {
     path: "/reports",
     element: <Reports />,
+  },
+  {
+    path: "/reports-employee",
+    element: <ReportsEmployee />,
   },
   {
     path: "/",

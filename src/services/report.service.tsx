@@ -102,6 +102,7 @@ const apiUrl = (process.env.NODE_ENV === 'development'
 const serverUrl = `${apiUrl}report`;
 
 const apiRequest = async (method: string, url: string, data?: any) => {
+  
   const token = localStorage.getItem('token') || sessionStorage.getItem('token');
   if (!token) {
     throw new Error('No token found. User is not authenticated.');

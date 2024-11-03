@@ -50,6 +50,21 @@ const EmployeeManagement: React.FC = () => {
     const handleAddEmployee = () => {
         setIsAdding(!isAdding);
         setHandleAdd(!handleAdd);
+        setNewEmployee({
+            _id: 0,
+            name: '',
+            password: '',
+            address: '',
+            city: '',
+            phoneNumber: '',
+            bankDetails: {
+                bankName: '',
+                branchNumber: '',
+                accountNumber: '',
+            },
+            roles: [{ name: '', rate: 0, rateIncrease: 0 }],
+            project: '',
+        });
     }
 
     const handleCreateEmployee = async () => {
@@ -509,6 +524,7 @@ const EmployeeManagement: React.FC = () => {
                                 </div>
 
                                 <button type="button" className="btn btn-success" onClick={handleUpdateEmployee}>שמור שינויים</button>
+                                <button type="button" className="btn btn-danger" onClick={() => setEditEmployee(null)}>ביטול</button>
                             </form>
                         </div>
                     </div>

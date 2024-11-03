@@ -260,7 +260,7 @@ const Report: React.FC = () => {
   };
 
   const toggleShowReports = () => {
-
+    navigate('/reports-employee');
   };
 
   const handleRoleChange = (e: any) => {
