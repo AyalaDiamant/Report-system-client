@@ -6,7 +6,6 @@ import { saveAs } from 'file-saver';
 import { useUser } from '../../../contexts/user.context';
 import { useNavigate } from 'react-router-dom';
 import ExcelJS from 'exceljs';
-import Enums from '../../../interfaces/enums';
 import Header from '../../header.component';
 
 const Reports: React.FC = () => {

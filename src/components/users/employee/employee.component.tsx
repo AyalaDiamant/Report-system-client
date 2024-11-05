@@ -3,17 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import ReportService from '../../../services/report.service';
 // import FileService from '../../../services/file.service'; // סרויס לקובץ
 import { useUser } from '../../../contexts/user.context';
-import { Deliverable, MyReport } from '../../../interfaces/report.interface';
-import Enums from '../../../interfaces/enums';
+import { MyReport } from '../../../interfaces/report.interface';
 import Header from '../../header.component';
 
 const Employee: React.FC = () => {
     const [reports, setReports] = useState<MyReport[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [showReports, setShowReports] = useState<boolean>(false);
-    const [editingReportId, setEditingReportId] = useState<number | null>(null);
-    const [editedReportData, setEditedReportData] = useState<any>({});
-    const [originalReportData, setOriginalReportData] = useState<MyReport | null>(null);
+    // const [showReports, setShowReports] = useState<boolean>(false);
+    // const [editingReportId, setEditingReportId] = useState<number | null>(null);
+    // const [editedReportData, setEditedReportData] = useState<any>({});
+    // const [originalReportData, setOriginalReportData] = useState<MyReport | null>(null);
     // const [file, setFile] = useState<File | null>(null); // מצב לקובץ
 
 
@@ -21,6 +20,8 @@ const Employee: React.FC = () => {
     const { user } = useUser();
 
     const loadReports = async () => {
+        loading
+        reports
         try {
             const data = await ReportService.getReportByEmployee(user?.employeeId || 0);
             setReports(data);
