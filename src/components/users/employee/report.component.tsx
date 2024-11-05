@@ -107,7 +107,6 @@ const Report: React.FC = () => {
   // }
 
   const fixDeliverable = () => {
-    alert(rateState)
     const rate = rateState;
     const foundRole = employee?.roles.find(role => role.name === roleState);
     if (rate != 0 && foundRole) {
