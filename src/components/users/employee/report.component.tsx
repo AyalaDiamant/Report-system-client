@@ -77,6 +77,10 @@ const Report: React.FC = () => {
     const total = deliverable.quantity * rate;
     setDeliverable((prev) => ({ ...prev, rate, total }));
     setTotalSum(total);
+    if (employee?.roles.length === 1) {
+      setRoleState(employee.roles[0].name)
+      setRateState(employee.roles[0].rate)
+    }
   }, [deliverable.quantity, employee]);
 
   // חישוב תפקיד לפי הגדרה כרגע לא נצרך
@@ -103,6 +107,7 @@ const Report: React.FC = () => {
   // }
 
   const fixDeliverable = () => {
+    alert(rateState)
     const rate = rateState;
     const foundRole = employee?.roles.find(role => role.name === roleState);
     if (rate != 0 && foundRole) {
@@ -331,8 +336,18 @@ const Report: React.FC = () => {
                   </div>
 
                   {/* שדה שכר */}
-                  <div className="form-group">
-                    <label htmlFor="rate">שכר</label>
+                  <label htmlFor="sign">שכר</label>
+                  {employee?.roles.length === 1 ? (
+                    <input
+                      id="rate"
+                      name="rate"
+                      type="number"
+                      value={employee.roles[0].rate} // נעדכן את השכר לפי התפקיד שנבחר
+                      readOnly
+                      className="form-control"
+                      style={{ backgroundColor: '#cbcaca', color: 'white', border: '1px solid #cbcaca' }} // צבע רקע כהה עם טקסט לבן
+                    />
+                  ) : (
                     <input
                       id="rate"
                       name="rate"
@@ -342,8 +357,7 @@ const Report: React.FC = () => {
                       className="form-control"
                       style={{ backgroundColor: '#cbcaca', color: 'white', border: '1px solid #cbcaca' }} // צבע רקע כהה עם טקסט לבן
                     />
-                  </div>
-
+                  )}
                   <div className="form-group">
                     <label htmlFor="sign">סימן</label>
                     <input
