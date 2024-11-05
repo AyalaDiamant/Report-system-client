@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../../contexts/user.context';
 import ReportService from '../../../services/report.service';
 import Header from '../../header.component';
+import ExcelExportService from '../../../services/excelExport.service';
 
 const ReportsEmployee: React.FC = () => {
 
@@ -140,6 +141,12 @@ const ReportsEmployee: React.FC = () => {
                             <div className="row">
                                 {reports.map((report, index) => {
                                     const totalSum = report.deliverables.reduce((sum, item) => sum + item?.total, 0);
+                                    async function handleExportToExcel(report: MyReport) {
+                                        let userName = user?.name.toString();
+                                        if (userName)
+                                            ExcelExportService.exportStyledReportToExcel(report, userName)
+                                    }
+
                                     return (
                                         <div className="col-md-4 mb-4" key={index}>
                                             <div className="card report-card">
@@ -175,6 +182,10 @@ const ReportsEmployee: React.FC = () => {
                                                         <button className="btn btn-primary" onClick={() => handleEditReport(report)}>
                                                             ערוך
                                                         </button>
+                                                        <button className="btn btn-success" onClick={() => handleExportToExcel(report)}>
+                                                            יצא לאקסל
+                                                        </button>
+
                                                         <button className="btn btn-danger" onClick={() => handleDelete(report._id)}>
                                                             מחק
                                                         </button>

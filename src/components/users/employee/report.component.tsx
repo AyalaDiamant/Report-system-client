@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import ReportService from '../../../services/report.service';
 import { useUser } from '../../../contexts/user.context';
 import { MyReport, Deliverable } from '../../../interfaces/report.interface';
-import ExcelJS from 'exceljs';
 import employeeService from '../../../services/employee.service';
 import { Employee } from '../../../interfaces/employee.interface';
 import Header from '../../header.component';
+import ExcelExportService from '../../../services/excelExport.service';
 
 // בשביל ההגדרות
 // import { Settings } from '../../../interfaces/settings.interface';
@@ -149,67 +149,70 @@ const Report: React.FC = () => {
   }
 
   async function exportStyledReportToExcel(report: MyReport) {
-    const today = new Date();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const year = today.getFullYear().toString().slice(-2);
+    // const today = new Date();
+    // const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    // const year = today.getFullYear().toString().slice(-2);
 
-    const formattedDate = `${month}-${year}`;
-    console.log(formattedDate);
+    // const formattedDate = `${month}-${year}`;
+    // console.log(formattedDate);
 
-    const date = formattedDate
-    const totalSum: number = totalSumCalculation(report);
+    // const date = formattedDate
+    // const totalSum: number = totalSumCalculation(report);
 
-    const fileName = `דוח_${user?.name}_${date}.xlsx`;
+    // const fileName = `דוח_${user?.name}_${date}.xlsx`;
 
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('דוח');
+    // const workbook = new ExcelJS.Workbook();
+    // const worksheet = workbook.addWorksheet('דוח');
 
-    // עיצוב כותרות
-    worksheet.addRow([
-      `${formattedDate}`,
-      `${user?.name}`
-    ]).eachCell({ includeEmpty: true }, (cell) => {
-      cell.font = { bold: true };
-      cell.alignment = { vertical: 'middle', horizontal: 'center' };
-    });
-
-    worksheet.addRow([]);
-    worksheet.addRow(['כמות', 'תעריף', 'תפקיד', 'פרויקט', 'סימן', 'סעיף', 'סכום סה"כ'])
-      .eachCell({ includeEmpty: true }, (cell) => {
-        cell.font = { bold: true };
-        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFF00' } };
-      });
-
-    // הוספת הנתונים
-    report.deliverables.forEach(deliverable => {
-      worksheet.addRow([
-        // deliverable.type,
-        deliverable.quantity,
-        deliverable.rate,
-        deliverable.role,
-        deliverable.project,
-        deliverable.sign,
-        deliverable.seif,
-        deliverable.total
-      ]);
-    });
-
-    worksheet.addRow([]); // שורה ריקה
-    worksheet.addRow(['הערה כללית', report.common, 'סכום סה"כ', totalSum, '', '', '', '',])
-    // .eachCell({ includeEmpty: true }, (cell) => {
-    //   cell.alignment = { horizontal: 'right', vertical: 'middle', textRotation: 0, wrapText: true };
+    // // עיצוב כותרות
+    // worksheet.addRow([
+    //   `${formattedDate}`,
+    //   `${user?.name}`
+    // ]).eachCell({ includeEmpty: true }, (cell) => {
+    //   cell.font = { bold: true };
+    //   cell.alignment = { vertical: 'middle', horizontal: 'center' };
     // });
 
-    await workbook.xlsx.writeBuffer().then((buffer) => {
-      // יצירת אובייקט Blob ושמירה לקובץ
-      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = fileName;
-      link.click();
-      window.URL.revokeObjectURL(url);
-    });
+    // worksheet.addRow([]);
+    // worksheet.addRow(['כמות', 'תעריף', 'תפקיד', 'פרויקט', 'סימן', 'סעיף', 'סכום סה"כ'])
+    //   .eachCell({ includeEmpty: true }, (cell) => {
+    //     cell.font = { bold: true };
+    //     cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFF00' } };
+    //   });
+
+    // // הוספת הנתונים
+    // report.deliverables.forEach(deliverable => {
+    //   worksheet.addRow([
+    //     // deliverable.type,
+    //     deliverable.quantity,
+    //     deliverable.rate,
+    //     deliverable.role,
+    //     deliverable.project,
+    //     deliverable.sign,
+    //     deliverable.seif,
+    //     deliverable.total
+    //   ]);
+    // });
+
+    // worksheet.addRow([]); // שורה ריקה
+    // worksheet.addRow(['הערה כללית', report.common, 'סכום סה"כ', totalSum, '', '', '', '',])
+    // // .eachCell({ includeEmpty: true }, (cell) => {
+    // //   cell.alignment = { horizontal: 'right', vertical: 'middle', textRotation: 0, wrapText: true };
+    // // });
+
+    // await workbook.xlsx.writeBuffer().then((buffer) => {
+    //   // יצירת אובייקט Blob ושמירה לקובץ
+    //   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    //   const url = window.URL.createObjectURL(blob);
+    //   const link = document.createElement('a');
+    //   link.href = url;
+    //   link.download = fileName;
+    //   link.click();
+    //   window.URL.revokeObjectURL(url);
+    // });
+    let userName = user?.name.toString();
+    if (userName)
+      ExcelExportService.exportStyledReportToExcel(report, userName)
   }
 
   const send = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -397,12 +400,11 @@ const Report: React.FC = () => {
                   </div>
                   <div className='d-flex align-items-center mt-3 gap-2'>
                     <button type="button" className="btn btn-secondary" onClick={addDeliverable}>
-                      הוסף הספק
+                      הוסף הספק לדו"ח
                     </button>
 
                     <button type="submit" className="btn btn-secondary">
-                      שלח
-                    </button>
+                      שליחה וסיום                    </button>
                   </div>
 
                   {errorMessage && <div className="alert alert-danger mt-2">{errorMessage}</div>}
