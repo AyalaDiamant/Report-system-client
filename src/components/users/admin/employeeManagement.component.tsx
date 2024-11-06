@@ -106,16 +106,16 @@ const EmployeeManagement: React.FC = () => {
         }
     };
 
-    const handleDeleteEmployee = async (employeeId: number) => {
-        if (confirm('האם אתה בטוח שברצונך למחוק עובד זה?')) {
-            try {
-                await employeeService.deleteEmployee(employeeId);
-                fetchEmployees(); // refresh employee list
-            } catch (error) {
-                console.error('Error deleting employee:', error);
-            }
-        }
-    };
+    // const handleDeleteEmployee = async (employeeId: number) => {
+    //     if (confirm('האם אתה בטוח שברצונך למחוק עובד זה?')) {
+    //         try {
+    //             await employeeService.deleteEmployee(employeeId);
+    //             fetchEmployees(); // refresh employee list
+    //         } catch (error) {
+    //             console.error('Error deleting employee:', error);
+    //         }
+    //     }
+    // };
 
     const handleLogout = () => {
         localStorage.removeItem('token');
