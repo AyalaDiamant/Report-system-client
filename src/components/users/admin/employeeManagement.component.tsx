@@ -117,6 +117,23 @@ const EmployeeManagement: React.FC = () => {
     //     }
     // };
 
+    const handleDeleteEmployee = async (employeeId: number) => {
+        if (confirm('האם אתה בטוח שברצונך למחוק עובד זה?')) {
+            try {
+                const response = await employeeService.deleteEmployee(employeeId);
+                if (response.status === 200) { // או בהתאם לתקנים שלך ב-API
+                    fetchEmployees(); // רענן את רשימת העובדים לאחר המחיקה
+                } else {
+                    console.error('Failed to delete employee:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error deleting employee:', error);
+                alert('שגיאה במחיקת עובד');
+            }
+        }
+    };
+    
+
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('isAdmin');
@@ -184,7 +201,22 @@ const EmployeeManagement: React.FC = () => {
                                             </li>
                                         ))}
                                 </ul> */}
-                                
+                                <ul className="list-group mb-4">
+                                    {employees
+                                        .filter((employee) => employee._id !== 0)
+                                        .sort((a, b) => a.name.localeCompare(b.name))
+                                        .map((employee) => (
+                                            <li key={employee._id} className="list-group-item d-flex justify-content-between align-items-center">
+                                                {employee.name} - {employee.roles && employee.roles.length > 0 ? employee.roles[0].name : 'תפקיד לא ידוע'}
+                                                <div>
+                                                    <button type="button" className="btn btn-warning btn-sm" onClick={() => setEditEmployee(employee)}>ערוך</button>
+                                                    <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteEmployee(employee._id)}>מחק</button>
+                                                </div>
+                                            </li>
+                                        ))}
+                                </ul>
+
+
                             </div>
                             <button type="button" className="btn btn-primary" onClick={handleAddEmployee}>
                                 {isAdding ? 'ביטול' : 'הוסף עובד'}
