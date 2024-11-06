@@ -10,6 +10,7 @@ export interface Employee {
         branchNumber: string;
         accountNumber: string;
     };
+    isAdmin?: boolean; // הוספת השדה isAdmin
     roles: {
         name: string;
         rate: number;
