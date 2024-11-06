@@ -184,23 +184,7 @@ const EmployeeManagement: React.FC = () => {
                                             </li>
                                         ))}
                                 </ul> */}
-                                {employees && employees.length > 0 && (
-                                    <ul className="list-group mb-4">
-                                        {employees
-                                            .filter((employee) => employee._id !== 0)
-                                            .sort((a, b) => a.name.localeCompare(b.name))
-                                            .map((employee) => (
-                                                <li key={employee._id} className="list-group-item d-flex justify-content-between align-items-center">
-                                                    {employee.name} - {employee.roles[0]?.name}
-                                                    <div>
-                                                        <button type="button" className="btn btn-warning btn-sm" onClick={() => setEditEmployee(employee)}>ערוך</button>
-                                                        <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteEmployee(employee._id)}>מחק</button>
-                                                    </div>
-                                                </li>
-                                            ))}
-                                    </ul>
-                                )}
-
+                                
                             </div>
                             <button type="button" className="btn btn-primary" onClick={handleAddEmployee}>
                                 {isAdding ? 'ביטול' : 'הוסף עובד'}
