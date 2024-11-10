@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { BrowserRouter } from 'react-router-dom';
 
 // ייבוא קומפוננטות לצורך הניווטים
 import Login from './components/auth/login.component';
@@ -64,13 +63,10 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById('root')!).render(
-  <BrowserRouter>
-
-    <StrictMode>
-      <UserProvider>
-        <RouterProvider router={router} />
-      </UserProvider>
-    </StrictMode>
-  </BrowserRouter>
-  ,
+  <StrictMode>
+    <UserProvider>
+      <RouterProvider router={router} />
+    </UserProvider>
+  </StrictMode>,
 );
+
