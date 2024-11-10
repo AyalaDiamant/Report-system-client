@@ -64,11 +64,13 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <UserProvider>
-      <BrowserRouter>
+  <BrowserRouter>
+
+    <StrictMode>
+      <UserProvider>
         <RouterProvider router={router} />
-      </BrowserRouter>
-    </UserProvider>
-  </StrictMode>,
+      </UserProvider>
+    </StrictMode>
+  </BrowserRouter>
+  ,
 );
