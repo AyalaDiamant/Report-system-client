@@ -54,6 +54,10 @@ const Employee: React.FC = () => {
         navigate('/employee');
     };
 
+    const handleDocument = () => {
+        navigate('/document');
+    };
+
 
     // פונצקיה להעלאת קובץכרגע לא נוגעים בה
     // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,6 +94,7 @@ const Employee: React.FC = () => {
                 handleReport={handleReport}
                 toggleShowReports={toggleShowReports} // העברת פונקציה
                 handleHome={handleHome}
+                handleDocument={handleDocument}
             />
             <div className="container mt-5">
                 <h1>עמוד עובד</h1>

@@ -53,6 +53,10 @@ const ReportsEmployee: React.FC = () => {
         navigate('/employee');
     };
 
+    const handleDocument = () => {
+        navigate('/document');
+    };
+
     const handleDelete = async (reportId: number) => {
         if (confirm('אתה בטוח שברצונך למחוק את הדוח?')) {
             try {
@@ -125,6 +129,7 @@ const ReportsEmployee: React.FC = () => {
                 handleReport={handleReport}
                 toggleShowReports={toggleShowReports} // העברת פונקציה
                 handleHome={handleHome}
+                handleDocument={handleDocument}
             />
             <div className="container mt-5">
                 <h1>עמוד עובד</h1>

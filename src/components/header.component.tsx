@@ -9,6 +9,8 @@ interface HeaderProps {
     handleEmployeeManagement?: () => void; // אופציונלי למנהל
     handleHome: () => void; // פונקציה לדף הבית
     handleSettings?: () => void; // אופציונלי למנהל
+    handleDocument?: () => void; // אופציונלי לעובד
+
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -19,7 +21,8 @@ const Header: React.FC<HeaderProps> = ({
     toggleShowReports,
     handleEmployeeManagement,
     handleHome,
-    handleSettings
+    handleSettings,
+    handleDocument
 }) => {
     return (
         <div>
@@ -43,9 +46,14 @@ const Header: React.FC<HeaderProps> = ({
                                 )}
                             </li>
                             {role === 'employee' && (
-                                <li className="nav-item">
-                                    <button className="nav-link btn" onClick={handleReport}>למילוי דוח</button>
-                                </li>
+                                <>
+                                    <li className="nav-item">
+                                        <button className="nav-link btn" onClick={handleReport}>למילוי דוח</button>
+                                    </li>
+                                    <li className="nav-item">
+                                        <button className="nav-link btn" onClick={handleDocument}>מסמכים</button>
+                                    </li>
+                                </>
                             )}
                             {role === 'manager' && (
                                 <>

@@ -278,6 +278,10 @@ const Report: React.FC = () => {
     }
   };
 
+  const handleDocument = () => {
+    navigate('/document');
+  };
+
   return (
     <div>
       <Header
@@ -287,6 +291,7 @@ const Report: React.FC = () => {
         handleReport={handleReport}
         toggleShowReports={toggleShowReports} // העברת פונקציה
         handleHome={handleHome}
+        handleDocument={handleDocument}
       />
       <div className="container mt-5">
         <div className="row justify-content-center">
