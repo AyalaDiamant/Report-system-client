@@ -26,6 +26,7 @@ const EmployeeManagement: React.FC = () => {
             rateIncrease: 0,
         }],
         project: '',
+        isAvailable: true,
     });
     const [editEmployee, setEditEmployee] = useState<Employee | null>(null);
     const [handleAdd, setHandleAdd] = useState<boolean>(false);
@@ -64,6 +65,7 @@ const EmployeeManagement: React.FC = () => {
             },
             roles: [{ name: '', rate: 0, rateIncrease: 0 }],
             project: '',
+            isAvailable: true,
         });
     }
 
@@ -84,6 +86,7 @@ const EmployeeManagement: React.FC = () => {
                 },
                 roles: [{ name: '', rate: 0, rateIncrease: 0 }],
                 project: '',
+                isAvailable: true,
             });
             fetchEmployees();
             setHandleAdd(false);
@@ -92,7 +95,6 @@ const EmployeeManagement: React.FC = () => {
             console.error('Error creating employee:', error);
         }
     };
-
 
     const handleUpdateEmployee = async () => {
         if (editEmployee) {
@@ -132,7 +134,6 @@ const EmployeeManagement: React.FC = () => {
             }
         }
     };
-    
 
     const handleLogout = () => {
         localStorage.removeItem('token');

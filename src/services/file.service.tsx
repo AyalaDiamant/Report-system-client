@@ -7,7 +7,7 @@
 
 // // const uploadFile = async (formData: FormData) => {
 // //   console.log(formData);
-  
+
 // //   return axios.post('http://localhost:3000/api/files/upload', formData, {
 // //     headers: {
 // //       'Content-Type': 'multipart/form-data',
@@ -39,7 +39,7 @@
 //     formData.append('uploadedBy', uploadedById.toString()); // הכנס כאן את המזהה של המעלה (מספר)
 //     formData.append('assignedTo', uploadedById.toString()); // הכנס כאן את המזהה של המוקצה (מספר)
 //     formData.append('status', 'בבדיקה')
-  
+
 //     try {
 //         const response = await axios.post(`${API_URL}`, formData, {
 //             headers: {
@@ -92,7 +92,6 @@
 
 
 import axios from 'axios';
-import { Document } from '../interfaces/file.interface';
 
 const API_URL = 'http://localhost:3000/api/files';  // עדכון לכתובת ה-API שלך
 
@@ -120,9 +119,21 @@ export const getAssignedDocuments = async (userId: string) => {
   try {
     const response = await axios.get(`${API_URL}/assigned/${userId}`);
     console.log(response.data.documents);
-    return response.data.documents; 
-    
+    return response.data.documents;
+
   } catch (error) {
     throw new Error('Error fetching assigned documents');
+  }
+};
+
+export const updateEmployeeAvailability = async (employeeId: number, isAvailable: boolean) => {
+  alert(employeeId)
+  try {
+    const response = await axios.put(`${API_URL}/${employeeId}/available`, { isAvailable });
+    alert(response.data)
+    return response.data;
+  } catch (error) {
+    console.error("Error updating employee availability:", error);
+    throw error;
   }
 };

@@ -142,12 +142,19 @@
 
 import React, { useState, useEffect } from 'react';
 import { Document } from '../../../interfaces/file.interface';
-import { uploadFile, getAssignedDocuments } from '../../../services/file.service';
+import { uploadFile, getAssignedDocuments, updateEmployeeAvailability } from '../../../services/file.service';
 import { useUser } from '../../../contexts/user.context';
+import { Employee } from '../../../interfaces/employee.interface';
+import employeeService from '../../../services/employee.service';
+
 
 const DocumentsPage = () => {
     const [file, setFile] = useState<File | null>(null);
     const [assignedDocuments, setAssignedDocuments] = useState<Document[]>([]);
+    const [employees, setEmployees] = useState<Employee[]>([]);
+    const [availableReviewer, setAvailableReviewer] = useState<Employee>(); // לשמירת התוצאה של הפונקציה
+    const [message, setMessage] = useState('');
+
     //   const [userId, setUserId] = useState('1'); // זה המשתמש המחובר (ה-ID שלו)
 
     const { user } = useUser();
@@ -182,8 +189,60 @@ const DocumentsPage = () => {
 
     useEffect(() => {
         loadAssignedDocuments(); // טוען את המסמכים ברגע שהקומפוננטה נטענת
+        fetchEmployees();
     }, [user?.employeeId]); // טוען את המסמכים גם אם יש שינוי ב-ID של המשתמש
 
+    const fetchEmployees = async () => {
+        try {
+            const data = await employeeService.getAllEmployees();
+            setEmployees(data);
+        } catch (error) {
+            console.error('Error fetching employees:', error);
+        }
+    };
+
+    // const findAvailable = () => {
+    //     fetchEmployees();
+    //     const employeeReviewer: Employee[] = [];
+    //     for (let i = 0; i < employees.length; i++) {
+    //         for (let j = 0; j < employees[i].roles.length; j++) {
+    //             if (employees[i].roles[j].name === 'ביקורת')
+    //                 employeeReviewer.push(employees[i])
+    //         }
+    //     }
+    //     let availableReviewer = employeeReviewer.find(emp => emp.isAvailable);
+    //     if (availableReviewer)
+    //     {
+    //         availableReviewer.isAvailable = false;
+    //         return availableReviewer.name
+    //     }
+    //     return 'אין מבקר פנוי'
+    // }
+
+    const findAvailable = async () => {
+        // debugger
+        console.log(employees);
+
+        // מוצא את העובדים שמוגדרים כ'ביקורת'
+        const reviewers = employees.filter(emp => emp.roles.some(role => role.name === 'ביקורת'));
+        console.log(reviewers);
+
+        // מוצא את הראשון מבין הבודקים שזמין
+        const available = reviewers.find(emp => emp.isAvailable);
+        setAvailableReviewer(available)
+        console.log(available);
+
+        if (availableReviewer) {
+            // עדכון הסטטוס של העובד בשרת
+            alert(availableReviewer.name)
+            const updatedEmployee = await updateEmployeeAvailability(availableReviewer._id, false);
+            alert(updatedEmployee.name)
+
+            setMessage(`נמצא מבקר פנוי: ${updatedEmployee.name}`);
+        } else {
+            setMessage('אין מבקר פנוי');
+        }
+    };
     return (
         <div>
             <h1>ניהול מסמכים</h1>
@@ -210,6 +269,13 @@ const DocumentsPage = () => {
                     <p>אין מסמכים באחריותך.</p>
                 )}
             </section>
+            <div>
+                <button onClick={findAvailable}>חפש מבקר פנוי</button>
+                {availableReviewer && (
+                    <p>{message}</p>
+                )}
+            </div>
+
         </div>
     );
 };

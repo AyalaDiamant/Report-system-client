@@ -17,4 +17,5 @@ export interface Employee {
         rateIncrease: number;
     }[];
     project: string;
+    isAvailable: boolean,
 }
