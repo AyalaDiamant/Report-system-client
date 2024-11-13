@@ -48,7 +48,7 @@ const Employee: React.FC = () => {
 
     const toggleShowReports = () => {
         navigate('/reports-employee');
-      };
+    };
 
     const handleHome = () => {
         navigate('/employee');
@@ -101,7 +101,7 @@ const Employee: React.FC = () => {
                 {/* כפתור להעלאת קובץ כרגע לא נוגעים בו */}
                 {/* <input type="file" onChange={handleFileChange} />
                 <button onClick={handleUpload} disabled={!file}>העלה קובץ</button> */}
-               
+
             </div>
         </div>
     );
