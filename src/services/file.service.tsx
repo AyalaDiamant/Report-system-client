@@ -127,10 +127,8 @@ export const getAssignedDocuments = async (userId: string) => {
 };
 
 export const updateEmployeeAvailability = async (employeeId: number, isAvailable: boolean) => {
-  alert(employeeId)
   try {
     const response = await axios.put(`${API_URL}/${employeeId}/available`, { isAvailable });
-    alert(response.data)
     return response.data;
   } catch (error) {
     console.error("Error updating employee availability:", error);

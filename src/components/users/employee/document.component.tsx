@@ -201,48 +201,20 @@ const DocumentsPage = () => {
         }
     };
 
-    // const findAvailable = () => {
-    //     fetchEmployees();
-    //     const employeeReviewer: Employee[] = [];
-    //     for (let i = 0; i < employees.length; i++) {
-    //         for (let j = 0; j < employees[i].roles.length; j++) {
-    //             if (employees[i].roles[j].name === 'ביקורת')
-    //                 employeeReviewer.push(employees[i])
-    //         }
-    //     }
-    //     let availableReviewer = employeeReviewer.find(emp => emp.isAvailable);
-    //     if (availableReviewer)
-    //     {
-    //         availableReviewer.isAvailable = false;
-    //         return availableReviewer.name
-    //     }
-    //     return 'אין מבקר פנוי'
-    // }
-
     const findAvailable = async () => {
-        // debugger
-        console.log(employees);
-
-        // מוצא את העובדים שמוגדרים כ'ביקורת'
         const reviewers = employees.filter(emp => emp.roles.some(role => role.name === 'ביקורת'));
-        console.log(reviewers);
-
-        // מוצא את הראשון מבין הבודקים שזמין
         const available = reviewers.find(emp => emp.isAvailable);
-        setAvailableReviewer(available)
-        console.log(available);
 
-        if (availableReviewer) {
-            // עדכון הסטטוס של העובד בשרת
-            alert(availableReviewer.name)
-            const updatedEmployee = await updateEmployeeAvailability(availableReviewer._id, false);
-            alert(updatedEmployee.name)
-
-            setMessage(`נמצא מבקר פנוי: ${updatedEmployee.name}`);
+        if (available) {
+            await updateEmployeeAvailability(available._id, false);
+            setAvailableReviewer(available);
+            setMessage(`נמצא מבקר פנוי: ${available.name}`);
         } else {
+            setAvailableReviewer(undefined);
             setMessage('אין מבקר פנוי');
         }
     };
+
     return (
         <div>
             <h1>ניהול מסמכים</h1>
@@ -271,9 +243,7 @@ const DocumentsPage = () => {
             </section>
             <div>
                 <button onClick={findAvailable}>חפש מבקר פנוי</button>
-                {availableReviewer && (
-                    <p>{message}</p>
-                )}
+                {message && <p>{message}</p>}
             </div>
 
         </div>
