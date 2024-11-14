@@ -18,4 +18,3 @@ export interface Document {
     dateUploaded: string;         // תאריך העלאת הקובץ
   }
 
-  ['התחלה','בבדיקה', 'בעריכה', 'מושלם']
