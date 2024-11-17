@@ -11,10 +11,11 @@
 export interface Document {
     _id: string;                  // ID של המסמך (הנתיב יוכל להיות מונגוז)
     originalName: string;         // שם הקובץ המקורי
-    status: 'התחלה' | 'בבדיקה' | 'מוכן לבדיקה' | 'מושלם'; // סטטוס הקובץ
+    status: 'התחלה' | 'בבדיקה' | 'מוכן לבדיקה' | 'מושלם' | 'בתור הממתינים'; // סטטוס הקובץ
     uploadedBy: string;           // ID של מי שהעלה את הקובץ
     assignedTo: string | null;    // ID של מי שמוקצה לתיקון (אם יש)
     filePath: string;             // נתיב הקובץ על השרת
     dateUploaded: string;         // תאריך העלאת הקובץ
+    isInQueue: boolean;
   }
 

@@ -226,6 +226,20 @@ const DocumentsPage = () => {
     };
 
     const assignReviewerToDocument = async (documentId: any) => {
+        // try {
+        //     const reviewer = employees.find(emp => emp.roles.some(role => role.name === 'ביקורת') && emp.isAvailable);
+        //     if (reviewer) {
+        //         await assignReviewerToFile(documentId, reviewer._id.toString());
+        //         reviewer.isAvailable = false;
+        //         setAvailableReviewer(reviewer);
+        //         setMessage(`נמצא מבקר פנוי: ${reviewer.name}`);
+        //     } else {
+        //         setAvailableReviewer(null);
+        //         setMessage('אין מבקר פנוי');
+        //     }
+        // } catch (error) {
+        //     console.error('Error assigning reviewer to document:', error);
+        // }
         try {
             const reviewer = employees.find(emp => emp.roles.some(role => role.name === 'ביקורת') && emp.isAvailable);
             if (reviewer) {
@@ -235,7 +249,7 @@ const DocumentsPage = () => {
                 setMessage(`נמצא מבקר פנוי: ${reviewer.name}`);
             } else {
                 setAvailableReviewer(null);
-                setMessage('אין מבקר פנוי');
+                setMessage('המסמך הועבר לתור ממתינים');
             }
         } catch (error) {
             console.error('Error assigning reviewer to document:', error);
