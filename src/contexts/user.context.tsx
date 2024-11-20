@@ -2,8 +2,8 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 
 // יצירת ה-Context עבור המשתמש
 interface UserContextType {
-  user: { employeeId: number, name: string } | null;
-  setUser: (user: { employeeId: number, name: string } | null) => void;
+  user: { employeeId: number, name: string, roles: any } | null;
+  setUser: (user: { employeeId: number, name: string, roles: any } | null) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -19,7 +19,8 @@ export const useUser = () => {
 
 // הקומפוננטה שמספקת את המידע של המשתמש לכל האפליקציה
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<{ employeeId: number, name: string } | null>(null);
+  
+  const [user, setUser] = useState<{ employeeId: number, name: string,  roles:any } | null>(null);
 
   // טעינת המשתמש מה-localStorage כאשר הקומפוננטה נטענת
   useEffect(() => {

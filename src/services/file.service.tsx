@@ -99,3 +99,61 @@ export const assignReviewerToFile = async (documentId: string, reviewerId: strin
     throw error;
   }
 };
+
+
+
+// פונקציה שמבצעת בדיקה אם המסמך קיים במסד נתונים לפי שם המסמך
+export const checkIfDocumentExists = async (fileName: string) => {
+  // debugger
+  try {
+    const response = await axios.get(`${API_URL}/${fileName}`);
+    return response.data || null;
+  } catch (error) {
+    console.error('Error checking document existence:', error);
+    return null;
+  }
+};
+
+// פונקציה לעדכון המעלה של המסמך
+export const updateDocumentUploader = async (documentId: string, newUploader: string) => {
+  // debugger
+  try {
+    await axios.put(`${API_URL}/${documentId}`, { uploadedBy: newUploader });
+  } catch (error) {
+    console.error('Error updating document uploader:', error);
+  }
+};
+
+// export const getAllDocuments = async () => {
+//   debugger
+//   try {
+//       const response = await axios.get(`${API_URL}/all-documents`);
+//       return response.data;
+//   } catch (error) {
+//       console.error('Error fetching documents:', error);
+//       throw new Error('שגיאה בעת הבאת המסמכים');
+//   }
+// };
+export const getAllDocuments = async () => {
+  debugger
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token'); 
+  if (!token) {
+      throw new Error('לא נמצא טוקן. המשתמש לא מאומת.');
+  }
+
+  try {
+      const response = await axios({
+          method: 'get',
+          url: `${API_URL}/all-documents`,
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+          },
+      });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching documents:', error);
+      throw new Error('שגיאה בעת הבאת המסמכים');
+  }
+};
+

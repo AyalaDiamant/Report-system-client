@@ -33,7 +33,8 @@ const Employee: React.FC = () => {
     };
 
     useEffect(() => {
-        loadReports();
+        // זה בהערה רק כי זה עזה מלא בעיות בקונסול לבדוק למה זה בהערה!!!!!!
+        // loadReports();
     }, [user, navigate]);
 
     const handleLogout = () => {

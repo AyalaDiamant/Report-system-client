@@ -126,7 +126,6 @@ const apiRequest = async (method: string, url: string, data?: any) => {
                 'Authorization': `Bearer ${token}`, 
             },
         });
-
         return response.data;
     } catch (error) {
         console.error(`Error during ${method.toUpperCase()} request to ${url}:`, error);
@@ -144,6 +143,7 @@ const updateEmployee = (employeeId: any, employeeData: any) => apiRequest('put',
 const deleteEmployee = (employeeId: any) => apiRequest('delete', employeeId);
 
 const getEmployeeById = (employeeId: number) => apiRequest('get', employeeId.toString());
+
 
 export default {
     getAllEmployees,

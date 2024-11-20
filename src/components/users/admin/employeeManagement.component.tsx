@@ -33,7 +33,7 @@ const EmployeeManagement: React.FC = () => {
     // const [showPassword, setShowPassword] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const navigate = useNavigate();
-    const { user } = useUser();
+    const { user, setUser } = useUser();
 
     useEffect(() => {
         fetchEmployees();
@@ -71,7 +71,7 @@ const EmployeeManagement: React.FC = () => {
 
     const handleCreateEmployee = async () => {
         try {
-            await employeeService.createEmployee(newEmployee);
+            const res = await employeeService.createEmployee(newEmployee);
             setNewEmployee({
                 _id: 0,
                 name: '',
@@ -88,6 +88,13 @@ const EmployeeManagement: React.FC = () => {
                 project: '',
                 isAvailable: true,
             });
+            
+            // setUser({
+            //     _id: res._id,
+            //     name: res.name,
+            //     roles: res.roles, // שימוש במערך התפקידים שהתקבל
+            // });
+    
             fetchEmployees();
             setHandleAdd(false);
             setIsAdding(!isAdding);
