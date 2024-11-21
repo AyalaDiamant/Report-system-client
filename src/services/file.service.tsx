@@ -135,7 +135,7 @@ export const updateDocumentUploader = async (documentId: string, newUploader: st
 //   }
 // };
 export const getAllDocuments = async () => {
-  debugger
+  
   const token = localStorage.getItem('token') || sessionStorage.getItem('token'); 
   if (!token) {
       throw new Error('לא נמצא טוקן. המשתמש לא מאומת.');
