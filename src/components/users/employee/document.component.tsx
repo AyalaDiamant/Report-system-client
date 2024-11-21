@@ -11,7 +11,8 @@ const DocumentsPage = () => {
     const [file, setFile] = useState<File | null>(null);
     const [documents, setDocuments] = useState<Document[]>([]);
     const [assignedDocument, setAssignedDocument] = useState<Document | null>(null);
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null); // הודעת שגיאה
     const [currentDocument, setCurrentDocument] = useState<Document>();
     const [availableReviewer, setAvailableReviewer] = useState<Employee | null>(null);
     const [employees, setEmployees] = useState<Employee[]>([]);
@@ -19,6 +20,18 @@ const DocumentsPage = () => {
 
     const { user } = useUser();
     const navigate = useNavigate();
+
+    const showMessage = (msg: string, error: boolean) => {
+        const duration = 5000
+        if(error){
+            setErrorMessage(msg);
+            setTimeout(() => setErrorMessage(null), duration);
+        }
+        else{
+            setMessage(msg);
+            setTimeout(() => setMessage(null), duration);
+        }
+    };
 
     const fetchEmployees = async () => {
         try {
@@ -52,7 +65,7 @@ const DocumentsPage = () => {
                 const assigned = docs.find((doc: Document) => doc.assignedTo === user?.employeeId.toString());
                 if (assigned) {
                     setAssignedDocument(assigned);
-                    setMessage(`יש לך מסמך שהוקצה: ${assigned.originalName}`);
+                    showMessage(`יש לך מסמך שהוקצה: ${assigned.originalName}`, false);
                 }
             } catch (error) {
                 console.error('Error loading documents:', error);
@@ -66,15 +79,14 @@ const DocumentsPage = () => {
     const handleFileUpload = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!file) {
-            alert('לא נבחר קובץ להעלאה');
+            showMessage('לא נבחר קובץ להעלאה', true);
             return;
         }
         try {
             // אם יש מסמך שהוקצה למשתמש הנוכחי
             if (assignedDocument) {
-                alert(assignedDocument.originalName)
                 if (file.name !== assignedDocument.originalName) {
-                    alert('ניתן להעלות רק את המסמך שהוקצה לך!');
+                    showMessage('ניתן להעלות רק את המסמך שהוקצה לך!', true);
                     return;
                 }
                 // העלאת המסמך
@@ -85,7 +97,6 @@ const DocumentsPage = () => {
 
                 // עדכון סטטוס `isAvailable` למשתמש המקורי
                 const updateEmployee = { ...currentEmployee, isAvailable: true }
-                alert(`${updateEmployee.isAvailable} updateEmployee.isAvailable`)
 
                 if (updateEmployee) {
                     try {
@@ -108,20 +119,18 @@ const DocumentsPage = () => {
                     docs.map(doc => (doc._id === assignedDocument._id ? updatedDocument : doc))
                 );
 
-                alert('המסמך הועלה בהצלחה והוקצה למעלה הקודם!');
-                alert(currentEmployee?.isAvailable)
+                showMessage('המסמך הועלה בהצלחה ונשלח לעורך שערך אותו.', false);
                 setCurrentDocument(updatedDocument);
 
             } else {
                 const uploadResponse = await uploadFile(file, user?.employeeId.toString() || "0", undefined);
                 setCurrentDocument(uploadResponse.file);
                 await assignReviewerToDocument(uploadResponse.file._id); // ננסה להקצות מבקר פנוי למסמך החדש
-                alert('המסמך הועלה בהצלחה!');
-                // alert('לא הוקצה לך מסמך, אינך יכול להעלות מסמך!');
+                showMessage('המסמך הועלה בהצלחה!', false);
             }
         } catch (error) {
             console.error('Error uploading file:', error);
-            alert('שגיאה בהעלאת הקובץ');
+            showMessage('שגיאה בהעלאת הקובץ', true);
         }
     };
 
@@ -132,49 +141,28 @@ const DocumentsPage = () => {
                 await assignReviewerToFile(documentId, reviewer._id.toString());
                 reviewer.isAvailable = false;
                 setAvailableReviewer(reviewer);
-                setMessage(`נמצא מבקר פנוי: ${reviewer.name}`);
+                showMessage(`נמצא מבקר פנוי: ${reviewer.name}`, false);
             } else {
                 setAvailableReviewer(null);
-                setMessage('המסמך הועבר לתור ממתינים');
+                showMessage('המסמך הועבר לתור ממתינים', false);
             }
         } catch (error) {
             console.error('Error assigning reviewer to document:', error);
         }
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        sessionStorage.removeItem('token');
-        navigate('/login');
-    };
-
-    const handleReport = () => {
-        navigate('/report');
-    };
-
-    const toggleShowReports = () => {
-        navigate('/reports-employee');
-    };
-
-    const handleHome = () => {
-        navigate('/employee');
-    };
-
-    const handleDocument = () => {
-        navigate('/document');
-    };
-
+    const navigateTo = (path: string) => navigate(path);
 
     return (
         <>
             <Header
                 user={user}
-                role="employee" // מצב של עובד
-                handleLogout={handleLogout}
-                handleReport={handleReport}
-                toggleShowReports={toggleShowReports} // העברת פונקציה
-                handleHome={handleHome}
-                handleDocument={handleDocument}
+                role="employee"
+                handleLogout={() => navigateTo('/login')}
+                handleReport={() => navigateTo('/report')}
+                toggleShowReports={() => navigateTo('/reports-employee')}
+                handleHome={() => navigateTo('/employee')}
+                handleDocument={() => navigateTo('/document')}
             />
             <div className="container mt-4">
                 <h1 className="text-center mb-4">ניהול מסמכים</h1>
@@ -200,7 +188,11 @@ const DocumentsPage = () => {
                         </form>
                     </div>
                 </div>
-
+                {errorMessage && (
+                    <div className="alert alert-danger" role="alert">
+                        {errorMessage}
+                    </div>
+                )}
                 {message && (
                     <div className="alert alert-info" role="alert">
                         {message}
@@ -242,4 +234,3 @@ const DocumentsPage = () => {
 };
 
 export default DocumentsPage;
-
