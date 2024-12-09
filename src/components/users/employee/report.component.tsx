@@ -8,11 +8,6 @@ import { Employee } from '../../../interfaces/employee.interface';
 import Header from '../../header.component';
 import ExcelExportService from '../../../services/excelExport.service';
 
-// בשביל ההגדרות
-// import { Settings } from '../../../interfaces/settings.interface';
-// import { getSetting } from '../../../services/setting.service';
-// import * as XLSX from 'xlsx';
-// import { saveAs } from 'file-saver';
 
 const Report: React.FC = () => {
   const { user } = useUser();
@@ -43,21 +38,7 @@ const Report: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // הגדרות - אם יצתרכו להשאיר
-    // const fetchSettings = async () => {
-    //   try {
-    //     const settingsData = await getSetting();
-    //     const settings = settingsData[0] || {};
-    //     setSetting({
-    //       roles: settings.roles || [],
-    //       projects: settings.projects || []
-    //     });
-    //   } catch (error) {
-    //     console.error('Error fetching settings:', error);
-    //   }
-    // };
     getEmployeeById();
-    // fetchSettings();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -82,29 +63,6 @@ const Report: React.FC = () => {
       setRateState(employee.roles[0].rate)
     }
   }, [deliverable.quantity, employee]);
-
-  // חישוב תפקיד לפי הגדרה כרגע לא נצרך
-  // function rateCalculation(): number {
-
-  //   if (isOtherSelected) {
-  //     return otherType.customRate;
-  //   }
-  //   const role = deliverable.role;
-  //   let rate: number | undefined;
-  //   if (setting)
-  //     for (let index = 0; index < setting.roles.length; index++) {
-  //       const set = setting.roles[index];
-  //       console.log(set, 'set');
-
-  //       if (set.name === role) {
-  //         rate = set.rate;
-  //         console.log(rate, 'rate');
-
-  //         break;
-  //       }
-  //     }
-  //   return rate !== undefined ? rate : 0;
-  // }
 
   const fixDeliverable = () => {
     const rate = rateState;
@@ -153,67 +111,6 @@ const Report: React.FC = () => {
   }
 
   async function exportStyledReportToExcel(report: MyReport) {
-    // const today = new Date();
-    // const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    // const year = today.getFullYear().toString().slice(-2);
-
-    // const formattedDate = `${month}-${year}`;
-    // console.log(formattedDate);
-
-    // const date = formattedDate
-    // const totalSum: number = totalSumCalculation(report);
-
-    // const fileName = `דוח_${user?.name}_${date}.xlsx`;
-
-    // const workbook = new ExcelJS.Workbook();
-    // const worksheet = workbook.addWorksheet('דוח');
-
-    // // עיצוב כותרות
-    // worksheet.addRow([
-    //   `${formattedDate}`,
-    //   `${user?.name}`
-    // ]).eachCell({ includeEmpty: true }, (cell) => {
-    //   cell.font = { bold: true };
-    //   cell.alignment = { vertical: 'middle', horizontal: 'center' };
-    // });
-
-    // worksheet.addRow([]);
-    // worksheet.addRow(['כמות', 'תעריף', 'תפקיד', 'פרויקט', 'סימן', 'סעיף', 'סכום סה"כ'])
-    //   .eachCell({ includeEmpty: true }, (cell) => {
-    //     cell.font = { bold: true };
-    //     cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFF00' } };
-    //   });
-
-    // // הוספת הנתונים
-    // report.deliverables.forEach(deliverable => {
-    //   worksheet.addRow([
-    //     // deliverable.type,
-    //     deliverable.quantity,
-    //     deliverable.rate,
-    //     deliverable.role,
-    //     deliverable.project,
-    //     deliverable.sign,
-    //     deliverable.seif,
-    //     deliverable.total
-    //   ]);
-    // });
-
-    // worksheet.addRow([]); // שורה ריקה
-    // worksheet.addRow(['הערה כללית', report.common, 'סכום סה"כ', totalSum, '', '', '', '',])
-    // // .eachCell({ includeEmpty: true }, (cell) => {
-    // //   cell.alignment = { horizontal: 'right', vertical: 'middle', textRotation: 0, wrapText: true };
-    // // });
-
-    // await workbook.xlsx.writeBuffer().then((buffer) => {
-    //   // יצירת אובייקט Blob ושמירה לקובץ
-    //   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    //   const url = window.URL.createObjectURL(blob);
-    //   const link = document.createElement('a');
-    //   link.href = url;
-    //   link.download = fileName;
-    //   link.click();
-    //   window.URL.revokeObjectURL(url);
-    // });
     let userName = user?.name.toString();
     if (userName)
       ExcelExportService.exportStyledReportToExcel(report, userName)

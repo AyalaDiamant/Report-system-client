@@ -1,7 +1,6 @@
-* {
+/* * {
     direction: rtl;
     text-align: right;
-
 }
 
 .my-card {
@@ -141,12 +140,8 @@ th {
 
 .navbar {
     margin-top: 50px;
-    /* השאר מקום מתחת לתגית הפיתוח */
 }
 
-/* styles.css */
-
-/* תגית פיתוח */
 .development-tag {
     position: fixed;
     top: 0;
@@ -157,16 +152,12 @@ th {
     text-align: center;
     padding: 10px;
     z-index: 1030;
-    /* מבטיח שהתכנים של ה-Navbar לא יכסו את התגית */
 }
 
-/* ניתוב עליון */
 .navbar {
     margin-top: 50px;
-    /* השאר מקום מתחת לתגית הפיתוח */
     padding: 0 15px;
     border-bottom: 1px solid #ddd;
-    /* קו תחתון עדין */
 }
 
 .navbar-nav {
@@ -212,7 +203,6 @@ th {
     margin-right: 5px;
 }
 
-/* סגנונות כלליים */
 .reports-container {
     padding: 20px;
 }
@@ -224,7 +214,6 @@ th {
     margin-bottom: 20px;
 }
 
-/* עיצוב כרטיס הדוח */
 .report-card {
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -244,7 +233,6 @@ th {
     margin: 0;
 }
 
-/* עיצוב פרטי הדוח */
 .list-item {
     padding: 10px;
     border-bottom: 1px solid #ddd;
@@ -262,7 +250,6 @@ th {
     margin-top: 10px;
 }
 
-/* עיצוב אם אין דוחות */
 .no-reports {
     color: #777;
     font-style: italic;
@@ -270,33 +257,28 @@ th {
     margin-top: 20px;
 }
 
-/* טיונינג קטן */
 .mb-4 {
     margin-bottom: 1.5rem;
 }
 
-/* ------ */
 
-/* עיצוב כללי של הכרטיסים */
 .report-card {
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     padding: 15px;
-    margin: 0 auto; /* מרכז את הכרטיסים בתוך העמודה */
-    max-width: 100%; /* מונע מהכרטיסים להתפשט מעבר לרוחב המסך */
+    margin: 0 auto; 
+    max-width: 100%; 
 }
 
 
-/* עיצוב התאריך ופרטי הדוח */
 .report-date {
     font-size: 14px;
     color: #555;
     margin-bottom: 15px;
 }
 
-/* עיצוב פרטי הדוח */
 .list-group-item {
     padding: 10px;
     border-bottom: 1px solid #ddd;
@@ -318,4 +300,491 @@ th {
 .a{
     background-color: #cbcaca;
 }
+ */
+
+
+/* סגנון כללי */
+* {
+    direction: rtl;
+    text-align: right;
+}
+
+.development-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f8d7da;
+    color: #721c24;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 1rem;
+    z-index: 1000;
+}
+
+
+/* עיצוב ההדר */
+.header-container {
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+    /* מעבר צבע עדין */
+    color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 10px 0;
+}
+
+.navbar-brand {
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.navbar-nav .nav-link {
+    color: #f8f9fa;
+    font-weight: bold;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: #f8f9fa;
+    color: #1e3c72;
+}
+
+.logout-link {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.logout-link.btn{
+    color: white;
+}
+
+.logout-link:hover {
+    color: #ff4d4f;
+    text-decoration: underline;
+}
+
+/* התאמות */
+.navbar-nav {
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+}
+
+.btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* ריווח בין אלמנטים */
+.margin-top {
+    margin-top: 15px;
+}
+
+.margin-bottom {
+    margin-bottom: 15px;
+}
+
+
+
+/* עמוד לוגין */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* padding-top: 50px; */
+    /* התאמה לגובה הבאנר */
+}
+
+.login-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    text-align: center;
+    margin-top: -5%;
+}
+
+.login-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #343a40;
+}
+
+.login-subtitle {
+    font-size: 16px;
+    color: #6c757d;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.form-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #495057;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    width: 100%;
+    height: 38px;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.password-toggle {
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    margin-left: 8px;
+    font-size: 18px;
+}
+
+.btn-primary {
+    width: 100%;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* עמוד ניהול *//* עיצוב כותרת העמוד */
+h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  /* עיצוב הכפתורים */
+  .admin-actions {
+    display: flex;
+    justify-content: center; /* למרכז את הכפתורים */
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+  }
+  
+  .admin-actions button {
+    width: 100%;
+    max-width: 250px; /* הגבלת רוחב הכפתור */
+    font-size: 1.2rem;
+    padding: 15px;
+    transition: transform 0.3s ease;
+    background-color: #007bff; /* רקע כחול לכפתור */
+    color: white; /* צבע טקסט לבן */
+    border: none; /* אין גבול לכפתור */
+    border-radius: 5px; /* פינות מעוגלות */
+  }
+  
+  .admin-actions button:hover {
+    transform: translateY(-5px); /* אפקט ריחוף */
+    background-color: #0056b3; /* שינוי צבע הרקע כשמניחים את העכבר */
+  }
+  
+  .admin-actions button:focus {
+    outline: none; /* הסרת קו המיקוד */
+  }
+  
+  /* עיצוב כללי */
+  .container {
+    padding: 20px;
+  }
+  
+  h1 {
+    font-weight: bold;
+    text-align: center;
+  }
+  
+
+  /* עמוד עובד */
+
+  .employee-actions {
+    display: flex;
+    justify-content: center; /* למרכז את הכפתורים */
+    align-items: center; /* לאיזון האנכיים */
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+  }
+  
+  .employee-actions button {
+    width: 100%;
+    max-width: 250px; /* הגבלת רוחב הכפתור */
+    justify-content: center;
+    font-size: 1.2rem;
+    padding: 15px;
+    transition: transform 0.3s ease;
+    background-color: #007bff; /* רקע כחול לכפתור */
+    color: white; /* צבע טקסט לבן */
+    border: none; /* אין גבול לכפתור */
+    border-radius: 5px; /* פינות מעוגלות */
+  }
+  
+  .employee-actions button:hover {
+    transform: translateY(-5px); /* אפקט ריחוף */
+    background-color: #0056b3; /* שינוי צבע הרקע כשמניחים את העכבר */
+  }
+  
+  .employee-actions button:focus {
+    outline: none; /* הסרת קו המיקוד */
+  }
+  
+  .btn-edit{
+    margin-left: 2px;
+  }
+
+  /* .btn-delete{
+    margin: 1%;
+  } */
+
+  .btn-cancel{
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 15px;
+    margin-right: 1020px;
+    width: 250px;
+  }
+
+  /* עיצוב כללי */
+.container {
+    direction: rtl;
+    padding: 0 15px;
+}
+
+h1 {
+    font-size: 2.5rem; /* גודל גופן גדול יותר לכותרת */
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.no-reports {
+    font-size: 1.2rem;
+    color: #666;
+    text-align: center;
+}
+
+/* עיצוב כפתור יצוא דוחות ל-Excel */
+.btn-export {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-export:hover {
+    background-color: #45a049;
+}
+
+/* עיצוב כפתורים */
+.btn-primary, .btn-danger {
+    padding: 5px 15px;
+    font-size: 1rem; /* גודל גופן בכפתורים */
+    border-radius: 4px;
+    border: none;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* עיצוב הטבלה */
+.table-responsive {
+    margin-top: 30px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem; /* גודל גופן בטבלה */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table th, .table td {
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #ddd;
+    vertical-align: middle;
+}
+
+.table th {
+    background-color: #f7f7f7;
+    font-weight: bold;
+    color: #333;
+}
+
+.table-striped tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.table-bordered td, .table-bordered th {
+    border: 1px solid #ddd;
+}
+
+/* עיצוב עבור שם העובד ותאריך */
+.employee-name, .report-date {
+    font-size: 1.15rem; /* גודל גופן גדול יותר לשם העובד והתאריך */
+    font-weight: bold;
+}
+
+/* עיצוב רשימות הספקים */
+.deliverables-list {
+    padding: 0;
+    margin: 0;
+}
+
+.deliverable-item {
+    margin-bottom: 10px; /* רווח בין כל פריט */
+    font-size: 1rem; /* גודל גופן פריטים */
+    color: #555;
+}
+
+.deliverable-item p {
+    margin: 5px 0;
+}
+
+.deliverable-item strong {
+    color: #333;
+}
+
+/* כותרות הטבלה */
+.table th {
+    text-align: center;
+}
+
+/* שינוי צבע רקע בעת שהסמן מעל שורה */
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.reports-container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.reports-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: #fff;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    text-align: center;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #343a40;
+    color: #fff;
+    font-weight: bold;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2;
+}
+
+.table .btn {
+    width: 80px;
+    margin: 0 5px;
+}
+
+.list-group-item {
+    padding: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+}
+
+.list-item p {
+    margin: 0;
+    padding: 2px 0;
+}
+
+.no-reports {
+    text-align: center;
+    color: #777;
+    font-size: 1.2rem;
+}
+
+.table-responsive {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+    .table th, .table td {
+        font-size: 0.8rem;
+    }
+
+    .btn {
+        font-size: 0.8rem;
+    }
+}
+
+
 

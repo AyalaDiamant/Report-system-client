@@ -165,12 +165,10 @@ const EmployeeManagement: React.FC = () => {
             <div className="container mt-5">
                 <h2 className="text-center">ניהול עובדים</h2>
                 <div className="">
-                    {loading ? (
-                        <p className="loading">טוען עובדים...</p>
-                    ) : employees.length === 0 ? (
+                    {employees.length === 1 ? (
                         <div>
-                            <p className="no-employees">עדיין אין עובדים</p>
-                            <button className="btn btn-primary card row mb-12" onClick={handleAddEmployee}>הוסף עובד</button>
+                            <p className="no-reports">עדיין אין עובדים</p>
+                            <button className='btn btn-primary card row mb-12' onClick={handleAddEmployee}>הוסף עובד</button>
                         </div>
                     ) : (
                         <div className="card">
@@ -186,14 +184,14 @@ const EmployeeManagement: React.FC = () => {
                                             <li key={employee._id} className="list-group-item d-flex justify-content-between align-items-center">
                                                 {employee.name} - {employee.roles && employee.roles.length > 0 ? employee.roles[0].name : ''}
                                                 <div>
-                                                    <button type="button" className="btn btn-warning btn-sm" onClick={() => setEditEmployee(employee)}>ערוך</button>
-                                                    <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteEmployee(employee._id)}>מחק</button>
+                                                    <button type="button" className="btn btn-warning btn-sm btn-edit" onClick={() => setEditEmployee(employee)}>ערוך</button>
+                                                    <button type="button" className="btn btn-danger btn-sm btn-delete" onClick={() => handleDeleteEmployee(employee._id)}>מחק</button>
                                                 </div>
                                             </li>
                                         ))}
                                 </ul>
                             </div>
-                            <button type="button" className="btn btn-primary" onClick={handleAddEmployee}>
+                            <button type="button" className="btn btn-primary btn-cancel" onClick={handleAddEmployee}>
                                 {isAdding ? 'ביטול' : 'הוסף עובד'}
                             </button>
                         </div>
@@ -366,7 +364,7 @@ const EmployeeManagement: React.FC = () => {
                                                 autoComplete="new-text"
                                             />
                                         </div>
-                                        <button type="button" className="btn btn-primary" onClick={handleCreateEmployee}>הוסף עובד</button>
+                                        <button type="button" className="btn btn-primary btn-cancel btn-btn" onClick={handleCreateEmployee}>הוסף עובד</button>
                                     </form>
                                 </div>
                             </div>
@@ -513,7 +511,7 @@ const EmployeeManagement: React.FC = () => {
                                     />
                                 </div>
 
-                                <button type="button" className="btn btn-success" onClick={handleUpdateEmployee}>שמור שינויים</button>
+                                <button type="button" className="btn btn-success btn-edit" onClick={handleUpdateEmployee}>שמור שינויים</button>
                                 <button type="button" className="btn btn-danger" onClick={() => setEditEmployee(null)}>ביטול</button>
                             </form>
                         </div>
