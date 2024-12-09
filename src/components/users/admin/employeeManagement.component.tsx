@@ -29,8 +29,10 @@ const EmployeeManagement: React.FC = () => {
     });
     const [editEmployee, setEditEmployee] = useState<Employee | null>(null);
     const [handleAdd, setHandleAdd] = useState<boolean>(false);
-    // const [showPassword, setShowPassword] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
+    const [loading, setLoading] = useState<boolean>(true);
+    // const [showPassword, setShowPassword] = useState(false);
+
     const navigate = useNavigate();
     const { user } = useUser();
 
@@ -44,6 +46,9 @@ const EmployeeManagement: React.FC = () => {
             setEmployees(data);
         } catch (error) {
             console.error('Error fetching employees:', error);
+        }
+        finally {
+            setLoading(false);
         }
     };
 
@@ -93,7 +98,6 @@ const EmployeeManagement: React.FC = () => {
         }
     };
 
-
     const handleUpdateEmployee = async () => {
         if (editEmployee) {
             try {
@@ -106,33 +110,18 @@ const EmployeeManagement: React.FC = () => {
         }
     };
 
-    // const handleDeleteEmployee = async (employeeId: number) => {
-    //     if (confirm('האם אתה בטוח שברצונך למחוק עובד זה?')) {
-    //         try {
-    //             await employeeService.deleteEmployee(employeeId);
-    //             fetchEmployees(); // refresh employee list
-    //         } catch (error) {
-    //             console.error('Error deleting employee:', error);
-    //         }
-    //     }
-    // };
-
     const handleDeleteEmployee = async (employeeId: number) => {
         if (confirm('האם אתה בטוח שברצונך למחוק עובד זה?')) {
             try {
                 const response = await employeeService.deleteEmployee(employeeId);
-                if (response.status === 200) { // או בהתאם לתקנים שלך ב-API
-                    fetchEmployees(); // רענן את רשימת העובדים לאחר המחיקה
-                } else {
-                    console.error('Failed to delete employee:', response.statusText);
-                }
+                await fetchEmployees();
+                console.error('Failed to delete employee:', response.statusText);
             } catch (error) {
                 console.error('Error deleting employee:', error);
                 alert('שגיאה במחיקת עובד');
             }
         }
     };
-    
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -176,10 +165,12 @@ const EmployeeManagement: React.FC = () => {
             <div className="container mt-5">
                 <h2 className="text-center">ניהול עובדים</h2>
                 <div className="">
-                    {employees.length === 1 ? (
+                    {loading ? (
+                        <p className="loading">טוען עובדים...</p>
+                    ) : employees.length === 0 ? (
                         <div>
-                            <p className="no-reports">עדיין אין עובדים</p>
-                            <button className='btn btn-primary card row mb-12' onClick={handleAddEmployee}>הוסף עובד</button>
+                            <p className="no-employees">עדיין אין עובדים</p>
+                            <button className="btn btn-primary card row mb-12" onClick={handleAddEmployee}>הוסף עובד</button>
                         </div>
                     ) : (
                         <div className="card">
@@ -187,20 +178,6 @@ const EmployeeManagement: React.FC = () => {
                                 <h3>רשימת עובדים</h3>
                             </div>
                             <div className="card-body">
-                                {/* <ul className="list-group mb-4">
-                                    {employees
-                                        .filter((employee) => employee._id !== 0) // מסנן את העובד עם _id שווה ל-0
-                                        .sort((a, b) => a.name.localeCompare(b.name)) // ממיין לפי סדר אלפביתי של השם
-                                        .map((employee) => (
-                                            <li key={employee._id} className="list-group-item d-flex justify-content-between align-items-center">
-                                                {employee.name} - {employee.roles[0]?.name}
-                                                <div>
-                                                    <button type="button" className="btn btn-warning btn-sm" onClick={() => setEditEmployee(employee)}>ערוך</button>
-                                                    <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteEmployee(employee._id)}>מחק</button>
-                                                </div>
-                                            </li>
-                                        ))}
-                                </ul> */}
                                 <ul className="list-group mb-4">
                                     {employees
                                         .filter((employee) => employee._id !== 0)
@@ -215,8 +192,6 @@ const EmployeeManagement: React.FC = () => {
                                             </li>
                                         ))}
                                 </ul>
-
-
                             </div>
                             <button type="button" className="btn btn-primary" onClick={handleAddEmployee}>
                                 {isAdding ? 'ביטול' : 'הוסף עובד'}
@@ -255,24 +230,6 @@ const EmployeeManagement: React.FC = () => {
                                                 onChange={(e) => setNewEmployee({ ...newEmployee, password: e.target.value })}
                                             />
                                         </div>
-                                        {/* <div className="form-group">
-                                            <label>סיסמה</label>
-                                            <div className="input-group">
-                                                <input
-                                                    type={showPassword ? "text" : "password"}
-                                                    className="form-control"
-                                                    placeholder="הכנס סיסמה"
-                                                    value={newEmployee.password}
-                                                    onChange={(e) => setNewEmployee({ ...newEmployee, password: e.target.value })}
-                                                    autoComplete="new-password"
-                                                />
-                                                <div className="input-group-append">
-                                                    <span className="input-group-text" onClick={togglePasswordVisibility} style={{ cursor: 'pointer' }}>
-                                                        {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div> */}
                                         <div className="form-group">
                                             <label>כתובת</label>
                                             <input
