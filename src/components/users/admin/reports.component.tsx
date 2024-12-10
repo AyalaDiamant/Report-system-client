@@ -16,7 +16,7 @@ const Reports: React.FC = () => {
     // const [setting, setSetting] = useState<Settings | null>(null);
     const [editingReportId, setEditingReportId] = useState<number | null>(null);
     const [editedReportData, setEditedReportData] = useState<any>({});
-    const [originalReportData, setOriginalReportData] = useState<MyReport | null>(null);
+    const [originalReportData, _setOriginalReportData] = useState<MyReport | null>(null);
 
     const navigate = useNavigate();
     const { user } = useUser();
