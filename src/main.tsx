@@ -10,7 +10,6 @@ import Login from './components/auth/login.component';
 // import Register from './components/auth/register.comonent';
 import Admin from './components/users/admin/admin.component';
 import Employee from './components/users/employee/employee.component';
-import Setting from './components/users/admin/setting.component';
 import EmployeeManagement from './components/users/admin/employeeManagement.component';
 import Reports from './components/users/admin/reports.component';
 import Report from './components/users/employee/report.component';
@@ -43,10 +42,6 @@ const router = createBrowserRouter([
   {
     path: "/report",
     element: <Report />,
-  },
-  {
-    path: "/settings",
-    element: <Setting />,
   },
   {
     path: "/reports",

@@ -146,25 +146,17 @@ const Report: React.FC = () => {
       setEmployee(await employeeService.getEmployeeById(userIdFromSend));
   }
 
+  const handleNavigation = (route: string) => {
+    navigate(route);
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('isAdmin');
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('isAdmin');
 
-    navigate('/login');
-  };
-
-  const handleReport = () => {
-    navigate('/report');
-  };
-
-  const handleHome = () => {
-    navigate('/employee');
-  };
-
-  const toggleShowReports = () => {
-    navigate('/reports-employee');
+    handleNavigation('/login');
   };
 
   const handleRoleChange = (e: any) => {
@@ -181,9 +173,9 @@ const Report: React.FC = () => {
         user={user}
         role="employee" // מצב של עובד
         handleLogout={handleLogout}
-        handleReport={handleReport}
-        toggleShowReports={toggleShowReports} // העברת פונקציה
-        handleHome={handleHome}
+        handleReport={() => handleNavigation('/report')} 
+        toggleShowReports={() => handleNavigation('/reports-employee')} 
+        handleHome={() => handleNavigation('/employee')} 
       />
       <div className="container mt-5">
         <div className="row justify-content-center">

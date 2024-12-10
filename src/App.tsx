@@ -1,16 +1,3 @@
-
-// import React from 'react';
-
-// const App: React.FC = () => {
-//   return (
-//     <div>
-//       {/* כל שאר התוכן שלך באפליקציה */}
-//     </div>
-//   );
-// }
-
-// export default App;
-
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,7 +17,6 @@ const App: React.FC = () => {
 
   return (
     <div>
-      {/* <div className="development-banner">האתר בשלבי פיתוח</div> */}
     </div>
   );
 };

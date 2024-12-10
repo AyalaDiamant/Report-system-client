@@ -1,19 +1,19 @@
 export interface Deliverable {
-    // type: string; // סוג
-    quantity: number; // כמות
-    rate: number; // תעריף
-    rateIncrease: number, // העלאת תעריף
-    role: string; // תפקיד
-    project: string; // פרוייקט
-    sign: string; // סימן/סעיף
+    // type: string; 
+    quantity: number;
+    rate: number; 
+    rateIncrease: number, 
+    role: string;
+    project: string; 
+    sign: string; 
     seif: string;
-    total: number; // סכום סה"כ
+    total: number;
 }
 
 export interface MyReport {
     _id: number
-    employeeId: number; // מספר עובד
+    employeeId: number;
     date: String,
-    deliverables: Deliverable[]; // מערך של הספקים
-    common: string; // הערה כללית
+    deliverables: Deliverable[]; 
+    common: string; 
 }

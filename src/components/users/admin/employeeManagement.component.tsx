@@ -4,7 +4,6 @@ import { Employee } from '../../../interfaces/employee.interface';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../../contexts/user.context';
 import Header from '../../header.component';
-// import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const EmployeeManagement: React.FC = () => {
     const [employees, setEmployees] = useState<Employee[]>([]);
@@ -31,7 +30,6 @@ const EmployeeManagement: React.FC = () => {
     const [handleAdd, setHandleAdd] = useState<boolean>(false);
     const [isAdding, setIsAdding] = useState(false);
     const [_loading, setLoading] = useState<boolean>(true);
-    // const [showPassword, setShowPassword] = useState(false);
 
     const navigate = useNavigate();
     const { user } = useUser();
@@ -123,33 +121,18 @@ const EmployeeManagement: React.FC = () => {
         }
     };
 
+    const handleNavigation = (route: string) => {
+        navigate(route);
+    };
+
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('isAdmin');
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('isAdmin');
 
-        navigate('/login');
+        handleNavigation('/login');
     };
-
-    const handleHome = () => {
-        navigate('/admin');
-    };
-
-    const handleSetting = () => {
-        navigate('/settings');
-    };
-
-    const handleReport = () => {
-        navigate('/reports');
-    }
-    const handleEmployeeManagement = () => {
-        navigate('/employee-management');
-    };
-
-    // const togglePasswordVisibility = () => {
-    //     setShowPassword(!showPassword);
-    // };
 
     return (
         <div>
@@ -157,10 +140,10 @@ const EmployeeManagement: React.FC = () => {
                 user={user}
                 role="manager" // מצב של מנהל
                 handleLogout={handleLogout}
-                handleReport={handleReport}
-                handleEmployeeManagement={handleEmployeeManagement}
-                handleHome={handleHome}
-                handleSettings={handleSetting}
+                handleReport={() => handleNavigation('/reports')} 
+                handleEmployeeManagement={() => handleNavigation('/employee-management')} 
+                handleHome={() => handleNavigation('/admin')}
+                handleSettings={() => handleNavigation('/settings')}
             />
             <div className="container mt-5">
                 <h2 className="text-center">ניהול עובדים</h2>
@@ -195,9 +178,7 @@ const EmployeeManagement: React.FC = () => {
                                 {isAdding ? 'ביטול' : 'הוסף עובד'}
                             </button>
                         </div>
-
                     )}
-
                 </div>
                 {handleAdd ? (
                     <div className="row mb-4">
