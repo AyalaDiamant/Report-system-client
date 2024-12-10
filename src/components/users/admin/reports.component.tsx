@@ -634,10 +634,10 @@ const Reports: React.FC = () => {
                                                         </td>
                                                         <td>{totalSum}</td>
                                                         <td>
-                                                            <div>
-                                                                <button className="btn btn-success" onClick={() => handleEditReport(report)}>
+                                                            <div className="button-container">
+                                                                {/* <button className="btn btn-success" onClick={() => handleEditReport(report)}>
                                                                     ערוך
-                                                                </button>
+                                                                </button> */}
                                                                 <button className="btn btn-danger" onClick={() => handleDelete(report._id)}>
                                                                     מחק
                                                                 </button>

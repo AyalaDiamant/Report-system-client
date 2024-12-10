@@ -829,3 +829,10 @@ h1 {
         font-size: 0.8rem;
     }
 }
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* למרכז את הכפתור במרכז התא לגובה */
+}
