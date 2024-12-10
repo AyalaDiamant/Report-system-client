@@ -215,10 +215,12 @@ const Login: React.FC = () => {
   return (
     <div>
       <Header
-        user={null}  // במקרה של לא מחובר
-        role="employee"  // לא משנה כאן כי אין יוזר
+        user={null}  
+        role="employee"  
         handleLogout={handleLogout}
         handleHome={() => { }}
+        handleReport={() => { }}
+        handleEmployeeManagement={() => { }}
       />
       <div className="development-banner">האתר בשלבי פיתוח</div>
       <div className="login-container">
