@@ -187,12 +187,12 @@ const Report: React.FC = () => {
       />
       <div className="container mt-5">
         <div className="row justify-content-center">
-          <div className="col-md-12">
+          <div className="col-md-10">
             <div className="card">
               <div className="card-header text-center">
                 <h2>מילוי דו"ח</h2>
               </div>
-              <div className="card-body">
+              <div className="card-body ">
                 <form onSubmit={send}>
                   <div className="form-group">
                     <label htmlFor="project">פרוייקט</label>

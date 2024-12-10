@@ -309,6 +309,12 @@ th {
     text-align: right;
 }
 
+body {
+    padding-bottom: 50px; 
+    /* padding-top: 60px; */
+}
+
+
 .development-banner {
     position: fixed;
     bottom: 0;
@@ -325,12 +331,17 @@ th {
 
 /* עיצוב ההדר */
 .header-container {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100%;
     background: linear-gradient(to right, #1e3c72, #2a5298);
-    /* מעבר צבע עדין */
     color: white;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
     padding: 10px 0;
+    z-index: 2000; 
 }
+
 
 .navbar-brand {
     color: #ffffff;
@@ -359,7 +370,7 @@ th {
     margin-left: 10px;
 }
 
-.logout-link.btn{
+.logout-link.btn {
     color: white;
 }
 
@@ -484,111 +495,132 @@ th {
     margin-top: 10px;
 }
 
-/* עמוד ניהול *//* עיצוב כותרת העמוד */
+/* עמוד ניהול */
+/* עיצוב כותרת העמוד */
 h1 {
     font-size: 2.5rem;
     color: #333;
     margin-bottom: 1rem;
-  }
-  
-  /* עיצוב הכפתורים */
-  .admin-actions {
+}
+
+/* עיצוב הכפתורים */
+.admin-actions {
     display: flex;
-    justify-content: center; /* למרכז את הכפתורים */
+    justify-content: center;
+    /* למרכז את הכפתורים */
     gap: 15px;
     flex-wrap: wrap;
     margin-top: 30px;
-  }
-  
-  .admin-actions button {
+}
+
+.admin-actions button {
     width: 100%;
-    max-width: 250px; /* הגבלת רוחב הכפתור */
+    max-width: 250px;
+    /* הגבלת רוחב הכפתור */
     font-size: 1.2rem;
     padding: 15px;
     transition: transform 0.3s ease;
-    background-color: #007bff; /* רקע כחול לכפתור */
-    color: white; /* צבע טקסט לבן */
-    border: none; /* אין גבול לכפתור */
-    border-radius: 5px; /* פינות מעוגלות */
-  }
-  
-  .admin-actions button:hover {
-    transform: translateY(-5px); /* אפקט ריחוף */
-    background-color: #0056b3; /* שינוי צבע הרקע כשמניחים את העכבר */
-  }
-  
-  .admin-actions button:focus {
-    outline: none; /* הסרת קו המיקוד */
-  }
-  
-  /* עיצוב כללי */
-  .container {
+    background-color: #007bff;
+    /* רקע כחול לכפתור */
+    color: white;
+    /* צבע טקסט לבן */
+    border: none;
+    /* אין גבול לכפתור */
+    border-radius: 5px;
+    /* פינות מעוגלות */
+}
+
+.admin-actions button:hover {
+    transform: translateY(-5px);
+    /* אפקט ריחוף */
+    background-color: #0056b3;
+    /* שינוי צבע הרקע כשמניחים את העכבר */
+}
+
+.admin-actions button:focus {
+    outline: none;
+    /* הסרת קו המיקוד */
+}
+
+/* עיצוב כללי */
+.container {
     padding: 20px;
-  }
-  
-  h1 {
+}
+
+h1 {
     font-weight: bold;
     text-align: center;
-  }
-  
+}
 
-  /* עמוד עובד */
 
-  .employee-actions {
+/* עמוד עובד */
+
+.employee-actions {
     display: flex;
-    justify-content: center; /* למרכז את הכפתורים */
-    align-items: center; /* לאיזון האנכיים */
+    justify-content: center;
+    /* למרכז את הכפתורים */
+    align-items: center;
+    /* לאיזון האנכיים */
     gap: 15px;
     flex-wrap: wrap;
     margin-top: 30px;
-  }
-  
-  .employee-actions button {
+}
+
+.employee-actions button {
     width: 100%;
-    max-width: 250px; /* הגבלת רוחב הכפתור */
+    max-width: 250px;
+    /* הגבלת רוחב הכפתור */
     justify-content: center;
     font-size: 1.2rem;
     padding: 15px;
     transition: transform 0.3s ease;
-    background-color: #007bff; /* רקע כחול לכפתור */
-    color: white; /* צבע טקסט לבן */
-    border: none; /* אין גבול לכפתור */
-    border-radius: 5px; /* פינות מעוגלות */
-  }
-  
-  .employee-actions button:hover {
-    transform: translateY(-5px); /* אפקט ריחוף */
-    background-color: #0056b3; /* שינוי צבע הרקע כשמניחים את העכבר */
-  }
-  
-  .employee-actions button:focus {
-    outline: none; /* הסרת קו המיקוד */
-  }
-  
-  .btn-edit{
-    margin-left: 2px;
-  }
+    background-color: #007bff;
+    /* רקע כחול לכפתור */
+    color: white;
+    /* צבע טקסט לבן */
+    border: none;
+    /* אין גבול לכפתור */
+    border-radius: 5px;
+    /* פינות מעוגלות */
+}
 
-  /* .btn-delete{
+.employee-actions button:hover {
+    transform: translateY(-5px);
+    /* אפקט ריחוף */
+    background-color: #0056b3;
+    /* שינוי צבע הרקע כשמניחים את העכבר */
+}
+
+.employee-actions button:focus {
+    outline: none;
+    /* הסרת קו המיקוד */
+}
+
+.btn-edit {
+    margin-left: 2px;
+}
+
+/* .btn-delete{
     margin: 1%;
   } */
 
-  .btn-cancel{
+.btn-cancel {
     justify-content: center;
     text-align: center;
     margin-bottom: 15px;
     margin-right: 1020px;
     width: 250px;
-  }
+}
 
-  /* עיצוב כללי */
+/* עיצוב כללי */
 .container {
     direction: rtl;
     padding: 0 15px;
 }
 
 h1 {
-    font-size: 2.5rem; /* גודל גופן גדול יותר לכותרת */
+    font-size: 2.5rem;
+    /* גודל גופן גדול יותר לכותרת */
     color: #333;
     margin-bottom: 20px;
     text-align: center;
@@ -618,9 +650,11 @@ h1 {
 }
 
 /* עיצוב כפתורים */
-.btn-primary, .btn-danger {
+.btn-primary,
+.btn-danger {
     padding: 5px 15px;
-    font-size: 1rem; /* גודל גופן בכפתורים */
+    font-size: 1rem;
+    /* גודל גופן בכפתורים */
     border-radius: 4px;
     border: none;
     margin: 5px;
@@ -653,11 +687,13 @@ h1 {
 .table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 1rem; /* גודל גופן בטבלה */
+    font-size: 1rem;
+    /* גודל גופן בטבלה */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.table th, .table td {
+.table th,
+.table td {
     padding: 15px;
     text-align: center;
     border: 1px solid #ddd;
@@ -674,13 +710,16 @@ h1 {
     background-color: #f9f9f9;
 }
 
-.table-bordered td, .table-bordered th {
+.table-bordered td,
+.table-bordered th {
     border: 1px solid #ddd;
 }
 
 /* עיצוב עבור שם העובד ותאריך */
-.employee-name, .report-date {
-    font-size: 1.15rem; /* גודל גופן גדול יותר לשם העובד והתאריך */
+.employee-name,
+.report-date {
+    font-size: 1.15rem;
+    /* גודל גופן גדול יותר לשם העובד והתאריך */
     font-weight: bold;
 }
 
@@ -691,8 +730,10 @@ h1 {
 }
 
 .deliverable-item {
-    margin-bottom: 10px; /* רווח בין כל פריט */
-    font-size: 1rem; /* גודל גופן פריטים */
+    margin-bottom: 10px;
+    /* רווח בין כל פריט */
+    font-size: 1rem;
+    /* גודל גופן פריטים */
     color: #555;
 }
 
@@ -733,7 +774,8 @@ h1 {
     border-collapse: collapse;
 }
 
-.table th, .table td {
+.table th,
+.table td {
     text-align: center;
     padding: 12px 15px;
     border: 1px solid #ddd;
@@ -777,7 +819,9 @@ h1 {
 }
 
 @media (max-width: 768px) {
-    .table th, .table td {
+
+    .table th,
+    .table td {
         font-size: 0.8rem;
     }
 
@@ -785,6 +829,3 @@ h1 {
         font-size: 0.8rem;
     }
 }
-
-
-
