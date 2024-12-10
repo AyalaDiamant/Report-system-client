@@ -30,7 +30,7 @@ const EmployeeManagement: React.FC = () => {
     const [editEmployee, setEditEmployee] = useState<Employee | null>(null);
     const [handleAdd, setHandleAdd] = useState<boolean>(false);
     const [isAdding, setIsAdding] = useState(false);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [_loading, setLoading] = useState<boolean>(true);
     // const [showPassword, setShowPassword] = useState(false);
 
     const navigate = useNavigate();

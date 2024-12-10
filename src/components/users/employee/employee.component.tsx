@@ -76,8 +76,8 @@ import { MyReport } from '../../../interfaces/report.interface';
 import Header from '../../header.component';
 
 const Employee: React.FC = () => {
-    const [reports, setReports] = useState<MyReport[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [_reports, setReports] = useState<MyReport[]>([]);
+    const [_loading, setLoading] = useState<boolean>(true);
 
     const navigate = useNavigate();
     const { user } = useUser();
