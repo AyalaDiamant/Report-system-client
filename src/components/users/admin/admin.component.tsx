@@ -21,7 +21,6 @@ const Admin: React.FC = () => {
     handleNavigation('/login');
   };
 
-
   return (
     <div>
       <Header

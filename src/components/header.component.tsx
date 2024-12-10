@@ -19,7 +19,7 @@ const Header: React.FC<HeaderProps> = ({
     toggleShowReports,
     handleEmployeeManagement,
     handleHome,
-    handleSettings
+    // handleSettings
 }) => {
     return (
         <div>
@@ -56,9 +56,9 @@ const Header: React.FC<HeaderProps> = ({
                                         <li className="nav-item">
                                             <button className="nav-link btn" onClick={handleEmployeeManagement}>ניהול עובדים</button>
                                         </li>
-                                        <li className="nav-item">
+                                        {/* <li className="nav-item">
                                             <button className="nav-link btn" onClick={handleSettings}>הגדרות</button>
-                                        </li>
+                                        </li> */}
                                     </>
                                 )}
                                 <div className="d-flex align-items-center">
