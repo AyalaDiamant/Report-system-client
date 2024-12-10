@@ -240,17 +240,17 @@ const Reports: React.FC = () => {
             }
         }
     };
-
-    const handleEditReport = (report: MyReport) => {
-        setEditingReportId(report._id);
-        setOriginalReportData(report);
-        setEditedReportData(report.deliverables.map((item) => ({
-            quantity: item.quantity,
-            seif: item.seif || '',
-            sign: item.sign || '',
-            total: item.quantity * item.rate
-        })));
-    };
+    // עריכת דוח
+    // const handleEditReport = (report: MyReport) => {
+    //     setEditingReportId(report._id);
+    //     setOriginalReportData(report);
+    //     setEditedReportData(report.deliverables.map((item) => ({
+    //         quantity: item.quantity,
+    //         seif: item.seif || '',
+    //         sign: item.sign || '',
+    //         total: item.quantity * item.rate
+    //     })));
+    // };
 
     const handleChange = (idx: number, field: keyof Deliverable, value: string | number, total: keyof Deliverable) => {
         setEditedReportData((prevData: any) => {
@@ -389,7 +389,7 @@ const Reports: React.FC = () => {
     //                                         {editingReportId === report._id && (
     //                                             <div className="card-body mt-3">
     //                                                 <h6>ערוך דוח</h6>
-                                                  
+
     //                                                 {editedReportData.map((deliverable: Deliverable, idx: number) => (
     //                                                     <div key={idx} className="mb-3">
     //                                                         <input
@@ -532,7 +532,7 @@ const Reports: React.FC = () => {
     //                 </div>
     //             )}
     //         </div>
-    
+
     //         {/* אם יש דוח שנמצא במצב עריכה, נציג את טופס העריכה */}
     //         {editingReportId && (
     //             <div className="modal-overlay">
@@ -575,7 +575,7 @@ const Reports: React.FC = () => {
     //         )}
     //     </div>
     // );
-    
+
     return (
         <div>
             <Header
@@ -643,7 +643,7 @@ const Reports: React.FC = () => {
                                                                 </button>
                                                             </div>
                                                         </td>
-                                                        
+
                                                         {/* אם הדוח הנוכחי הוא בדח עריכה, מציגים את הפורום לידו */}
                                                         {editingReportId === report._id && (
                                                             <td colSpan={5}>
@@ -701,7 +701,7 @@ const Reports: React.FC = () => {
             </div>
         </div>
     );
-    
+
 
 };
 export default Reports;
